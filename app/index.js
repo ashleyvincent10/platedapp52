@@ -1,38 +1,23 @@
-import { useEffect, useState } from "react";
-
 import { Redirect } from "expo-router";
-
-import Login from "@/components/Login";
-import db from "@/database/db";
-import Loading from "@/components/Loading";
+import * as SplashScreen from "expo-splash-screen";
+import { useFonts } from "expo-font";
+import { useCallback } from "react";
 
 export default function App() {
-  const [session, setSession] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // Default to true for initial load
+  //my attempt at getting the custom fonts loaded in, got this from A2.
+  const [fontsLoaded] = useFonts({
+    Poppins: require("../assets/fonts/Poppins-Regular.ttf"),
+    Prata: require("../assets/fonts/Prata-Regular.ttf"),
+  });
 
-  useEffect(() => {
-    setIsLoading(true);
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+  if (!fontsLoaded) return null;
 
-    db.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setIsLoading(false);
-    });
-
-    const {
-      data: { subscription },
-    } = db.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setIsLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  if (session) {
-    return <Redirect href="/feed" />;
-  } else if (isLoading) {
-    return <Loading />;
-  } else {
-    return <Login />;
-  }
+  return <Redirect href="/tabs/home" onLayout={onLayoutRootView} />;
 }
+
+//font export lines from A2
