@@ -17,7 +17,7 @@ export default function App() {
   }, [fontsLoaded]);
   if (!fontsLoaded) return null;
 
-  return <Redirect href="/tabs/home" onLayout={onLayoutRootView} />;
+  return <Redirect href="/login" onLayout={onLayoutRootView} />;
 }
 
 //font export lines from A2

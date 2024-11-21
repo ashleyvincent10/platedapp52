@@ -6,7 +6,6 @@ import Theme from "@/assets/theme";
 import Feed from "@/components/Feed";
 import Loading from "@/components/Loading";
 
-import db from "@/database/db";
 import useSession from "@/utils/useSession";
 
 export default function Profile() {

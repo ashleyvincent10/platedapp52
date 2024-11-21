@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import db from "@/database/db";
+// import db from "@/database/db";
 
 import Theme from "@/assets/theme";
 

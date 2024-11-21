@@ -5,7 +5,7 @@ import Theme from "@/assets/theme";
 import Post from "@/components/Post";
 import Loading from "@/components/Loading";
 
-import timeAgo from "@/utils/timeAgo";
+// import timeAgo from "@/utils/timeAgo";
 
 export default function Feed({
   shouldNavigateToComments = false,
