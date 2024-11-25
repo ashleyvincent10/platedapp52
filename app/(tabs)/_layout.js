@@ -22,36 +22,11 @@ export default function TabLayout() {
         name="chefSu"
         options={{
           title: "Chef Su",
-          headerTitle: "Chef Su",
-          headerShown: true,
-          headerStyle: {
-            backgroundColor: "#FAF9F6",
-          },
-          headerTitleStyle: {
-            fontFamily: "Prata-Regular",
-            fontSize: 38,
-          },
           tabBarIcon: ({ size, color }) => (
             <Image
               source={require("../../assets/chef-hat copy 1.png")}
               style={{ width: size, height: size, tintColor: color }}
             />
-          ),
-          headerRight: () => (
-            <Image
-              source={require("../../assets/info.png")}
-              style={{
-                width: windowWidth * 0.07,
-                height: windowWidth * 0.07,
-                margin: 10,
-              }}
-            />
-            //giving me a render error about the native gesture handler root view
-            // <TouchableOpacity
-            //   onPress={() => alert("More information about this screen!")}
-            // >
-            //   <Text>info</Text>
-            // </TouchableOpacity>
           ),
         }}
       />
