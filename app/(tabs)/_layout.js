@@ -1,4 +1,4 @@
-import { Image, StyleSheet, View, Text, Dimensions } from "react-native";
+import { Image, StyleSheet, View, Text, Dimensions, rgba } from "react-native";
 import { Redirect, Tabs } from "expo-router";
 import { useFonts } from "expo-font";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -15,6 +15,10 @@ export default function TabLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: "#ffffff",
+          //boxShadow: {0px -4px 5px 0px rgba(0, 0, 0, 0.10)},
+          shadowColor: "rgba(0, 0, 0, 0.1)",
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 0.4,
         },
       }}
     >
@@ -72,7 +76,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile/index"
+        name="profile"
         options={{
           title: "Profile",
           tabBarIcon: ({ size, color }) => (

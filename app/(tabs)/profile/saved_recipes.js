@@ -1,8 +1,6 @@
-import { StyleSheet, Text, View, Dimensions } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import { Link } from "expo-router";
-
-const windowWidth = Dimensions.get("window").width;
 
 export default function Page() {
   return (
@@ -17,22 +15,14 @@ export default function Page() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
-    padding: 24,
-    backgroundColor: "#FAF9F6",
-  },
-  stats: {
-    flex: 1,
-    flexDirection: "column",
     alignItems: "center",
+    padding: 24,
+  },
+  main: {
+    flex: 1,
     justifyContent: "center",
     maxWidth: 960,
     marginHorizontal: "auto",
-  },
-  number: {
-    fontSize: 32,
-    fontFamily: "Poppins",
-    color: "black",
   },
   title: {
     fontSize: 64,
