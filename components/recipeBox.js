@@ -1,31 +1,77 @@
-import React from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { React, useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Link,
+} from "react-native";
+import { useRouter } from "expo-router";
 
-const RecipeBox = ({ title, the_image }) => {
+export default function RecipeBox({ title, the_image }) {
+  const [post, setPost] = useState(null);
+  const router = useRouter();
+
+  //   const fetchCookBook = async () => {
+  //     try {
+  //       const user_response = await supabase
+  //         .from("recipes")
+  //         .select("*")
+  //         .eq("is_mine", "true");
+  //       setMine(user_response.data);
+  //       console.log(mine);
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   };
+
+  // const fetchRecreation = async () => {
+  //     try {
+  //       const user_response = await supabase
+  //         .from("recipes")
+  //         .select("*")
+  //         .eq("is_mine", "true");
+  //       setRecreatino(user_response.data);
+  //       console.log(recreation);
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   };
+
   return (
+    // <TouchableOpacity
+    //   onPress={() =>
+    //     router.push({
+    //       pathname: "/(tabs)/profile/recipe_details",
+    //       params: {
+    //         title: title,
+    //         the_image: the_image,
+    //       },
+    //     })
+    //   }
+    // >
     <View style={styles.container}>
-      <View style={styles.imageGrid}>
-        <Image source={the_image} style={styles.image} />
-      </View>
+      <Image source={the_image} style={styles.image} />
       <View style={styles.footer}>
         <Text style={styles.title}>{title}</Text>
-        <TouchableOpacity
-          onPress={alert("under construction!")}
-          style={styles.editButton}
-        >
+        <TouchableOpacity style={styles.editButton}>
           <Text style={styles.editText}>✎</Text>
         </TouchableOpacity>
       </View>
     </View>
+    // </TouchableOpacity>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     width: 150, // Adjust to match your layout
+    aspectRatio: 1,
+    maxWidth: 150,
     borderWidth: 2,
-    borderColor: "#B5300B",
     overflow: "hidden",
+    borderColor: "#B5300B",
     backgroundColor: "#fff",
     margin: 8,
     shadowColor: "#000",
@@ -34,14 +80,9 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  imageGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    height: 100, // Adjust to fit the images
-  },
   image: {
-    width: "50%",
-    height: "50%",
+    width: 100,
+    height: 100,
   },
   footer: {
     flexDirection: "row",
@@ -50,11 +91,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     backgroundColor: "#f8f8f8",
+    marginHorizontal: 2,
   },
   title: {
     fontSize: 14,
-    fontWeight: "bold",
+    //fontWeight: "bold",
     color: "#333",
+    fontStyle: "Poppins-Regular",
+    overflow: "hidden",
   },
   editButton: {
     padding: 4,
@@ -64,5 +108,3 @@ const styles = StyleSheet.create({
     color: "black", // Edit button color
   },
 });
-
-export default RecipeBox;

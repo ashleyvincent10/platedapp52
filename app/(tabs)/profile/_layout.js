@@ -103,6 +103,13 @@ export default function StackLayout() {
           headerBackButtonDisplayMode: "minimal",
         }}
       />
+      <Stack.Screen
+        name="recipe_details"
+        options={{
+          headerTitle: "Recipe Name",
+          headerBackTitle: "Back",
+        }}
+      />
     </Stack>
   );
 }

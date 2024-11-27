@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   Animated,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 
 const CollapsibleView = ({ title, children }) => {
@@ -35,11 +36,11 @@ const CollapsibleView = ({ title, children }) => {
 
   return (
     <View>
-      <TouchableWithoutFeedback onPress={toggleCollapse}>
+      <TouchableOpacity onPress={toggleCollapse}>
         <View>
           <Text style={styles.title}>{title}</Text>
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
       <Animated.View style={{ height: heightInterpolate }}>
         {children}
       </Animated.View>
