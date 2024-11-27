@@ -40,7 +40,7 @@ export default function TabLayout() {
           title: "Post",
           tabBarIcon: ({ size, color }) => (
             <Image
-              source={require("../../assets/book_icon.png")}
+              source={require("../../assets/post.png")}
               style={{
                 width: size,
                 height: size,
