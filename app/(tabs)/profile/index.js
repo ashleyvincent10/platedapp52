@@ -8,6 +8,7 @@ import {
   FlatList,
 } from "react-native";
 import CollapsibleView from "components/collapsibleView";
+import RecipeBox from "components/recipeBox";
 
 import { Link } from "expo-router";
 
@@ -20,7 +21,7 @@ export default function Page() {
         <View style={styles.topHeader}>
           <View style={styles.topHeaderElem}>
             <Image
-              source="../../../assets/chef_prof.png"
+              source={require("../../../assets/chef_prof.png")}
               style={styles.profPic}
             ></Image>
             <Text style={styles.title}>Chef You</Text>
@@ -48,9 +49,11 @@ export default function Page() {
       {/* ScrollViews here and then */}
       <ScrollView marginTop="5%" flexDirection="column" flex={1}>
         <Text style={styles.title}> Cookbooks</Text>
-        <View backgroundColor="red">
-          <Text> acai bowl</Text>
-          <Image source="../../../assets/recipe_images/recipe_image_1.jpeg" />
+        <View backgroundColor="gray">
+          <RecipeBox
+            title="Healthy recipes"
+            image={"assets/recipe_images/recipe_image_1.jpeg"}
+          ></RecipeBox>
         </View>
 
         {/* <Text style={styles.title}> All Recipes</Text>
@@ -104,6 +107,7 @@ const styles = StyleSheet.create({
   profPic: {
     height: windowWidth * 0.2,
     width: windowWidth * 0.2,
+    marginBottom: 10,
   },
   topHeaderElem: {
     flexDirection: "column",

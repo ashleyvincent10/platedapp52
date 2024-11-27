@@ -1,17 +1,18 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
-const recipeBox = ({ title, images, onEdit }) => {
+const RecipeBox = ({ title, the_image }) => {
   return (
     <View style={styles.container}>
       <View style={styles.imageGrid}>
-        {images.map((image, index) => (
-          <Image key={index} source={{ uri: image }} style={styles.image} />
-        ))}
+        <Image source={the_image} style={styles.image} />
       </View>
       <View style={styles.footer}>
         <Text style={styles.title}>{title}</Text>
-        <TouchableOpacity onPress={onEdit} style={styles.editButton}>
+        <TouchableOpacity
+          onPress={alert("under construction!")}
+          style={styles.editButton}
+        >
           <Text style={styles.editText}>✎</Text>
         </TouchableOpacity>
       </View>
@@ -22,9 +23,8 @@ const recipeBox = ({ title, images, onEdit }) => {
 const styles = StyleSheet.create({
   container: {
     width: 150, // Adjust to match your layout
-    borderWidth: 1,
-    borderColor: "#e0e0e0",
-    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#B5300B",
     overflow: "hidden",
     backgroundColor: "#fff",
     margin: 8,
@@ -61,8 +61,8 @@ const styles = StyleSheet.create({
   },
   editText: {
     fontSize: 16,
-    color: "#FF5722", // Edit button color
+    color: "black", // Edit button color
   },
 });
 
-export default recipeBox;
+export default RecipeBox;
