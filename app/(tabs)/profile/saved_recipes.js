@@ -8,11 +8,13 @@ import {
 import { useState, useEffect } from "react";
 import RecipeBox from "components/recipeBox";
 import { supabase } from "backend/supabaseClient";
+import { useRouter } from "expo-router";
 
 import { Link } from "expo-router";
 
 export default function Page() {
   const [saved, setSaved] = useState(null);
+  const router = useRouter();
   const fetchSaved = async () => {
     try {
       const user_response = await supabase
@@ -43,6 +45,10 @@ export default function Page() {
                   pathname: "/(tabs)/profile/recipe_details",
                   params: {
                     title: item.Name,
+                    the_image:
+                      "assets/recipe_images/recipe_image_" +
+                      [item.RecipeId] +
+                      ".jpeg",
                   },
                 })
               }

@@ -70,6 +70,7 @@ export default function Page() {
           Hi this is my profile and I'm writing the bio that would go here!
         </Text>
       </View>
+
       {/* ScrollViews here and then */}
       <ScrollView marginTop="5%" flex={1}>
         <Text style={styles.title} marginTop={10} edit={true}>
@@ -96,7 +97,11 @@ export default function Page() {
                   router.push({
                     pathname: "/(tabs)/profile/recipe_details",
                     params: {
-                      title: item.Name,
+                      recipe_title: item.Name,
+                      the_image:
+                        "assets/recipe_images/recipe_image_" +
+                        [item.RecipeId] +
+                        ".jpeg",
                     },
                   })
                 }
