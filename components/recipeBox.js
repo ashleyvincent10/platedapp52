@@ -6,12 +6,15 @@ import {
   StyleSheet,
   TouchableOpacity,
   Link,
+  rgba,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { BlurView } from "expo-blur";
 
-export default function RecipeBox({ title, the_image }) {
+export default function RecipeBox({ title, the_image, edit }) {
   const [post, setPost] = useState(null);
   const router = useRouter();
+  let box = null;
 
   //   const fetchCookBook = async () => {
   //     try {
@@ -38,47 +41,54 @@ export default function RecipeBox({ title, the_image }) {
   //       console.error(err);
   //     }
   //   };
-
-  return (
-    // <TouchableOpacity
-    //   onPress={() =>
-    //     router.push({
-    //       pathname: "/(tabs)/profile/recipe_details",
-    //       params: {
-    //         title: title,
-    //         the_image: the_image,
-    //       },
-    //     })
-    //   }
-    // >
-    <View style={styles.container}>
-      <Image source={the_image} style={styles.image} />
-      <View style={styles.footer}>
-        <Text style={styles.title}>{title}</Text>
-        <TouchableOpacity style={styles.editButton}>
-          <Text style={styles.editText}>✎</Text>
-        </TouchableOpacity>
+  if (edit) {
+    box = (
+      <View style={styles.container}>
+        <Image source={the_image} style={styles.image} />
+        <BlurView style={styles.footer} intensity={7.5}>
+          <Text style={styles.title}>{title}</Text>
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() =>
+              alert(
+                "🚧whoops this feature is under construction!🚧, please return back"
+              )
+            }
+          >
+            <Text style={styles.editText}>✎</Text>
+          </TouchableOpacity>
+        </BlurView>
       </View>
-    </View>
-    // </TouchableOpacity>
-  );
+    );
+  } else {
+    box = (
+      <View style={styles.container}>
+        <Image source={the_image} style={styles.image} />
+        <BlurView style={styles.footer} intensity={7.5}>
+          <Text style={styles.title}>{title}</Text>
+        </BlurView>
+      </View>
+    );
+  }
+  return box;
 }
 
 const styles = StyleSheet.create({
   container: {
     width: 150, // Adjust to match your layout
-    aspectRatio: 1,
-    maxWidth: 150,
+    height: 150,
     borderWidth: 2,
-    overflow: "hidden",
+    //overflow: "hidden",
     borderColor: "#B5300B",
-    backgroundColor: "#fff",
+    backgroundColor: "pink",
     margin: 8,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 2,
+    // flexDirection: "column",
+    // justifyContent: "space-between",
   },
   image: {
     width: 100,
@@ -86,12 +96,15 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 8,
+    width: "100%",
+    paddingHorizontal: 4,
     paddingVertical: 4,
-    backgroundColor: "#f8f8f8",
-    marginHorizontal: 2,
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    position: "absolute",
+    bottom: "0",
+    left: "0",
+
+    //  blur(7.5px),
   },
   title: {
     fontSize: 14,
@@ -99,9 +112,13 @@ const styles = StyleSheet.create({
     color: "#333",
     fontStyle: "Poppins-Regular",
     overflow: "hidden",
+    marginHorizontal: 2,
   },
   editButton: {
-    padding: 4,
+    padding: 2,
+    right: "2%",
+    bottom: "2%",
+    position: "absolute",
   },
   editText: {
     fontSize: 16,

@@ -101,15 +101,28 @@ export default function StackLayout() {
           },
           headerTintColor: "black",
           headerBackButtonDisplayMode: "minimal",
+          headerRight: () => (
+            <View style={{ justifyContent: "center" }}>
+              <TouchableOpacity
+                onPress={() =>
+                  alert(
+                    "🚧whoops this feature is under construction!🚧 Please go back and find your recipe manually."
+                  )
+                }
+              >
+                <Image
+                  source={require("../../../assets/magnifier.png")}
+                  style={{
+                    width: windowWidth * 0.08,
+                    height: windowWidth * 0.08,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+          ),
         }}
       />
-      <Stack.Screen
-        name="recipe_details"
-        options={{
-          headerTitle: "Recipe Name",
-          headerBackTitle: "Back",
-        }}
-      />
+      <Stack.Screen name="recipe_details" />
     </Stack>
   );
 }

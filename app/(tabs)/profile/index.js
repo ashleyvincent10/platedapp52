@@ -72,20 +72,21 @@ export default function Page() {
       </View>
       {/* ScrollViews here and then */}
       <ScrollView marginTop="5%" flex={1}>
-        <Text style={styles.title} marginTop={10}>
+        <Text style={styles.title} marginTop={10} edit={true}>
           Cookbooks
         </Text>
         <View backgroundColor="gray">
           <RecipeBox
             title="Healthy recipes"
             image={"assets/recipe_images/recipe_image_1.jpeg"}
+            edit={true}
           ></RecipeBox>
         </View>
 
         <Text style={styles.title} marginTop={10}>
           Your Recipes
         </Text>
-        <View backgroundColor="gray">
+        <View backgroundColor="#FAF9F6">
           <FlatList
             horizontal={true}
             data={mine}
@@ -107,6 +108,7 @@ export default function Page() {
                     [item.RecipeId] +
                     ".jpeg"
                   }
+                  edit={true}
                 ></RecipeBox>
               </TouchableOpacity>
             )}
@@ -120,6 +122,7 @@ export default function Page() {
           <RecipeBox
             title="Healthy recipes"
             image={"assets/recipe_images/recipe_image_1.jpeg"}
+            edit={true}
           ></RecipeBox>
         </View>
         {/* <Text style={styles.title}> All Recipes</Text>
