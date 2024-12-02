@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     //overflow: "hidden",
     borderColor: "#B5300B",
-    backgroundColor: "pink",
+    backgroundColor: "white",
     margin: 8,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
