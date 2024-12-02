@@ -33,7 +33,7 @@ export default function Page() {
   console.log(items);
 
   const renderHeader = () => (
-    <View style={styles.itemContainer}>
+    <View style={styles.cartContainer}>
       <Text style={styles.itemLabel}>This is the top item!</Text>
     </View>
   );
@@ -90,6 +90,21 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     width: 166,
+    height: 166,
+    borderWidth: 2,
+    borderColor: "#B5300B",
+    marginTop: 20,
+    marginBottom: 20,
+    marginRight: 10,
+    marginLeft: 10,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    backgroundColor: "#FAF9F6",
+  },
+  cartContainer: {
+    width: 352,
     height: 166,
     borderWidth: 2,
     borderColor: "#B5300B",
