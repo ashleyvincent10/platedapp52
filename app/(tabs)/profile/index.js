@@ -97,8 +97,14 @@ export default function Page() {
                   router.push({
                     pathname: "/(tabs)/profile/recipe_details",
                     params: {
-                      recipe_title: item.Name,
-                      the_image: item.image_url,
+                      recipe_title: "title",
+                      the_image:
+                        "assets/recipe_images/recipe_image_" +
+                        [item.RecipeId] +
+                        ".jpeg",
+                      servings: item.servings,
+                      time: item.TotalTime,
+                      difficulty: item.difficulty,
                     },
                   })
                 }
