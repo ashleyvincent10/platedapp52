@@ -98,21 +98,14 @@ export default function Page() {
                     pathname: "/(tabs)/profile/recipe_details",
                     params: {
                       recipe_title: item.Name,
-                      the_image:
-                        "assets/recipe_images/recipe_image_" +
-                        [item.RecipeId] +
-                        ".jpeg",
+                      the_image: item.image_url,
                     },
                   })
                 }
               >
                 <RecipeBox
                   title={item.Name}
-                  image={
-                    "assets/recipe_images/recipe_image_" +
-                    [item.RecipeId] +
-                    ".jpeg"
-                  }
+                  the_image={item.image_url}
                   edit={true}
                 ></RecipeBox>
               </TouchableOpacity>

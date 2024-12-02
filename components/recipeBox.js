@@ -44,7 +44,11 @@ export default function RecipeBox({ title, the_image, edit }) {
   if (edit) {
     box = (
       <View style={styles.container}>
-        <Image source={the_image} style={styles.image} />
+        <Image
+          source={{ uri: the_image }}
+          style={styles.image}
+          resizeMode="cover"
+        />
         <BlurView style={styles.footer} intensity={7.5}>
           <Text style={styles.title}>{title}</Text>
           <TouchableOpacity
@@ -63,7 +67,11 @@ export default function RecipeBox({ title, the_image, edit }) {
   } else {
     box = (
       <View style={styles.container}>
-        <Image source={the_image} style={styles.image} />
+        <Image
+          source={{ uri: the_image }}
+          style={styles.image}
+          resizeMode="cover"
+        />
         <BlurView style={styles.footer} intensity={7.5}>
           <Text style={styles.title}>{title}</Text>
         </BlurView>
@@ -91,8 +99,8 @@ const styles = StyleSheet.create({
     // justifyContent: "space-between",
   },
   image: {
-    width: 100,
-    height: 100,
+    width: "100%",
+    height: "100%",
   },
   footer: {
     flexDirection: "row",
