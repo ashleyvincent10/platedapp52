@@ -49,7 +49,7 @@ export default function RecipeBox({ title, the_image, edit }) {
           style={styles.image}
           resizeMode="cover"
         />
-        <BlurView style={styles.footer} intensity={7.5}>
+        <BlurView style={styles.footer} intensity={10}>
           <Text style={styles.title}>{title}</Text>
           <TouchableOpacity
             style={styles.editButton}
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 4,
     paddingVertical: 4,
-    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
     position: "absolute",
     bottom: "0",
     left: "0",
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 14,
     //fontWeight: "bold",
-    color: "#333",
+    color: "black",
     fontStyle: "Poppins-Regular",
     overflow: "hidden",
     marginHorizontal: 2,

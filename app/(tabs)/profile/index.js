@@ -76,7 +76,7 @@ export default function Page() {
         <Text style={styles.title} marginTop={10} edit={true}>
           Cookbooks
         </Text>
-        <View backgroundColor="gray">
+        <View backgroundColor="#FAF9F6">
           <RecipeBox
             title="Healthy recipes"
             image={"assets/recipe_images/recipe_image_1.jpeg"}
@@ -122,7 +122,7 @@ export default function Page() {
         <Text style={styles.title} marginTop={10}>
           Recreations
         </Text>
-        <View backgroundColor="gray">
+        <View backgroundColor="#FAF9F6">
           <RecipeBox
             title="Healthy recipes"
             image={"assets/recipe_images/recipe_image_1.jpeg"}

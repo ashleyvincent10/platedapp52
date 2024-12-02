@@ -55,11 +55,7 @@ export default function Page() {
             >
               <RecipeBox
                 title={item.Name}
-                image={
-                  "assets/recipe_images/recipe_image_" +
-                  [item.RecipeId] +
-                  ".jpeg"
-                }
+                the_image={item.image_url}
                 edit={false}
               ></RecipeBox>
             </TouchableOpacity>
