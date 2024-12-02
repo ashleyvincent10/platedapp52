@@ -106,7 +106,7 @@ export default function HomeScreen() {
 
       <TouchableOpacity style={styles.buttonContainer}>
         <Image
-          source={require("assets/saved.png")}
+          source={require("assets/saved_bookmark.png")}
           style={styles.savedRecipesButton}
         />
       </TouchableOpacity>
@@ -304,5 +304,3 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
 });
-
-

@@ -10,21 +10,15 @@ import {
   FlatList,
 } from "react-native";
 import { useNavigation } from "expo-router";
-import { useSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { supabase } from "backend/supabaseClient";
 const windowWidth = Dimensions.get("window").width;
 
-export default function RecipeDetails({
-  recipe_title,
-  the_image,
-  servings,
-  time,
-  difficulty,
-}) {
-  // const { recipe_title, the_image, servings, time, difficulty } =
-  //   useLocalSearchParams();
+export default function RecipeDetails() {
+  const { recipe_title, the_image, servings, time, difficulty } =
+    useLocalSearchParams();
   console.log(recipe_title);
   const [ingredients, setIngredients] = useState([]);
   const navigation = useNavigation();
@@ -136,7 +130,7 @@ export default function RecipeDetails({
           </TouchableOpacity>
         </View>
       </View>
-
+      {/* change the data structure to be a list of tuples */}
       {/* INGREDIENTS  */}
       <View marginBottom={10}>
         <Text style={styles.title}> Ingredients </Text>
