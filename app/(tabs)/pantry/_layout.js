@@ -24,6 +24,7 @@ export default function StackLayout() {
         headerTitleStyle: { color: "white" },
         headerTintColor: "white",
         headerShown: false,
+        backgroundColor: "#FAF9F6",
       }}
     >
       <Stack.Screen
@@ -39,21 +40,52 @@ export default function StackLayout() {
             fontSize: 34,
             color: "black",
           },
-          //   headerRight: () => (
-          //     <View style={{ justifyContent: "center" }}>
-          //       <TouchableOpacity
-          //         onPress={() => router.push("/(tabs)/chefSu/info")}
-          //       >
-          //         <Image
-          //           source={require("../../../assets/info.png")}
-          //           style={{
-          //             width: windowWidth * 0.07,
-          //             height: windowWidth * 0.07,
-          //           }}
-          //         />
-          //       </TouchableOpacity>
-          //     </View>
-          //   ),
+        }}
+      />
+      <Stack.Screen
+        name="groceries"
+        options={{
+          headerShown: true,
+          headerTitle: "Grocery Cart",
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+          },
+          headerTitleStyle: {
+            fontFamily: "Prata-Regular",
+            fontSize: 34,
+            color: "black",
+          },
+        }}
+      />
+      <Stack.Screen
+        name="details"
+        options={{
+          headerShown: true,
+          headerTitle: "Details",
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+          },
+          headerTitleStyle: {
+            fontFamily: "Prata-Regular",
+            fontSize: 34,
+            color: "black",
+          },
+        }}
+      />
+      <Stack.Screen
+        name="newItem"
+        options={{
+          presentation: "modal",
+          headerShown: true,
+          headerTitle: "Details",
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+          },
+          headerTitleStyle: {
+            fontFamily: "Prata-Regular",
+            fontSize: 34,
+            color: "black",
+          },
         }}
       />
       {/* <Stack.Screen
