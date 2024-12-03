@@ -48,10 +48,7 @@ export default function Page() {
     </View>
   );
 
-  const pantriesWithNew = [
-    ...pantries,
-    { name: "Add New Item", isStatic: true },
-  ];
+  const pantriesWithNew = [...pantries, { name: "Add pantry", isStatic: true }];
 
   const images = {
     bread: require("assets/pantry_images/bread.png"),

@@ -9,7 +9,7 @@ export default function Page() {
   const navigation = useNavigation();
 
   navigation.setOptions({
-    headerTitle: "NewItem",
+    headerTitle: "New Pantry",
     headerLeft: () => (
       <TouchableOpacity
         style={styles.iconButton}
