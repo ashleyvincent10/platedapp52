@@ -13,6 +13,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: "black",
         tabBarPosition: "bottom",
         headerShown: false,
+        backgroundColor: "#FAF9F6",
         tabBarStyle: {
           backgroundColor: "#ffffff",
           //boxShadow: {0px -4px 5px 0px rgba(0, 0, 0, 0.10)},
