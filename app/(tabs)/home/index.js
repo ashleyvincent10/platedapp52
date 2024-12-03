@@ -97,19 +97,26 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
 
-      {/* Redo button */}
-      <TouchableOpacity style={styles.redoButton}>
-        <Image source={require("assets/redo.png")} style={styles.redoIcon} />
-      </TouchableOpacity>
+      <View style={styles.footer}>
+        {/* Redo button */}
+        <TouchableOpacity style={styles.redoButton}>
+          <Image source={require("assets/redo.png")} style={styles.redoIcon} />
+        </TouchableOpacity>
 
-      {/* Saved Recipes Button */}
+        {/* Saved Recipes Button */}
 
-      <TouchableOpacity style={styles.buttonContainer}>
-        <Image
+        <TouchableOpacity style={styles.buttonContainer}>
+          <Image
+            source={require("assets/swiping_images/saved_recipes_back.png")}
+            style={styles.savedRecipes}
+          />
+          {/* <Text style={styles.savedText}>Saved Recipes</Text> */}
+          {/* <Image
           source={require("assets/saved_bookmark.png")}
           style={styles.savedRecipesButton}
-        />
-      </TouchableOpacity>
+        /> */}
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -130,6 +137,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 45,
     marginBottom: 20,
+  },
+  footer: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
   title: {
     fontSize: 40,
@@ -230,9 +242,32 @@ const styles = StyleSheet.create({
   },
 
   buttonContainer: {
-    padding: 10,
-    backgroundColor: "#FAF9F6",
+    // padding: 10,
+    // width: 142,
+    // height: 24,
+    // backgroundColor: "red",
     alignItems: "center",
+    justifyContent: "center",
+
+    // height: 0,
+    // width: 105, // Width of the flat top
+    // borderBottomWidth: 30, // Height of the trapezoid
+    // borderBottomColor: "blue", // Color of the trapezoid
+    // borderLeftWidth: 8, // Skew size for the left side
+    // borderLeftColor: "transparent",
+    // borderRightWidth: 8, // Skew size for the right side
+    // borderRightColor: "transparent",
+    // transform: [{ scaleX: 2 }], // Scale the trapezoid horizontally
+
+    width: 405,
+    height: 30,
+    overflow: "hidden",
+  },
+  savedRecipes: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+    marginTop: 0,
   },
   savedRecipesButton: {
     width: 200,
@@ -293,7 +328,6 @@ const styles = StyleSheet.create({
   redoButton: {
     width: 70,
     height: 70,
-
     backgroundColor: "transparent",
     justifyContent: "center",
     alignItems: "center",
@@ -302,5 +336,10 @@ const styles = StyleSheet.create({
   redoIcon: {
     color: "#A52A2A",
     fontSize: 24,
+  },
+  savedText: {
+    fontFamily: "Poppins",
+    fontSize: 14,
+    color: "white",
   },
 });
