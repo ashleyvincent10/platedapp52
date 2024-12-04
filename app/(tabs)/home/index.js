@@ -6,36 +6,39 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Touchable,
 } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function HomeScreen() {
+  const router = useRouter();
   return (
     <View style={styles.mainContainer}>
-      <ScrollView style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.title}>Plated</Text>
-          <TouchableOpacity>
-            <Image
-              source={require("assets/magnifier.png")}
-              style={styles.searchIcon}
-            />
-          </TouchableOpacity>
-        </View>
-        {/* Filters */}
+      {/* <ScrollView style={styles.container}> */}
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.title}>Plated</Text>
+        <TouchableOpacity>
+          <Image
+            source={require("assets/magnifier.png")}
+            style={styles.searchIcon}
+          />
+        </TouchableOpacity>
+      </View>
+      {/* Filters */}
+      {/* Filter Icon */}
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <TouchableOpacity onPress={() => router.push("/(tabs)/home/filters")}>
+          <Image
+            source={require("assets/filter.png")}
+            style={styles.filterIcon}
+          />
+        </TouchableOpacity>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           style={styles.filtersContainer}
         >
-          {/* Filter Icon */}
-          <TouchableOpacity style={styles.filterIconWrapper}>
-            <Image
-              source={require("assets/filter.png")}
-              style={styles.filterIcon}
-            />
-          </TouchableOpacity>
-
           <View style={styles.filter}>
             <Text style={styles.filterText}>Nut Allergy</Text>
           </View>
@@ -49,8 +52,9 @@ export default function HomeScreen() {
             <Text style={styles.filterText}>Novice</Text>
           </View>
         </ScrollView>
-
-        {/* Recipe Card */}
+      </View>
+      {/* Recipe Card */}
+      <TouchableOpacity>
         <View style={styles.cardStack}>
           <View style={styles.stackLayer3} />
           <View style={styles.stackLayer2} />
@@ -95,7 +99,8 @@ export default function HomeScreen() {
             </View>
           </View>
         </View>
-      </ScrollView>
+      </TouchableOpacity>
+      {/* </ScrollView> */}
 
       <View style={styles.footer}>
         {/* Redo button */}
@@ -107,14 +112,9 @@ export default function HomeScreen() {
 
         <TouchableOpacity style={styles.buttonContainer}>
           <Image
-            source={require("assets/swiping_images/saved_recipes_back.png")}
+            source={require("assets/saved_folder_1.png")}
             style={styles.savedRecipes}
           />
-          {/* <Text style={styles.savedText}>Saved Recipes</Text> */}
-          {/* <Image
-          source={require("assets/saved_bookmark.png")}
-          style={styles.savedRecipesButton}
-        /> */}
         </TouchableOpacity>
       </View>
     </View>
@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: "#FAF9F6",
+    justifyContent: "space-between",
   },
   container: {
     flex: 1,
@@ -136,12 +137,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingTop: 45,
-    marginBottom: 20,
+    marginBottom: 5,
   },
   footer: {
     width: "100%",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "orange",
   },
   title: {
     fontSize: 40,
@@ -151,14 +154,16 @@ const styles = StyleSheet.create({
   searchIcon: {
     width: 27,
     height: 27,
-    marginHorizontal: 3,
+    marginHorizontal: 20,
   },
   filtersContainer: {
     flexDirection: "row",
-    marginBottom: 20,
+    //marginBottom:,
+    marginTop: 10,
+    backgroundColor: "blue",
   },
   filter: {
-    backgroundColor: "#FFEDE1",
+    // backgroundColor: "#FFEDE1",
     borderWidth: 1,
     borderColor: "#A52A2A",
     borderRadius: 20,
@@ -242,36 +247,17 @@ const styles = StyleSheet.create({
   },
 
   buttonContainer: {
-    // padding: 10,
-    // width: 142,
-    // height: 24,
-    // backgroundColor: "red",
     alignItems: "center",
-    justifyContent: "center",
-
-    // height: 0,
-    // width: 105, // Width of the flat top
-    // borderBottomWidth: 30, // Height of the trapezoid
-    // borderBottomColor: "blue", // Color of the trapezoid
-    // borderLeftWidth: 8, // Skew size for the left side
-    // borderLeftColor: "transparent",
-    // borderRightWidth: 8, // Skew size for the right side
-    // borderRightColor: "transparent",
-    // transform: [{ scaleX: 2 }], // Scale the trapezoid horizontally
-
-    width: 405,
-    height: 30,
+    justifyContent: "flex-end",
+    height: 50,
+    width: 200,
     overflow: "hidden",
   },
   savedRecipes: {
     width: "100%",
     height: "100%",
-    resizeMode: "cover",
-    marginTop: 0,
-  },
-  savedRecipesButton: {
-    width: 200,
-    height: 45,
+    backgroundColor: "blue",
+    marginBottom: -8,
     resizeMode: "contain",
   },
   savedRecipesButtonText: {
@@ -281,7 +267,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins",
   },
   cardStack: {
-    position: "relative",
+    //position: "relative",
     marginBottom: 20,
     marginHorizontal: 5,
   },
@@ -322,16 +308,16 @@ const styles = StyleSheet.create({
   },
   redoButtonContainer: {
     position: "relative",
-    paddingHorizontal: 20,
-    marginTop: -50,
   },
   redoButton: {
     width: 70,
     height: 70,
-    backgroundColor: "transparent",
     justifyContent: "center",
     alignItems: "center",
-    alignSelf: "flex-start",
+    // alignSelf: "flex-start",
+    position: "absolute",
+    left: 7,
+    bottom: 0,
   },
   redoIcon: {
     color: "#A52A2A",
