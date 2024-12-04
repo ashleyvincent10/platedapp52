@@ -9,7 +9,6 @@ import {
 } from "react-native";
 
 import { Link } from "expo-router";
-import { FlatList } from "react-native-gesture-handler";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -30,16 +29,16 @@ export default function Page() {
         </TouchableOpacity>
 
         <View style={styles.filter}>
-          <Text style={styles.filterText}>Nut Allergy</Text>
+          <Text style={styles.filterText}>Nut Allergy 🔒</Text>
         </View>
         <View style={styles.filter}>
-          <Text style={styles.filterText}>Gluten Free</Text>
+          <Text style={styles.filterText}>{"Gluten Free 🔒"}</Text>
         </View>
         <View style={styles.filter}>
           <Text style={styles.filterText}>{"<30 min ✓"}</Text>
         </View>
         <View style={styles.filter}>
-          <Text style={styles.filterText}>Novice</Text>
+          <Text style={styles.filterText}>{"Novice ✓"}</Text>
         </View>
       </ScrollView>
 

@@ -7,8 +7,11 @@ import {
   Image,
   ScrollView,
   Touchable,
+  Dimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
+
+const windowWidth = Dimensions.get("window").width;
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -40,16 +43,16 @@ export default function HomeScreen() {
           style={styles.filtersContainer}
         >
           <View style={styles.filter}>
-            <Text style={styles.filterText}>Nut Allergy</Text>
+            <Text style={styles.filterText}>Nut Allergy 🔒</Text>
           </View>
           <View style={styles.filter}>
-            <Text style={styles.filterText}>Gluten Free</Text>
+            <Text style={styles.filterText}>{"Gluten Free 🔒"}</Text>
           </View>
           <View style={styles.filter}>
             <Text style={styles.filterText}>{"<30 min ✓"}</Text>
           </View>
           <View style={styles.filter}>
-            <Text style={styles.filterText}>Novice</Text>
+            <Text style={styles.filterText}> Novice ✓</Text>
           </View>
         </ScrollView>
       </View>
@@ -75,26 +78,34 @@ export default function HomeScreen() {
                 <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text>
               </View>
               <View style={styles.recipeDetailsOverlay}>
-                <Image
-                  source={require("assets/forkkk.png")}
-                  style={styles.icon}
-                />
-                <Text style={styles.detailText}>4 people</Text>
-                <Image
-                  source={require("assets/whiteclock.png")}
-                  style={styles.icon}
-                />
-                <Text style={styles.detailText}>1 hr</Text>
-                <Image
-                  source={require("assets/whitefire.png")}
-                  style={styles.icon}
-                />
-                <Text style={styles.detailText}>easy</Text>
-                <Image
-                  source={require("assets/whitebookmark.png")}
-                  style={styles.icon}
-                />
-                <Text style={styles.detailText}>147</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Image
+                    source={require("assets/forkkk.png")}
+                    style={styles.icon}
+                  />
+                  <Text style={styles.detailText}>4 people</Text>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                  <Image
+                    source={require("assets/whiteclock.png")}
+                    style={styles.icon}
+                  />
+                  <Text style={styles.detailText}>1 hr</Text>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                  <Image
+                    source={require("assets/whitefire.png")}
+                    style={styles.icon}
+                  />
+                  <Text style={styles.detailText}>easy</Text>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                  <Image
+                    source={require("assets/whitebookmark.png")}
+                    style={styles.icon}
+                  />
+                  <Text style={styles.detailText}>147</Text>
+                </View>
               </View>
             </View>
           </View>
@@ -115,6 +126,7 @@ export default function HomeScreen() {
             source={require("assets/saved_folder_1.png")}
             style={styles.savedRecipes}
           />
+          <Text style={styles.savedRecipesButtonText}>Saved Recipes</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -136,20 +148,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: 45,
-    marginBottom: 5,
+    marginTop: 45,
+    //marginBottom: 5,
   },
   footer: {
     width: "100%",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "orange",
   },
   title: {
-    fontSize: 40,
+    fontSize: 50,
     fontWeight: "bold",
     fontFamily: "Prata",
+    marginHorizontal: 10,
   },
   searchIcon: {
     width: 27,
@@ -160,7 +172,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     //marginBottom:,
     marginTop: 10,
-    backgroundColor: "blue",
   },
   filter: {
     // backgroundColor: "#FFEDE1",
@@ -218,14 +229,15 @@ const styles = StyleSheet.create({
     color: "white",
   },
   icon: {
-    width: 15,
-    height: 15,
-    marginRight: 5,
+    width: windowWidth * 0.05,
+    height: windowWidth * 0.05,
+    resizeMode: "contain",
   },
   detailText: {
     fontSize: 16,
     fontFamily: "Poppins",
     color: "white",
+    marginLeft: 4,
   },
   overlayContent: {
     flexDirection: "row",
@@ -257,15 +269,16 @@ const styles = StyleSheet.create({
   savedRecipes: {
     width: "100%",
     height: "100%",
-    backgroundColor: "blue",
     marginBottom: -8,
     resizeMode: "contain",
   },
   savedRecipesButtonText: {
     color: "#FFF",
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "bold",
     fontFamily: "Poppins",
+    position: "absolute",
+    bottom: 4,
   },
   cardStack: {
     //position: "relative",
@@ -313,6 +326,7 @@ const styles = StyleSheet.create({
   redoButton: {
     width: 70,
     height: 70,
+    resizeMode: "contain",
     justifyContent: "center",
     alignItems: "center",
     // alignSelf: "flex-start",
