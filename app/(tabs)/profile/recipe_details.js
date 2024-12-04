@@ -17,9 +17,9 @@ import { supabase } from "backend/supabaseClient";
 const windowWidth = Dimensions.get("window").width;
 
 export default function RecipeDetails() {
-  const { recipe_title, the_image, servings, time, difficulty } =
+  const { recipe_title, the_image, servings, time, difficulty, chef_name } =
     useLocalSearchParams();
-  console.log(recipe_title);
+
   const [ingredients, setIngredients] = useState([]);
   const navigation = useNavigation();
   navigation.setOptions({
@@ -67,9 +67,15 @@ export default function RecipeDetails() {
       <View style={styles.rowContainter}>
         {/* image and recipe info */}
         <View style={styles.vertCenterContainer}>
-          <Image source={the_image} style={styles.recipeImage} />
+          <Image source={{ uri: the_image }} style={styles.recipeImage} />
           <View style={{ flexDirection: "row" }}>
-            <View style={{ marginHorizontal: 2 }}>
+            <View
+              style={{
+                marginHorizontal: 2,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
               <Image
                 source={require("../../../assets/fork.png")}
                 style={{
@@ -77,9 +83,15 @@ export default function RecipeDetails() {
                   height: windowWidth * 0.08,
                 }}
               />
-              <Text>{servings}</Text>
+              <Text style={styles.body}>{servings}</Text>
             </View>
-            <View style={{ marginHorizontal: 3 }}>
+            <View
+              style={{
+                marginHorizontal: 3,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
               <Image
                 source={require("../../../assets/clock.png")}
                 style={{
@@ -87,9 +99,15 @@ export default function RecipeDetails() {
                   height: windowWidth * 0.085,
                 }}
               />
-              <Text>{servings}</Text>
+              <Text style={styles.body}>{time}</Text>
             </View>
-            <View style={{ marginHorizontal: 3 }}>
+            <View
+              style={{
+                marginHorizontal: 3,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
               <Image
                 source={require("../../../assets/fire.png")}
                 style={{
@@ -97,7 +115,7 @@ export default function RecipeDetails() {
                   height: windowWidth * 0.085,
                 }}
               />
-              <Text>{servings}</Text>
+              <Text style={styles.body}>{difficulty}</Text>
             </View>
           </View>
         </View>
@@ -201,7 +219,8 @@ export default function RecipeDetails() {
                 marginHorizontal: 10,
               }}
             >
-              Chef Name {"\n"}@user_name
+              {chef_name}
+              {"\n"}@{chef_name}
             </Text>
           </View>
         </View>

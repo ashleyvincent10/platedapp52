@@ -6,7 +6,10 @@ export default function Page() {
   return (
     <View style={styles.container}>
       <View style={styles.main}>
-        <Text style={styles.title}>preferences</Text>
+        <Text style={styles.subtitle}>
+          this is where you would set your preferences like your permanent
+          dietary restriction filters
+        </Text>
       </View>
     </View>
   );
@@ -25,7 +28,7 @@ const styles = StyleSheet.create({
     marginHorizontal: "auto",
   },
   title: {
-    fontSize: 64,
+    fontSize: 50,
     fontWeight: "bold",
   },
   subtitle: {
