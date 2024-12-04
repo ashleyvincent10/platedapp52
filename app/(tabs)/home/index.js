@@ -242,8 +242,9 @@ const styles = StyleSheet.create({
     borderColor: "#FFF",
   },
   filterIcon: {
-    width: 27,
-    height: 27,
+    width: 35,
+    height: 35,
+    margin: 5,
   },
 
   buttonContainer: {
