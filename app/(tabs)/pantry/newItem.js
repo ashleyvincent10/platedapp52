@@ -2,23 +2,25 @@ import { StyleSheet, Text, View, Button, TouchableOpacity } from "react-native";
 
 import { Link } from "expo-router";
 import { useNavigation } from "expo-router";
-
+import { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 
 export default function Page() {
   const navigation = useNavigation();
 
-  navigation.setOptions({
-    headerTitle: "New Pantry",
-    headerLeft: () => (
-      <TouchableOpacity
-        style={styles.iconButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Icon name="chevron-back-sharp" size={24} color="black" />
-      </TouchableOpacity>
-    ),
-  });
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: "New Pantry",
+      headerLeft: () => (
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Icon name="chevron-back-sharp" size={24} color="black" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   return (
     <View style={styles.container}>

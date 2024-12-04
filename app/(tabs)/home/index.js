@@ -11,12 +11,93 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 
+import Animated, {
+  useSharedValue, // https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue
+  useAnimatedStyle, // https://docs.swmansion.com/react-native-reanimated/docs/core/useAnimatedStyle
+  // Animation functions
+  withTiming, // https://docs.swmansion.com/react-native-reanimated/docs/animations/withTiming/
+  withSpring, // https://docs.swmansion.com/react-native-reanimated/docs/animations/withSpring/
+  // Animation modifiers
+  withDecay, // https://docs.swmansion.com/react-native-reanimated/docs/animations/withDecay/
+  withSequence, // https://docs.swmansion.com/react-native-reanimated/docs/animations/withSequence/
+  withRepeat, // https://docs.swmansion.com/react-native-reanimated/docs/animations/withRepeat/
+  withDelay, // https://docs.swmansion.com/react-native-reanimated/docs/animations/withDelay/
+  Easing,
+} from "react-native-reanimated";
+import {
+  GestureHandlerRootView,
+  Gesture,
+  GestureDetector,
+  PanGestureHandler,
+  FlingGestureHandler,
+  Directions,
+} from "react-native-gesture-handler";
+
+
 const windowWidth = Dimensions.get("window").width;
 
 export default function HomeScreen() {
   const router = useRouter();
+  const topFolderMargin = useSharedValue(0);
+
+  // const swipeGesture = () => {
+  const onFling = (event) => {
+    topFolderMargin.value = withTiming(
+      -51,
+      {
+        duration: 1000,
+      },
+      () => {
+        topFolderMargin.value = withDelay(
+          1000,
+          withTiming(0, {
+            duration: 1000,
+          })
+        );
+      }
+    );
+  };
+  // };
+
+  // const composedGesture = Gesture.Exclusive(swipeGesture);
+
+  const handleSwipe = () => {
+    // console.log(height.value);
+    // return {
+    // topFolderMargin.value = withTiming(
+    //   -51,
+    //   {
+    //     duration: 1000,
+    //   },
+    //   () => {
+    //     topFolderMargin.value = withDelay(
+    //       1000,
+    //       withTiming(0, {
+    //         duration: 1000,
+    //       })
+    //     );
+    //   }
+    // );
+    // backgroundColor: color.value,
+    // opacity: toggled.value ? withTiming(0.2) : withTiming(1),
+    // transform: [{ translateY: translateY.value }],
+    // };
+  };
+  // const handleSwipe = () => {
+  //   topFolderMargin.value = withTiming(0, {
+  //     duration: 1000,
+  //   });
+  //   topFolderMargin.value = withDelay(
+  //     1000,
+  //     withTiming(51, {
+  //       duration: 1000,
+  //     })
+  //   );
+  // };
+
   return (
-    <View style={styles.mainContainer}>
+    <GestureHandlerRootView>
+       <View style={styles.mainContainer}>
       {/* <ScrollView style={styles.container}> */}
       {/* Header */}
       <View style={styles.header}>
@@ -59,11 +140,18 @@ export default function HomeScreen() {
       {/* Recipe Card */}
       <TouchableOpacity>
         <View style={styles.cardStack}>
-          <View style={styles.stackLayer3} />
-          <View style={styles.stackLayer2} />
-          <View style={styles.stackLayer1} />
-          <View style={styles.imageContainer}>
-            <Image
+            <View style={styles.stackLayer3} />
+            <View style={styles.stackLayer2} />
+
+            {/* <GestureDetector gesture={composedGesture}> */}
+
+            <View style={styles.stackLayer1} />
+            <FlingGestureHandler
+              direction={Directions.DOWN}
+              onActivated={onFling}
+            >
+              <View style={styles.imageContainer}>
+<Image
               source={require("assets/recipe_images/recipe_image_7.jpeg")}
               style={styles.recipeImage}
             />
@@ -105,31 +193,44 @@ export default function HomeScreen() {
                     style={styles.icon}
                   />
                   <Text style={styles.detailText}>147</Text>
+                  </View>
                 </View>
               </View>
-            </View>
+            </FlingGestureHandler>
+            {/* </GestureDetector> */}
           </View>
         </View>
       </TouchableOpacity>
       {/* </ScrollView> */}
 
-      <View style={styles.footer}>
-        {/* Redo button */}
         <TouchableOpacity style={styles.redoButton}>
           <Image source={require("assets/redo.png")} style={styles.redoIcon} />
         </TouchableOpacity>
 
-        {/* Saved Recipes Button */}
+        <View style={styles.footer}>
+          {/* Redo button */}
 
-        <TouchableOpacity style={styles.buttonContainer}>
-          <Image
-            source={require("assets/saved_folder_1.png")}
-            style={styles.savedRecipes}
-          />
-          <Text style={styles.savedRecipesButtonText}>Saved Recipes</Text>
-        </TouchableOpacity>
+          {/* Saved Recipes Button */}
+          <Animated.View style={{ top: topFolderMargin }}>
+            <TouchableOpacity
+              onPress={handleSwipe}
+              style={styles.buttonContainer}
+            >
+              <Image
+                source={require("assets/swiping_images/saved_recipes_folder_cropped.png")}
+                style={styles.savedRecipes}
+              />
+              {/* <Text style={styles.savedText}>Saved Recipes</Text> */}
+              {/* <Image
+          source={require("assets/saved_bookmark.png")}
+          style={styles.savedRecipesButton}
+        /> */}
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
+
       </View>
-    </View>
+    </GestureHandlerRootView>
   );
 }
 
@@ -153,9 +254,11 @@ const styles = StyleSheet.create({
   },
   footer: {
     width: "100%",
+    height: 70,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    // backgroundColor: "blue",
   },
   title: {
     fontSize: 50,
@@ -261,9 +364,10 @@ const styles = StyleSheet.create({
 
   buttonContainer: {
     alignItems: "center",
-    justifyContent: "flex-end",
-    height: 50,
-    width: 200,
+    justifyContent: "center",
+    width: 405,
+    height: 70,
+    top: 51,
     overflow: "hidden",
   },
   savedRecipes: {
@@ -326,13 +430,14 @@ const styles = StyleSheet.create({
   redoButton: {
     width: 70,
     height: 70,
-    resizeMode: "contain",
-    justifyContent: "center",
-    alignItems: "center",
-    // alignSelf: "flex-start",
-    position: "absolute",
-    left: 7,
-    bottom: 0,
+    alignSelf: "flex-start",
+//     resizeMode: "contain",
+//     justifyContent: "center",
+//     alignItems: "center",
+    
+//     position: "absolute",
+//     left: 7,
+//     bottom: 0,
   },
   redoIcon: {
     color: "#A52A2A",

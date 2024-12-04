@@ -4,21 +4,24 @@ import { Link } from "expo-router";
 import { useNavigation } from "expo-router";
 
 import Icon from "react-native-vector-icons/Ionicons";
+import { useState, useEffect } from "react";
 
 export default function Page() {
   const navigation = useNavigation();
 
-  navigation.setOptions({
-    headerTitle: "Grocery Cart",
-    headerLeft: () => (
-      <TouchableOpacity
-        style={styles.iconButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Icon name="chevron-back-sharp" size={24} color="black" />
-      </TouchableOpacity>
-    ),
-  });
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: "Grocery Cart",
+      headerLeft: () => (
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Icon name="chevron-back-sharp" size={24} color="black" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
   return (
     <View style={styles.container}>
       <View style={styles.main}>
