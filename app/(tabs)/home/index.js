@@ -33,12 +33,11 @@ import {
   Directions,
 } from "react-native-gesture-handler";
 
-
 const windowWidth = Dimensions.get("window").width;
 
 export default function HomeScreen() {
   const router = useRouter();
-  const topFolderMargin = useSharedValue(0);
+  const topFolderMargin = useSharedValue(-5);
 
   // const swipeGesture = () => {
   const onFling = (event) => {
@@ -97,111 +96,107 @@ export default function HomeScreen() {
 
   return (
     <GestureHandlerRootView>
-       <View style={styles.mainContainer}>
-      {/* <ScrollView style={styles.container}> */}
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.title}>Plated</Text>
+      <View style={styles.mainContainer}>
+        {/* <ScrollView style={styles.container}> */}
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.title}>Plated</Text>
+          <TouchableOpacity>
+            <Image
+              source={require("assets/magnifier.png")}
+              style={styles.searchIcon}
+            />
+          </TouchableOpacity>
+        </View>
+        {/* Filters */}
+        {/* Filter Icon */}
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <TouchableOpacity onPress={() => router.push("/(tabs)/home/filters")}>
+            <Image
+              source={require("assets/filter.png")}
+              style={styles.filterIcon}
+            />
+          </TouchableOpacity>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.filtersContainer}
+          >
+            <View style={styles.filter}>
+              <Text style={styles.filterText}>Nut Allergy 🔒</Text>
+            </View>
+            <View style={styles.filter}>
+              <Text style={styles.filterText}>{"Gluten Free 🔒"}</Text>
+            </View>
+            <View style={styles.filter}>
+              <Text style={styles.filterText}>{"<30 min ✓"}</Text>
+            </View>
+            <View style={styles.filter}>
+              <Text style={styles.filterText}> Novice ✓</Text>
+            </View>
+          </ScrollView>
+        </View>
+        {/* Recipe Card */}
         <TouchableOpacity>
-          <Image
-            source={require("assets/magnifier.png")}
-            style={styles.searchIcon}
-          />
-        </TouchableOpacity>
-      </View>
-      {/* Filters */}
-      {/* Filter Icon */}
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <TouchableOpacity onPress={() => router.push("/(tabs)/home/filters")}>
-          <Image
-            source={require("assets/filter.png")}
-            style={styles.filterIcon}
-          />
-        </TouchableOpacity>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.filtersContainer}
-        >
-          <View style={styles.filter}>
-            <Text style={styles.filterText}>Nut Allergy 🔒</Text>
-          </View>
-          <View style={styles.filter}>
-            <Text style={styles.filterText}>{"Gluten Free 🔒"}</Text>
-          </View>
-          <View style={styles.filter}>
-            <Text style={styles.filterText}>{"<30 min ✓"}</Text>
-          </View>
-          <View style={styles.filter}>
-            <Text style={styles.filterText}> Novice ✓</Text>
-          </View>
-        </ScrollView>
-      </View>
-      {/* Recipe Card */}
-      <TouchableOpacity>
-        <View style={styles.cardStack}>
+          <View style={styles.cardStack}>
             <View style={styles.stackLayer3} />
             <View style={styles.stackLayer2} />
-
-            {/* <GestureDetector gesture={composedGesture}> */}
-
             <View style={styles.stackLayer1} />
             <FlingGestureHandler
               direction={Directions.DOWN}
               onActivated={onFling}
             >
               <View style={styles.imageContainer}>
-<Image
-              source={require("assets/recipe_images/recipe_image_7.jpeg")}
-              style={styles.recipeImage}
-            />
-            <View style={styles.blurOverlay}>
-              <View style={styles.overlayContent}>
-                <View style={styles.profileContainer}>
-                  <Image
-                    source={require("assets/personprofile.png")}
-                    style={styles.profileImage}
-                  />
-                </View>
-                <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text>
-              </View>
-              <View style={styles.recipeDetailsOverlay}>
-                <View style={{ flexDirection: "row" }}>
-                  <Image
-                    source={require("assets/forkkk.png")}
-                    style={styles.icon}
-                  />
-                  <Text style={styles.detailText}>4 people</Text>
-                </View>
-                <View style={{ flexDirection: "row" }}>
-                  <Image
-                    source={require("assets/whiteclock.png")}
-                    style={styles.icon}
-                  />
-                  <Text style={styles.detailText}>1 hr</Text>
-                </View>
-                <View style={{ flexDirection: "row" }}>
-                  <Image
-                    source={require("assets/whitefire.png")}
-                    style={styles.icon}
-                  />
-                  <Text style={styles.detailText}>easy</Text>
-                </View>
-                <View style={{ flexDirection: "row" }}>
-                  <Image
-                    source={require("assets/whitebookmark.png")}
-                    style={styles.icon}
-                  />
-                  <Text style={styles.detailText}>147</Text>
+                <Image
+                  source={require("assets/recipe_images/recipe_image_7.jpeg")}
+                  style={styles.recipeImage}
+                />
+                <View style={styles.blurOverlay}>
+                  <View style={styles.overlayContent}>
+                    <View style={styles.profileContainer}>
+                      <Image
+                        source={require("assets/personprofile.png")}
+                        style={styles.profileImage}
+                      />
+                    </View>
+                    <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text>
+                  </View>
+
+                  <View style={styles.recipeDetailsOverlay}>
+                    <View style={{ flexDirection: "row" }}>
+                      <Image
+                        source={require("assets/forkkk.png")}
+                        style={styles.icon}
+                      />
+                      <Text style={styles.detailText}>4 people</Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Image
+                        source={require("assets/whiteclock.png")}
+                        style={styles.icon}
+                      />
+                      <Text style={styles.detailText}>1 hr</Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Image
+                        source={require("assets/whitefire.png")}
+                        style={styles.icon}
+                      />
+                      <Text style={styles.detailText}>easy</Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Image
+                        source={require("assets/whitebookmark.png")}
+                        style={styles.icon}
+                      />
+                      <Text style={styles.detailText}>147</Text>
+                    </View>
                   </View>
                 </View>
               </View>
             </FlingGestureHandler>
-            {/* </GestureDetector> */}
           </View>
-        </View>
-      </TouchableOpacity>
-      {/* </ScrollView> */}
+        </TouchableOpacity>
 
         <TouchableOpacity style={styles.redoButton}>
           <Image source={require("assets/redo.png")} style={styles.redoIcon} />
@@ -228,7 +223,6 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </Animated.View>
         </View>
-
       </View>
     </GestureHandlerRootView>
   );
@@ -431,13 +425,13 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     alignSelf: "flex-start",
-//     resizeMode: "contain",
-//     justifyContent: "center",
-//     alignItems: "center",
-    
-//     position: "absolute",
-//     left: 7,
-//     bottom: 0,
+    //     resizeMode: "contain",
+    //     justifyContent: "center",
+    //     alignItems: "center",
+
+    //     position: "absolute",
+    //     left: 7,
+    //     bottom: 0,
   },
   redoIcon: {
     color: "#A52A2A",
