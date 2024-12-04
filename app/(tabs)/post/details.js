@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,6 +6,8 @@ import {
   View,
   TouchableOpacity,
   Image,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 
@@ -14,7 +16,7 @@ export default function Details() {
   const { image } = useLocalSearchParams();
 
   // State hooks for form inputs
-  const [recipeName, setRecipeName] = useState("Penne a la Vodka");
+  const [recipeName, setRecipeName] = useState("");
   const [ingredients, setIngredients] = useState("");
   const [steps, setSteps] = useState("");
 
@@ -37,113 +39,119 @@ export default function Details() {
     router.back(); // Navigate back after posting
   };
 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.title}>Plating...</Text>
-      </View>
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <View style={styles.container}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.title}>Plating...</Text>
+        </View>
 
-      {/* Recipe Section */}
-      <View style={styles.recipeSection}>
-        {image ? (
-          <Image source={{ uri: image }} style={styles.recipeImage} />
-        ) : (
-          <Image
-            // source={require("../../assets/recipe_images/recipe_image_7.jpeg")}
-            style={styles.recipeImage}
+        {/* Recipe Section */}
+        <View style={styles.recipeSection}>
+          {image ? (
+            <Image source={{ uri: image }} style={styles.recipeImage} />
+          ) : (
+            <Image
+              // source={require("../../assets/recipe_images/recipe_image_7.jpeg")}
+              style={styles.recipeImage}
+            />
+          )}
+          <View style={styles.recipeInfo}>
+            <Text style={styles.recipeLabel}>Recipe Name</Text>
+            <View style={styles.recipeNameBox}>
+              <TextInput
+                style={styles.recipeNameText}
+                value={recipeName}
+                onChangeText={setRecipeName}
+                placeholder="Enter recipe name..."
+              />
+            </View>
+            <View style={styles.tagsContainer}>
+              <View style={styles.tag}>
+                <Image
+                  source={require("assets/fire.png")}
+                  style={styles.iconInsideCircle}
+                />
+                <Text style={styles.tagText}> Easy</Text>
+              </View>
+              <View style={styles.tag}>
+                <Image
+                  source={require("assets/fork.png")}
+                  style={styles.iconInsideCircle}
+                />
+                <Text style={styles.tagText}> 4</Text>
+              </View>
+              <View style={styles.tag}>
+                <Image
+                  source={require("assets/clock.png")}
+                  style={styles.iconInsideCircle}
+                />
+                <Text style={styles.tagText}> 30 min</Text>
+              </View>
+              <View style={styles.tag}>
+                <Image
+                  source={require("assets/dinner.png")}
+                  style={styles.iconInsideCircle}
+                />
+                <Text style={styles.tagText}> Italian</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* Ingredients Section */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Ingredients</Text>
+            <View style={styles.singleCircle}>
+              <Image
+                source={require("assets/wand.png")}
+                style={styles.iconInsideCircle}
+              />
+              <Image
+                source={require("assets/pdf.png")}
+                style={styles.iconInsideCircle}
+              />
+              <Image
+                source={require("assets/microphone.png")}
+                style={styles.iconInsideCircle}
+              />
+            </View>
+          </View>
+          <TextInput
+            style={[styles.textArea, styles.ingredientsBox]}
+            multiline
+            placeholder="List your ingredients here..."
+            value={ingredients}
+            onChangeText={setIngredients}
           />
-        )}
-        <View style={styles.recipeInfo}>
-          <Text style={styles.recipeLabel}>Recipe Name</Text>
-          <View style={styles.recipeNameBox}>
-            <TextInput
-              style={styles.recipeNameText}
-              value={recipeName}
-              onChangeText={setRecipeName}
-              placeholder="Enter recipe name..."
-            />
-          </View>
-          <View style={styles.tagsContainer}>
-            <View style={styles.tag}>
-              <Image
-                source={require("assets/fire.png")}
-                style={styles.iconInsideCircle}
-              />
-              <Text style={styles.tagText}> Easy</Text>
-            </View>
-            <View style={styles.tag}>
-              <Image
-                source={require("assets/fork.png")}
-                style={styles.iconInsideCircle}
-              />
-              <Text style={styles.tagText}> 4</Text>
-            </View>
-            <View style={styles.tag}>
-              <Image
-                source={require("assets/clock.png")}
-                style={styles.iconInsideCircle}
-              />
-              <Text style={styles.tagText}> 30 min</Text>
-            </View>
-            <View style={styles.tag}>
-              <Image
-                source={require("assets/dinner.png")}
-                style={styles.iconInsideCircle}
-              />
-              <Text style={styles.tagText}> Italian</Text>
-            </View>
-          </View>
+        </View>
+
+        {/* Steps Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Steps</Text>
+          <TextInput
+            style={[styles.textArea, styles.stepsBox]}
+            multiline
+            placeholder="Write your steps here..."
+            value={steps}
+            onChangeText={setSteps}
+          />
+        </View>
+
+        {/* Footer */}
+        <View style={styles.footer}>
+          <TouchableOpacity style={styles.postButton} onPress={handlePost}>
+            <Text style={styles.postButtonText}>POST</Text>
+          </TouchableOpacity>
         </View>
       </View>
-
-      {/* Ingredients Section */}
-      <View style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Ingredients</Text>
-          <View style={styles.singleCircle}>
-            <Image
-              source={require("assets/wand.png")}
-              style={styles.iconInsideCircle}
-            />
-            <Image
-              source={require("assets/pdf.png")}
-              style={styles.iconInsideCircle}
-            />
-            <Image
-              source={require("assets/microphone.png")}
-              style={styles.iconInsideCircle}
-            />
-          </View>
-        </View>
-        <TextInput
-          style={[styles.textArea, styles.ingredientsBox]}
-          multiline
-          placeholder="List your ingredients here..."
-          value={ingredients}
-          onChangeText={setIngredients}
-        />
-      </View>
-
-      {/* Steps Section */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Steps</Text>
-        <TextInput
-          style={[styles.textArea, styles.stepsBox]}
-          multiline
-          placeholder="Write your steps here..."
-          value={steps}
-          onChangeText={setSteps}
-        />
-      </View>
-
-      {/* Footer */}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.postButton} onPress={handlePost}>
-          <Text style={styles.postButtonText}>POST</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -158,12 +166,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 16,
-    paddingTop: 20, // Reduced from 40
-    marginBottom: 16, // Reduced from 24
+    paddingTop: 20,
+    marginBottom: 16,
   },
-
   title: {
-    fontSize: 36, // Reduced from 40
+    fontSize: 36,
     fontWeight: "bold",
     fontFamily: "Prata",
     textAlign: "center",
@@ -172,11 +179,11 @@ const styles = StyleSheet.create({
   recipeSection: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 8, // Reduced from 10
+    marginBottom: 8,
   },
   recipeImage: {
-    width: 140, // Reduced from 159
-    height: 150, // Reduced from 168
+    width: 140,
+    height: 150,
     borderWidth: 2,
     borderColor: "#A52A2A",
     marginRight: 16,
