@@ -34,7 +34,22 @@ export default function StackLayout() {
         }}
       />
 
-      <Stack.Screen name="filters" options={{ headerShown: true }} />
+      <Stack.Screen
+        name="filters"
+        options={{
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+          },
+          headerTitle: "Set Filters",
+          headerTitleStyle: {
+            fontFamily: "Prata-Regular",
+            fontSize: 34,
+            color: "black",
+          },
+          headerTintColor: "black",
+        }}
+      />
     </Stack>
   );
 }

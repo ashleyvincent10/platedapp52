@@ -16,8 +16,19 @@ import { useEffect, useState } from "react";
 import { supabase } from "backend/supabaseClient";
 const windowWidth = Dimensions.get("window").width;
 
+const DATA = [
+  "3 eggs",
+  "2 pumpkins",
+  "1 cup evaporated milk",
+  "1 1/3 tablespoons white sugar",
+  "1/2 tablespoon brown sugar",
+  "1/4 tablespoon ground cinnamon",
+  "1 tablespoon ground ginger",
+  "1/2 tablespoon ground cloves",
+];
+
 export default function RecipeDetails() {
-  const [ingredients, setIngredients] = useState([""]);
+  const [ingredients, setIngredients] = useState([]);
   const { recipe_title, the_image, servings, time, difficulty, chef_name } =
     useLocalSearchParams();
 
@@ -43,12 +54,13 @@ export default function RecipeDetails() {
   useEffect(() => {
     const fetchIngredients = async () => {
       try {
-        const { response, error } = await supabase
-          .from("Recipes") // Replace 'Recipes' with your actual table name
+        //console.log(recipe_title);
+        const { data, error } = await supabase
+          .from("Recipes")
           .select("FormattedIngredients")
           .eq("Name", recipe_title);
-        setIngredients(response.values);
-        //console.log(response.values);
+        //setIngredients(data);
+        console.log(data);
       } catch (err) {
         console.error(err);
       }
@@ -144,7 +156,7 @@ export default function RecipeDetails() {
           </TouchableOpacity>
         </View>
       </View>
-      {/* change the data structure to be a list of tuples */}
+
       {/* INGREDIENTS  */}
       <View marginBottom={10}>
         <Text style={styles.title}> Ingredients </Text>
@@ -278,5 +290,12 @@ const styles = StyleSheet.create({
   },
   ingredient: {
     width: "50%",
+    marginBottom: 5,
+    justifyContent: "center",
+  },
+  ingredientText: {
+    fontSize: 14,
+    color: "#38434D",
+    fontFamily: "Poppins",
   },
 });

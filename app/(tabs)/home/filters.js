@@ -56,17 +56,7 @@ export default function Page() {
   return (
     <View style={styles.mainContainer}>
       {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.title}>Plated</Text>
-        <TouchableOpacity>
-          <Image
-            source={require("assets/magnifier.png")}
-            style={styles.searchIcon}
-          />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.content}>
+      <View style={styles.content} marginTop={30}>
         {/* Active Filters */}
         <View style={styles.filtersSection}>
           <TouchableOpacity>
