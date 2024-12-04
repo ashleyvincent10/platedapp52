@@ -17,10 +17,10 @@ import { supabase } from "backend/supabaseClient";
 const windowWidth = Dimensions.get("window").width;
 
 export default function RecipeDetails() {
+  const [ingredients, setIngredients] = useState([""]);
   const { recipe_title, the_image, servings, time, difficulty, chef_name } =
     useLocalSearchParams();
 
-  const [ingredients, setIngredients] = useState([]);
   const navigation = useNavigation();
   navigation.setOptions({
     headerTitle: recipe_title,
@@ -42,24 +42,20 @@ export default function RecipeDetails() {
 
   useEffect(() => {
     const fetchIngredients = async () => {
-      const { data, error } = await supabase
-        .from("Recipes") // Replace 'Recipes' with your actual table name
-        .select("RecipeIngredientParts, RecipeIngredientQuantities")
-        .eq("Name", recipe_title);
-
-      if (error) {
-        console.error("Error fetching ingredients:", error);
-      } else {
-        // Combine the two columns into an array of objects
-        const formattedIngredients = data.map((item) => ({
-          part: item.RecipeIngredientParts,
-          quantity: item.RecipeIngredientQuantities,
-        }));
-        setIngredients(formattedIngredients);
+      try {
+        const { response, error } = await supabase
+          .from("Recipes") // Replace 'Recipes' with your actual table name
+          .select("FormattedIngredients")
+          .eq("Name", recipe_title);
+        setIngredients(response.values);
+        //console.log(response.values);
+      } catch (err) {
+        console.error(err);
       }
     };
 
     fetchIngredients();
+    //console.log(ingredients);
   }, []);
 
   return (
@@ -152,16 +148,13 @@ export default function RecipeDetails() {
       {/* INGREDIENTS  */}
       <View marginBottom={10}>
         <Text style={styles.title}> Ingredients </Text>
-        <FlatList
-          data={ingredients}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.ingredientRow}>
-              <Text style={styles.quantity}>{item.quantity}</Text>
-              <Text style={styles.part}>{item.part}</Text>
+        <View style={styles.ingredientContainer}>
+          {ingredients.map((str) => (
+            <View style={styles.ingredient}>
+              <Text style={styles.ingredientText}>{str}</Text>
             </View>
-          )}
-        />
+          ))}
+        </View>
       </View>
 
       {/* STEPS */}
@@ -219,7 +212,7 @@ export default function RecipeDetails() {
                 marginHorizontal: 10,
               }}
             >
-              {chef_name}
+              Chef {chef_name}
               {"\n"}@{chef_name}
             </Text>
           </View>
@@ -278,5 +271,12 @@ const styles = StyleSheet.create({
     height: windowWidth * 0.2,
     borderColor: "#B5300B",
     borderWidth: 3,
+  },
+  ingredientContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  ingredient: {
+    width: "50%",
   },
 });
