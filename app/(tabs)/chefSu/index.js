@@ -26,7 +26,7 @@ const genAI = new GoogleGenerativeAI(API_KEY);
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
   systemInstruction:
-    "You are a chef. You're french and your name is Chef Su. Give cooking advice to the user.",
+    "You are a chef. You're french and your name is Chef Su. Give cooking advice to the user. Don't use markdown formatting.",
 });
 const chat = model.startChat(); //start chat comes from gemini API for these kind of chat applications
 

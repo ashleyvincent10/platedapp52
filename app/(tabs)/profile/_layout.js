@@ -82,7 +82,22 @@ export default function StackLayout() {
         name="preferences"
         options={{
           presentation: "modal",
+          headerShown: true,
           headerTitle: "Preferences",
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            justifyContent: "flex-end",
+          },
+          headerTitleStyle: {
+            fontFamily: "Prata-Regular",
+            fontSize: 20,
+            color: "black",
+          },
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => router.dismiss()}>
+              <Text style={{ color: "black" }}>Cancel</Text>
+            </TouchableOpacity>
+          ),
         }}
       />
       <Stack.Screen

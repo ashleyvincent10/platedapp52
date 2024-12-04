@@ -6,7 +6,11 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Touchable,
+  Dimensions,
 } from "react-native";
+import { useRouter } from "expo-router";
+
 import Animated, {
   useSharedValue, // https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue
   useAnimatedStyle, // https://docs.swmansion.com/react-native-reanimated/docs/core/useAnimatedStyle
@@ -29,7 +33,11 @@ import {
   Directions,
 } from "react-native-gesture-handler";
 
+
+const windowWidth = Dimensions.get("window").width;
+
 export default function HomeScreen() {
+  const router = useRouter();
   const topFolderMargin = useSharedValue(0);
 
   // const swipeGesture = () => {
@@ -89,48 +97,49 @@ export default function HomeScreen() {
 
   return (
     <GestureHandlerRootView>
-      <View style={styles.mainContainer}>
-        <ScrollView style={styles.container}>
-          {/* Header */}
-          <View style={styles.header}>
-            <Text style={styles.title}>Plated</Text>
-            <TouchableOpacity>
-              <Image
-                source={require("assets/magnifier.png")}
-                style={styles.searchIcon}
-              />
-            </TouchableOpacity>
+       <View style={styles.mainContainer}>
+      {/* <ScrollView style={styles.container}> */}
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.title}>Plated</Text>
+        <TouchableOpacity>
+          <Image
+            source={require("assets/magnifier.png")}
+            style={styles.searchIcon}
+          />
+        </TouchableOpacity>
+      </View>
+      {/* Filters */}
+      {/* Filter Icon */}
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <TouchableOpacity onPress={() => router.push("/(tabs)/home/filters")}>
+          <Image
+            source={require("assets/filter.png")}
+            style={styles.filterIcon}
+          />
+        </TouchableOpacity>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.filtersContainer}
+        >
+          <View style={styles.filter}>
+            <Text style={styles.filterText}>Nut Allergy 🔒</Text>
           </View>
-          {/* Filters */}
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.filtersContainer}
-          >
-            {/* Filter Icon */}
-            <TouchableOpacity style={styles.filterIconWrapper}>
-              <Image
-                source={require("assets/filter.png")}
-                style={styles.filterIcon}
-              />
-            </TouchableOpacity>
-
-            <View style={styles.filter}>
-              <Text style={styles.filterText}>Nut Allergy</Text>
-            </View>
-            <View style={styles.filter}>
-              <Text style={styles.filterText}>Gluten Free</Text>
-            </View>
-            <View style={styles.filter}>
-              <Text style={styles.filterText}>{"<30 min ✓"}</Text>
-            </View>
-            <View style={styles.filter}>
-              <Text style={styles.filterText}>Novice</Text>
-            </View>
-          </ScrollView>
-
-          {/* Recipe Card */}
-          <View style={styles.cardStack}>
+          <View style={styles.filter}>
+            <Text style={styles.filterText}>{"Gluten Free 🔒"}</Text>
+          </View>
+          <View style={styles.filter}>
+            <Text style={styles.filterText}>{"<30 min ✓"}</Text>
+          </View>
+          <View style={styles.filter}>
+            <Text style={styles.filterText}> Novice ✓</Text>
+          </View>
+        </ScrollView>
+      </View>
+      {/* Recipe Card */}
+      <TouchableOpacity>
+        <View style={styles.cardStack}>
             <View style={styles.stackLayer3} />
             <View style={styles.stackLayer2} />
 
@@ -142,48 +151,57 @@ export default function HomeScreen() {
               onActivated={onFling}
             >
               <View style={styles.imageContainer}>
-                <Image
-                  source={require("assets/recipe_images/recipe_image_7.jpeg")}
-                  style={styles.recipeImage}
-                />
-                <View style={styles.blurOverlay}>
-                  <View style={styles.overlayContent}>
-                    <View style={styles.profileContainer}>
-                      <Image
-                        source={require("assets/personprofile.png")}
-                        style={styles.profileImage}
-                      />
-                    </View>
-                    <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text>
-                  </View>
-                  <View style={styles.recipeDetailsOverlay}>
-                    <Image
-                      source={require("assets/forkkk.png")}
-                      style={styles.icon}
-                    />
-                    <Text style={styles.detailText}>4 people</Text>
-                    <Image
-                      source={require("assets/whiteclock.png")}
-                      style={styles.icon}
-                    />
-                    <Text style={styles.detailText}>1 hr</Text>
-                    <Image
-                      source={require("assets/whitefire.png")}
-                      style={styles.icon}
-                    />
-                    <Text style={styles.detailText}>easy</Text>
-                    <Image
-                      source={require("assets/whitebookmark.png")}
-                      style={styles.icon}
-                    />
-                    <Text style={styles.detailText}>147</Text>
+<Image
+              source={require("assets/recipe_images/recipe_image_7.jpeg")}
+              style={styles.recipeImage}
+            />
+            <View style={styles.blurOverlay}>
+              <View style={styles.overlayContent}>
+                <View style={styles.profileContainer}>
+                  <Image
+                    source={require("assets/personprofile.png")}
+                    style={styles.profileImage}
+                  />
+                </View>
+                <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text>
+              </View>
+              <View style={styles.recipeDetailsOverlay}>
+                <View style={{ flexDirection: "row" }}>
+                  <Image
+                    source={require("assets/forkkk.png")}
+                    style={styles.icon}
+                  />
+                  <Text style={styles.detailText}>4 people</Text>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                  <Image
+                    source={require("assets/whiteclock.png")}
+                    style={styles.icon}
+                  />
+                  <Text style={styles.detailText}>1 hr</Text>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                  <Image
+                    source={require("assets/whitefire.png")}
+                    style={styles.icon}
+                  />
+                  <Text style={styles.detailText}>easy</Text>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                  <Image
+                    source={require("assets/whitebookmark.png")}
+                    style={styles.icon}
+                  />
+                  <Text style={styles.detailText}>147</Text>
                   </View>
                 </View>
               </View>
             </FlingGestureHandler>
             {/* </GestureDetector> */}
           </View>
-        </ScrollView>
+        </View>
+      </TouchableOpacity>
+      {/* </ScrollView> */}
 
         <TouchableOpacity style={styles.redoButton}>
           <Image source={require("assets/redo.png")} style={styles.redoIcon} />
@@ -210,6 +228,7 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </Animated.View>
         </View>
+
       </View>
     </GestureHandlerRootView>
   );
@@ -219,6 +238,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: "#FAF9F6",
+    justifyContent: "space-between",
   },
   container: {
     flex: 1,
@@ -229,32 +249,35 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: 45,
-    marginBottom: 20,
+    marginTop: 45,
+    //marginBottom: 5,
   },
   footer: {
     width: "100%",
     height: 70,
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     // backgroundColor: "blue",
   },
   title: {
-    fontSize: 40,
+    fontSize: 50,
     fontWeight: "bold",
     fontFamily: "Prata",
+    marginHorizontal: 10,
   },
   searchIcon: {
     width: 27,
     height: 27,
-    marginHorizontal: 3,
+    marginHorizontal: 20,
   },
   filtersContainer: {
     flexDirection: "row",
-    marginBottom: 20,
+    //marginBottom:,
+    marginTop: 10,
   },
   filter: {
-    backgroundColor: "#FFEDE1",
+    // backgroundColor: "#FFEDE1",
     borderWidth: 1,
     borderColor: "#A52A2A",
     borderRadius: 20,
@@ -309,14 +332,15 @@ const styles = StyleSheet.create({
     color: "white",
   },
   icon: {
-    width: 15,
-    height: 15,
-    marginRight: 5,
+    width: windowWidth * 0.05,
+    height: windowWidth * 0.05,
+    resizeMode: "contain",
   },
   detailText: {
     fontSize: 16,
     fontFamily: "Poppins",
     color: "white",
+    marginLeft: 4,
   },
   overlayContent: {
     flexDirection: "row",
@@ -333,15 +357,12 @@ const styles = StyleSheet.create({
     borderColor: "#FFF",
   },
   filterIcon: {
-    width: 27,
-    height: 27,
+    width: 35,
+    height: 35,
+    margin: 5,
   },
 
   buttonContainer: {
-    // padding: 10,
-    // width: 142,
-    // height: 24,
-    // backgroundColor: "red",
     alignItems: "center",
     justifyContent: "center",
     width: 405,
@@ -352,22 +373,19 @@ const styles = StyleSheet.create({
   savedRecipes: {
     width: "100%",
     height: "100%",
-    resizeMode: "cover",
-    marginTop: 0,
-  },
-  savedRecipesButton: {
-    width: 200,
-    height: 45,
+    marginBottom: -8,
     resizeMode: "contain",
   },
   savedRecipesButtonText: {
     color: "#FFF",
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "bold",
     fontFamily: "Poppins",
+    position: "absolute",
+    bottom: 4,
   },
   cardStack: {
-    position: "relative",
+    //position: "relative",
     marginBottom: 20,
     marginHorizontal: 5,
   },
@@ -408,16 +426,18 @@ const styles = StyleSheet.create({
   },
   redoButtonContainer: {
     position: "relative",
-    paddingHorizontal: 20,
-    marginTop: -50,
   },
   redoButton: {
     width: 70,
     height: 70,
-    // backgroundColor: "transparent",
-    // justifyContent: "center",
-    // alignItems: "center",
     alignSelf: "flex-start",
+//     resizeMode: "contain",
+//     justifyContent: "center",
+//     alignItems: "center",
+    
+//     position: "absolute",
+//     left: 7,
+//     bottom: 0,
   },
   redoIcon: {
     color: "#A52A2A",
