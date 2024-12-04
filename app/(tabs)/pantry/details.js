@@ -5,7 +5,9 @@ import { useNavigation } from "expo-router";
 import { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 
-export default function Page() {
+export default function Details({ route }) {
+  const pantry = route.params;
+
   const navigation = useNavigation();
 
   useEffect(() => {

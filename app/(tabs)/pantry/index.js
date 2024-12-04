@@ -80,7 +80,7 @@ export default function Page() {
           ) : (
             <TouchableOpacity
               style={styles.itemContainer}
-              onPress={() => navigation.navigate("details")}
+              onPress={() => navigation.navigate("details", { pantry: item })}
             >
               <Text style={styles.itemLabel}>{item.name}</Text>
               <View style={styles.regularIconContainer}>
