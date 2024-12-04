@@ -33,7 +33,7 @@ export default function Page() {
 
   useEffect(() => {
     fetchItems();
-  }, []);
+  }, [pantries]);
 
   const renderSeparator = () => <View style={styles.separator} />;
 

@@ -7,117 +7,211 @@ import {
   Image,
   ScrollView,
 } from "react-native";
+import Animated, {
+  useSharedValue, // https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue
+  useAnimatedStyle, // https://docs.swmansion.com/react-native-reanimated/docs/core/useAnimatedStyle
+  // Animation functions
+  withTiming, // https://docs.swmansion.com/react-native-reanimated/docs/animations/withTiming/
+  withSpring, // https://docs.swmansion.com/react-native-reanimated/docs/animations/withSpring/
+  // Animation modifiers
+  withDecay, // https://docs.swmansion.com/react-native-reanimated/docs/animations/withDecay/
+  withSequence, // https://docs.swmansion.com/react-native-reanimated/docs/animations/withSequence/
+  withRepeat, // https://docs.swmansion.com/react-native-reanimated/docs/animations/withRepeat/
+  withDelay, // https://docs.swmansion.com/react-native-reanimated/docs/animations/withDelay/
+  Easing,
+} from "react-native-reanimated";
+import {
+  GestureHandlerRootView,
+  Gesture,
+  GestureDetector,
+  PanGestureHandler,
+  FlingGestureHandler,
+  Directions,
+} from "react-native-gesture-handler";
 
 export default function HomeScreen() {
-  return (
-    <View style={styles.mainContainer}>
-      <ScrollView style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.title}>Plated</Text>
-          <TouchableOpacity>
-            <Image
-              source={require("assets/magnifier.png")}
-              style={styles.searchIcon}
-            />
-          </TouchableOpacity>
-        </View>
-        {/* Filters */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.filtersContainer}
-        >
-          {/* Filter Icon */}
-          <TouchableOpacity style={styles.filterIconWrapper}>
-            <Image
-              source={require("assets/filter.png")}
-              style={styles.filterIcon}
-            />
-          </TouchableOpacity>
+  const topFolderMargin = useSharedValue(0);
 
-          <View style={styles.filter}>
-            <Text style={styles.filterText}>Nut Allergy</Text>
+  // const swipeGesture = () => {
+  const onFling = (event) => {
+    topFolderMargin.value = withTiming(
+      -51,
+      {
+        duration: 1000,
+      },
+      () => {
+        topFolderMargin.value = withDelay(
+          1000,
+          withTiming(0, {
+            duration: 1000,
+          })
+        );
+      }
+    );
+  };
+  // };
+
+  // const composedGesture = Gesture.Exclusive(swipeGesture);
+
+  const handleSwipe = () => {
+    // console.log(height.value);
+    // return {
+    // topFolderMargin.value = withTiming(
+    //   -51,
+    //   {
+    //     duration: 1000,
+    //   },
+    //   () => {
+    //     topFolderMargin.value = withDelay(
+    //       1000,
+    //       withTiming(0, {
+    //         duration: 1000,
+    //       })
+    //     );
+    //   }
+    // );
+    // backgroundColor: color.value,
+    // opacity: toggled.value ? withTiming(0.2) : withTiming(1),
+    // transform: [{ translateY: translateY.value }],
+    // };
+  };
+  // const handleSwipe = () => {
+  //   topFolderMargin.value = withTiming(0, {
+  //     duration: 1000,
+  //   });
+  //   topFolderMargin.value = withDelay(
+  //     1000,
+  //     withTiming(51, {
+  //       duration: 1000,
+  //     })
+  //   );
+  // };
+
+  return (
+    <GestureHandlerRootView>
+      <View style={styles.mainContainer}>
+        <ScrollView style={styles.container}>
+          {/* Header */}
+          <View style={styles.header}>
+            <Text style={styles.title}>Plated</Text>
+            <TouchableOpacity>
+              <Image
+                source={require("assets/magnifier.png")}
+                style={styles.searchIcon}
+              />
+            </TouchableOpacity>
           </View>
-          <View style={styles.filter}>
-            <Text style={styles.filterText}>Gluten Free</Text>
-          </View>
-          <View style={styles.filter}>
-            <Text style={styles.filterText}>{"<30 min ✓"}</Text>
-          </View>
-          <View style={styles.filter}>
-            <Text style={styles.filterText}>Novice</Text>
+          {/* Filters */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.filtersContainer}
+          >
+            {/* Filter Icon */}
+            <TouchableOpacity style={styles.filterIconWrapper}>
+              <Image
+                source={require("assets/filter.png")}
+                style={styles.filterIcon}
+              />
+            </TouchableOpacity>
+
+            <View style={styles.filter}>
+              <Text style={styles.filterText}>Nut Allergy</Text>
+            </View>
+            <View style={styles.filter}>
+              <Text style={styles.filterText}>Gluten Free</Text>
+            </View>
+            <View style={styles.filter}>
+              <Text style={styles.filterText}>{"<30 min ✓"}</Text>
+            </View>
+            <View style={styles.filter}>
+              <Text style={styles.filterText}>Novice</Text>
+            </View>
+          </ScrollView>
+
+          {/* Recipe Card */}
+          <View style={styles.cardStack}>
+            <View style={styles.stackLayer3} />
+            <View style={styles.stackLayer2} />
+
+            {/* <GestureDetector gesture={composedGesture}> */}
+
+            <View style={styles.stackLayer1} />
+            <FlingGestureHandler
+              direction={Directions.DOWN}
+              onActivated={onFling}
+            >
+              <View style={styles.imageContainer}>
+                <Image
+                  source={require("assets/recipe_images/recipe_image_7.jpeg")}
+                  style={styles.recipeImage}
+                />
+                <View style={styles.blurOverlay}>
+                  <View style={styles.overlayContent}>
+                    <View style={styles.profileContainer}>
+                      <Image
+                        source={require("assets/personprofile.png")}
+                        style={styles.profileImage}
+                      />
+                    </View>
+                    <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text>
+                  </View>
+                  <View style={styles.recipeDetailsOverlay}>
+                    <Image
+                      source={require("assets/forkkk.png")}
+                      style={styles.icon}
+                    />
+                    <Text style={styles.detailText}>4 people</Text>
+                    <Image
+                      source={require("assets/whiteclock.png")}
+                      style={styles.icon}
+                    />
+                    <Text style={styles.detailText}>1 hr</Text>
+                    <Image
+                      source={require("assets/whitefire.png")}
+                      style={styles.icon}
+                    />
+                    <Text style={styles.detailText}>easy</Text>
+                    <Image
+                      source={require("assets/whitebookmark.png")}
+                      style={styles.icon}
+                    />
+                    <Text style={styles.detailText}>147</Text>
+                  </View>
+                </View>
+              </View>
+            </FlingGestureHandler>
+            {/* </GestureDetector> */}
           </View>
         </ScrollView>
 
-        {/* Recipe Card */}
-        <View style={styles.cardStack}>
-          <View style={styles.stackLayer3} />
-          <View style={styles.stackLayer2} />
-          <View style={styles.stackLayer1} />
-          <View style={styles.imageContainer}>
-            <Image
-              source={require("assets/recipe_images/recipe_image_7.jpeg")}
-              style={styles.recipeImage}
-            />
-            <View style={styles.blurOverlay}>
-              <View style={styles.overlayContent}>
-                <View style={styles.profileContainer}>
-                  <Image
-                    source={require("assets/personprofile.png")}
-                    style={styles.profileImage}
-                  />
-                </View>
-                <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text>
-              </View>
-              <View style={styles.recipeDetailsOverlay}>
-                <Image
-                  source={require("assets/forkkk.png")}
-                  style={styles.icon}
-                />
-                <Text style={styles.detailText}>4 people</Text>
-                <Image
-                  source={require("assets/whiteclock.png")}
-                  style={styles.icon}
-                />
-                <Text style={styles.detailText}>1 hr</Text>
-                <Image
-                  source={require("assets/whitefire.png")}
-                  style={styles.icon}
-                />
-                <Text style={styles.detailText}>easy</Text>
-                <Image
-                  source={require("assets/whitebookmark.png")}
-                  style={styles.icon}
-                />
-                <Text style={styles.detailText}>147</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-      </ScrollView>
-
-      <View style={styles.footer}>
-        {/* Redo button */}
         <TouchableOpacity style={styles.redoButton}>
           <Image source={require("assets/redo.png")} style={styles.redoIcon} />
         </TouchableOpacity>
 
-        {/* Saved Recipes Button */}
+        <View style={styles.footer}>
+          {/* Redo button */}
 
-        <TouchableOpacity style={styles.buttonContainer}>
-          <Image
-            source={require("assets/swiping_images/saved_recipes_back.png")}
-            style={styles.savedRecipes}
-          />
-          {/* <Text style={styles.savedText}>Saved Recipes</Text> */}
-          {/* <Image
+          {/* Saved Recipes Button */}
+          <Animated.View style={{ top: topFolderMargin }}>
+            <TouchableOpacity
+              onPress={handleSwipe}
+              style={styles.buttonContainer}
+            >
+              <Image
+                source={require("assets/swiping_images/saved_recipes_folder_cropped.png")}
+                style={styles.savedRecipes}
+              />
+              {/* <Text style={styles.savedText}>Saved Recipes</Text> */}
+              {/* <Image
           source={require("assets/saved_bookmark.png")}
           style={styles.savedRecipesButton}
         /> */}
-        </TouchableOpacity>
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
       </View>
-    </View>
+    </GestureHandlerRootView>
   );
 }
 
@@ -140,8 +234,10 @@ const styles = StyleSheet.create({
   },
   footer: {
     width: "100%",
+    height: 70,
     justifyContent: "center",
     alignItems: "center",
+    // backgroundColor: "blue",
   },
   title: {
     fontSize: 40,
@@ -248,19 +344,9 @@ const styles = StyleSheet.create({
     // backgroundColor: "red",
     alignItems: "center",
     justifyContent: "center",
-
-    // height: 0,
-    // width: 105, // Width of the flat top
-    // borderBottomWidth: 30, // Height of the trapezoid
-    // borderBottomColor: "blue", // Color of the trapezoid
-    // borderLeftWidth: 8, // Skew size for the left side
-    // borderLeftColor: "transparent",
-    // borderRightWidth: 8, // Skew size for the right side
-    // borderRightColor: "transparent",
-    // transform: [{ scaleX: 2 }], // Scale the trapezoid horizontally
-
     width: 405,
-    height: 30,
+    height: 70,
+    top: 51,
     overflow: "hidden",
   },
   savedRecipes: {
@@ -328,9 +414,9 @@ const styles = StyleSheet.create({
   redoButton: {
     width: 70,
     height: 70,
-    backgroundColor: "transparent",
-    justifyContent: "center",
-    alignItems: "center",
+    // backgroundColor: "transparent",
+    // justifyContent: "center",
+    // alignItems: "center",
     alignSelf: "flex-start",
   },
   redoIcon: {
