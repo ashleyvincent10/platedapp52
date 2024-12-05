@@ -174,42 +174,44 @@ export default function HomeScreen() {
                     </View>
                     <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text>
                   </View>
+                  <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text>
+                </View>
 
-                  <View style={styles.recipeDetailsOverlay}>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/forkkk.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>4 people</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/whiteclock.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>1 hr</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/whitefire.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>easy</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/whitebookmark.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>147</Text>
-                    </View>
+                <View style={styles.recipeDetailsOverlay}>
+                  <View style={{ flexDirection: "row" }}>
+                    <Image
+                      source={require("assets/forkkk.png")}
+                      style={styles.icon}
+                    />
+                    <Text style={styles.detailText}>4 people</Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Image
+                      source={require("assets/whiteclock.png")}
+                      style={styles.icon}
+                    />
+                    <Text style={styles.detailText}>1 hr</Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Image
+                      source={require("assets/whitefire.png")}
+                      style={styles.icon}
+                    />
+                    <Text style={styles.detailText}>easy</Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Image
+                      source={require("assets/whitebookmark.png")}
+                      style={styles.icon}
+                    />
+                    <Text style={styles.detailText}>147</Text>
                   </View>
                 </View>
               </View>
-            </FlingGestureHandler>
-          </View>
-        </TouchableOpacity>
+            </View>
+          </FlingGestureHandler>
+        </View>
+        {/* </TouchableOpacity> */}
 
         <TouchableOpacity style={styles.redoButton}>
           <Image source={require("assets/redo.png")} style={styles.redoIcon} />
