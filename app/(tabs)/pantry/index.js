@@ -13,6 +13,9 @@ import { useState, useEffect } from "react";
 
 import { supabase } from "backend/supabaseClient";
 
+import PANTRY_DATA from "data/pantry_log.json";
+import DATA from "data/grocery_log.json";
+console.log(DATA);
 // const windowWidth = Dimensions.get("window").width;
 
 export default function Page() {
@@ -39,16 +42,22 @@ export default function Page() {
 
   const renderHeader = () => (
     <View style={styles.headerContainer}>
-      <Link href="/(tabs)/pantry/groceries" style={styles.postButtonContainer}>
+      <TouchableOpacity
+        style={styles.postButtonContainer}
+        onPress={() => navigation.navigate("groceries")}
+      >
         <View style={styles.postButton}>
           <Icon size={35} name="cart-sharp" color="black" />
           <Text style={styles.cartLabel}>Grocery Cart</Text>
         </View>
-      </Link>
+      </TouchableOpacity>
     </View>
   );
 
-  const pantriesWithNew = [...pantries, { name: "Add pantry", isStatic: true }];
+  const pantriesWithNew = [
+    ...PANTRY_DATA,
+    { name: "Add pantry", contents: [], isStatic: true },
+  ];
 
   const images = {
     bread: require("assets/pantry_images/bread.png"),
@@ -62,14 +71,14 @@ export default function Page() {
     <View style={styles.main}>
       <FlatList
         data={pantriesWithNew}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.index}
         numColumns={2}
         scrollEnabled={true}
         ListHeaderComponent={renderHeader}
         renderItem={({ item }) =>
           item.isStatic ? (
             <TouchableOpacity
-              style={styles.itemContainer}
+              style={[styles.itemContainer, { paddingTop: 1, paddingLeft: 2 }]}
               onPress={() => navigation.navigate("newItem")}
             >
               <Text style={styles.itemLabel}>{item.name}</Text>
@@ -80,12 +89,25 @@ export default function Page() {
           ) : (
             <TouchableOpacity
               style={styles.itemContainer}
-              onPress={() => navigation.navigate("details", { pantry: item })}
+              // onPress={() =>
+              //   navigation.navigate("details", { pantry: item.index })
+              // }
             >
-              <Text style={styles.itemLabel}>{item.name}</Text>
-              <View style={styles.regularIconContainer}>
-                <Image source={images[item.image]} style={styles.regularIcon} />
-              </View>
+              <Link
+                href={{
+                  pathname: "(tabs)/pantry/details",
+                  params: { name: item.name, contents: item.contents }, // Pass your params here
+                }}
+                style={{ textDecorationLine: "none" }} // Prevents underline styling for the text
+              >
+                <Text style={styles.itemLabel}>{item.name}</Text>
+                <View style={styles.regularIconContainer}>
+                  <Image
+                    source={images[item.image]}
+                    style={styles.regularIcon}
+                  />
+                </View>
+              </Link>
             </TouchableOpacity>
           )
         }
@@ -101,6 +123,7 @@ const styles = StyleSheet.create({
     // padding: 12,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#FAF9F6",
   },
   itemContainer: {
     width: 166,
@@ -112,10 +135,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginLeft: 10,
     shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.22,
+    shadowRadius: 3,
     backgroundColor: "#FAF9F6",
+    padding: 5,
   },
   cartView: {
     width: 352,
@@ -200,6 +224,7 @@ const styles = StyleSheet.create({
   regularIcon: {
     width: "100%",
     height: "100%",
+    marginLeft: 25,
     resizeMode: "contain",
   },
   regularIconContainer: {
@@ -208,7 +233,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flex: 1,
-    marginLeft: 20,
     marginBottom: 5,
   },
 });
