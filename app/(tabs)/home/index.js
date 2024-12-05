@@ -9,8 +9,7 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import { useRouter, useNavigation } from "expo-router";
-import { useState, useEffect } from "react";
+import { useRouter } from "expo-router";
 import Animated, {
   useSharedValue, // https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue
   useAnimatedStyle, // https://docs.swmansion.com/react-native-reanimated/docs/core/useAnimatedStyle
@@ -29,19 +28,77 @@ import {
   Directions,
 } from "react-native-gesture-handler";
 
+import { supabase } from "backend/supabaseClient";
+import { useFilters } from "./FilterContext"; // Import the useFilters hook
+
 // Dynamic dimensions so it fits on any screen size
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 const FOLDER_HEIGHT = SCREEN_HEIGHT * 0.08; // Height of the full folder
 const TAB_HEIGHT = SCREEN_HEIGHT * 0.029; // Height of just the tab
-const INITIAL_MARGIN = FOLDER_HEIGHT - TAB_HEIGHT + 1; // Shows only the tab initially
+const INITIAL_MARGIN = FOLDER_HEIGHT - TAB_HEIGHT; // Shows only the tab initially
 const ANIMATION_DURATION = 1000;
 
-const BOTTOM_MARGIN = 200;
-
 export default function HomeScreen() {
-  // const [mine, setMine] = useState(null);
   const router = useRouter();
   const topFolderMargin = useSharedValue(INITIAL_MARGIN);
+  const { selectedFilters } = useFilters(); // Access the selected filters
+
+  const [recipes, setRecipes] = useState([]); // State to hold recipes
+
+  // Fetch recipes based on selected filters
+  const fetchRecipes = async () => {
+    try {
+      let query = supabase.from("Recipes").select("*"); // Select all fields
+
+      // Apply difficulty filter if it's not empty
+      if (selectedFilters.difficulty) {
+        query = query.eq("difficulty_1", selectedFilters.difficulty);
+      }
+
+      // Apply cuisine filter if it's not empty
+      if (selectedFilters.cuisine) {
+        query = query.eq("cuisine", selectedFilters.cuisine);
+      }
+
+      // Apply ingredients filter if there are selected ingredients
+      if (selectedFilters.ingredients.length > 0) {
+        selectedFilters.ingredients.forEach((ingredient) => {
+          query = query.filter(
+            "RecipeIngredientParts",
+            "ilike",
+            `%${ingredient}%`
+          ); // Check if ingredient_search contains the ingredient
+        });
+      }
+
+      const { data, error } = await query; // Execute the query
+
+      if (error) {
+        console.error("Error fetching recipes:", error.message); // Log the error message
+        return [];
+      }
+
+      console.log("Fetched Recipes:", data); // Log the fetched data
+      return data;
+    } catch (err) {
+      console.error("Error in fetchRecipes:", err); // Log any unexpected errors
+    }
+  };
+
+  // Add useEffect to fetch recipes when selected filters update
+  useEffect(() => {
+    const getRecipes = async () => {
+      const fetchedRecipes = await fetchRecipes(); // Fetch recipes based on filters
+      setRecipes(fetchedRecipes); // Update state with fetched recipes
+    };
+
+    getRecipes(); // Call the function to fetch recipes
+  }, [selectedFilters]); // Dependency array to trigger on updates
+
+  // Add useEffect to log selected filters when they update
+  useEffect(() => {
+    console.log("Selected Filters:", selectedFilters);
+  }, [selectedFilters]); // Dependency array to trigger on updates
 
   const onFling = () => {
     topFolderMargin.value = withTiming(
@@ -50,19 +107,11 @@ export default function HomeScreen() {
         duration: ANIMATION_DURATION,
       },
       () => {
-        bottomCardMargin.value = withTiming(
-          BOTTOM_MARGIN,
-          {
+        topFolderMargin.value = withDelay(
+          ANIMATION_DURATION,
+          withTiming(INITIAL_MARGIN, {
             duration: ANIMATION_DURATION,
-          },
-          () => {
-            topFolderMargin.value = withDelay(
-              ANIMATION_DURATION,
-              withTiming(INITIAL_MARGIN, {
-                duration: ANIMATION_DURATION,
-              })
-            );
-          }
+          })
         );
       }
     );
@@ -83,13 +132,7 @@ export default function HomeScreen() {
         </View>
 
         {/* Filters */}
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginBottom: 5,
-          }}
-        >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
           <TouchableOpacity onPress={() => router.push("/(tabs)/home/filters")}>
             <Image
               source={require("assets/filter.png")}
@@ -117,82 +160,66 @@ export default function HomeScreen() {
         </View>
 
         {/* Recipe Card */}
-        {/* <TouchableOpacity
-          onPress={() =>
-            router.push({
-              pathname: "/(tabs)/home/recipe_details1",
-              params: {
-                recipe_title: mine.Name,
-                the_image: mine.image_url,
-                servings: mine.servings,
-                time: mine.TotalTime,
-                difficulty: mine.difficulty,
-                chef_name: mine.AuthorName,
-              },
-            })
-          }
-        > */}
-        <View style={styles.cardStack}>
-          <View style={styles.stackLayer3} />
-          <View style={styles.stackLayer2} />
-          {/* <View style={[styles.stackLayer1, { bottom: bottomCardMargin }]} /> */}
-          <View style={styles.stackLayer1} />
-          <FlingGestureHandler
-            direction={Directions.DOWN}
-            onActivated={onFling}
-          >
-            <View style={styles.imageContainer}>
-              <Image
-                source={require("assets/recipe_images/recipe_image_1.jpeg")}
-                style={styles.recipeImage}
-              />
-              <View style={styles.blurOverlay}>
-                <View style={styles.overlayContent}>
-                  <View style={styles.profileContainer}>
-                    <Image
-                      source={require("assets/personprofile.png")}
-                      style={styles.profileImage}
-                    />
+        <TouchableOpacity>
+          <View style={styles.cardStack}>
+            <View style={styles.stackLayer3} />
+            <View style={styles.stackLayer2} />
+            <View style={styles.stackLayer1} />
+            <FlingGestureHandler
+              direction={Directions.DOWN}
+              onActivated={onFling}
+            >
+              <View style={styles.imageContainer}>
+                <Image
+                  source={require("assets/recipe_images/recipe_image_7.jpeg")}
+                  style={styles.recipeImage}
+                />
+                <View style={styles.blurOverlay}>
+                  <View style={styles.overlayContent}>
+                    <View style={styles.profileContainer}>
+                      <Image
+                        source={require("assets/personprofile.png")}
+                        style={styles.profileImage}
+                      />
+                    </View>
+                    <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text>
                   </View>
-                  <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text>
-                </View>
-                {/* <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text> */}
-              </View>
 
-              <View style={styles.recipeDetailsOverlay}>
-                <View style={{ flexDirection: "row" }}>
-                  <Image
-                    source={require("assets/forkkk.png")}
-                    style={styles.icon}
-                  />
-                  <Text style={styles.detailText}>4 people</Text>
-                </View>
-                <View style={{ flexDirection: "row" }}>
-                  <Image
-                    source={require("assets/whiteclock.png")}
-                    style={styles.icon}
-                  />
-                  <Text style={styles.detailText}>1 hr</Text>
-                </View>
-                <View style={{ flexDirection: "row" }}>
-                  <Image
-                    source={require("assets/whitefire.png")}
-                    style={styles.icon}
-                  />
-                  <Text style={styles.detailText}>easy</Text>
-                </View>
-                <View style={{ flexDirection: "row" }}>
-                  <Image
-                    source={require("assets/whitebookmark.png")}
-                    style={styles.icon}
-                  />
-                  <Text style={styles.detailText}>147</Text>
+                  <View style={styles.recipeDetailsOverlay}>
+                    <View style={{ flexDirection: "row" }}>
+                      <Image
+                        source={require("assets/forkkk.png")}
+                        style={styles.icon}
+                      />
+                      <Text style={styles.detailText}>4 people</Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Image
+                        source={require("assets/whiteclock.png")}
+                        style={styles.icon}
+                      />
+                      <Text style={styles.detailText}>1 hr</Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Image
+                        source={require("assets/whitefire.png")}
+                        style={styles.icon}
+                      />
+                      <Text style={styles.detailText}>easy</Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Image
+                        source={require("assets/whitebookmark.png")}
+                        style={styles.icon}
+                      />
+                      <Text style={styles.detailText}>147</Text>
+                    </View>
+                  </View>
                 </View>
               </View>
-            </View>
-          </FlingGestureHandler>
-        </View>
-        {/* </TouchableOpacity> */}
+            </FlingGestureHandler>
+          </View>
+        </TouchableOpacity>
 
         <TouchableOpacity style={styles.redoButton}>
           <Image source={require("assets/redo.png")} style={styles.redoIcon} />
@@ -202,10 +229,7 @@ export default function HomeScreen() {
           <Animated.View
             style={[styles.folderContainer, { top: topFolderMargin }]}
           >
-            <TouchableOpacity
-              onPress={() => router.push("/(tabs)/profile/saved_recipes")}
-              style={styles.buttonContainer}
-            >
+            <TouchableOpacity onPress={onFling} style={styles.buttonContainer}>
               <Image
                 source={require("assets/swiping_images/saved_recipes_folder_cropped.png")}
                 style={styles.savedRecipes}
@@ -286,7 +310,7 @@ const styles = StyleSheet.create({
   recipeImage: {
     width: "100%",
     height: 500,
-    // borderRadius: 8,
+    borderRadius: 8,
   },
   blurOverlay: {
     position: "absolute",
@@ -381,6 +405,7 @@ const styles = StyleSheet.create({
   },
   stackLayer1: {
     position: "absolute",
+    bottom: 0,
     left: 4,
     right: 4,
     height: 500,
@@ -397,7 +422,6 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     alignSelf: "flex-start",
-    marginLeft: 15,
   },
   redoIcon: {
     color: "#A52A2A",
