@@ -8,7 +8,7 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, useNavigation } from "expo-router";
 import { useState, useEffect } from "react";
 import Animated, {
   useSharedValue, // https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue
@@ -33,13 +33,16 @@ import { supabase } from "backend/supabaseClient";
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 const FOLDER_HEIGHT = SCREEN_HEIGHT * 0.08; // Height of the full folder
 const TAB_HEIGHT = SCREEN_HEIGHT * 0.029; // Height of just the tab
-const INITIAL_MARGIN = FOLDER_HEIGHT - TAB_HEIGHT; // Shows only the tab initially
+const INITIAL_MARGIN = FOLDER_HEIGHT - TAB_HEIGHT + 1; // Shows only the tab initially
 const ANIMATION_DURATION = 1000;
+
+const BOTTOM_MARGIN = 200;
 
 export default function HomeScreen() {
   // const [mine, setMine] = useState(null);
   const router = useRouter();
   const topFolderMargin = useSharedValue(INITIAL_MARGIN);
+  const bottomCardMargin = useSharedValue(0);
 
   // const fetchMine = async () => {
   //   try {
@@ -65,11 +68,19 @@ export default function HomeScreen() {
         duration: ANIMATION_DURATION,
       },
       () => {
-        topFolderMargin.value = withDelay(
-          ANIMATION_DURATION,
-          withTiming(INITIAL_MARGIN, {
+        bottomCardMargin.value = withTiming(
+          BOTTOM_MARGIN,
+          {
             duration: ANIMATION_DURATION,
-          })
+          },
+          () => {
+            topFolderMargin.value = withDelay(
+              ANIMATION_DURATION,
+              withTiming(INITIAL_MARGIN, {
+                duration: ANIMATION_DURATION,
+              })
+            );
+          }
         );
       }
     );
@@ -142,6 +153,7 @@ export default function HomeScreen() {
           <View style={styles.cardStack}>
             <View style={styles.stackLayer3} />
             <View style={styles.stackLayer2} />
+            {/* <View style={[styles.stackLayer1, { bottom: bottomCardMargin }]} /> */}
             <View style={styles.stackLayer1} />
             <FlingGestureHandler
               direction={Directions.DOWN}
@@ -207,7 +219,10 @@ export default function HomeScreen() {
           <Animated.View
             style={[styles.folderContainer, { top: topFolderMargin }]}
           >
-            <TouchableOpacity onPress={onFling} style={styles.buttonContainer}>
+            <TouchableOpacity
+              onPress={() => router.push("/(tabs)/profile/saved_recipes")}
+              style={styles.buttonContainer}
+            >
               <Image
                 source={require("assets/swiping_images/saved_recipes_folder_cropped.png")}
                 style={styles.savedRecipes}
@@ -288,7 +303,7 @@ const styles = StyleSheet.create({
   recipeImage: {
     width: "100%",
     height: 500,
-    borderRadius: 8,
+    // borderRadius: 8,
   },
   blurOverlay: {
     position: "absolute",
@@ -383,7 +398,6 @@ const styles = StyleSheet.create({
   },
   stackLayer1: {
     position: "absolute",
-    bottom: 0,
     left: 4,
     right: 4,
     height: 500,
