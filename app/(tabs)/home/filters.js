@@ -33,6 +33,7 @@ export default function Page() {
   // Update the onPress handler of the Save Button
   const handleSavePress = async () => {
     updateFilters(tempFilters);
+    console.log("tempfilters", tempFilters);
     router.back();
   };
 
