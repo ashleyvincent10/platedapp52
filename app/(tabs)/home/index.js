@@ -6,11 +6,9 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  Touchable,
   Dimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
-
 import Animated, {
   useSharedValue, // https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue
   useAnimatedStyle, // https://docs.swmansion.com/react-native-reanimated/docs/core/useAnimatedStyle
@@ -22,82 +20,44 @@ import Animated, {
   withSequence, // https://docs.swmansion.com/react-native-reanimated/docs/animations/withSequence/
   withRepeat, // https://docs.swmansion.com/react-native-reanimated/docs/animations/withRepeat/
   withDelay, // https://docs.swmansion.com/react-native-reanimated/docs/animations/withDelay/
-  Easing,
 } from "react-native-reanimated";
 import {
   GestureHandlerRootView,
-  Gesture,
-  GestureDetector,
-  PanGestureHandler,
   FlingGestureHandler,
   Directions,
 } from "react-native-gesture-handler";
 
-const windowWidth = Dimensions.get("window").width;
+// Dynamic dimensions so it fits on any screen size
+const SCREEN_HEIGHT = Dimensions.get("window").height;
+const FOLDER_HEIGHT = SCREEN_HEIGHT * 0.08; // Height of the full folder
+const TAB_HEIGHT = SCREEN_HEIGHT * 0.029; // Height of just the tab
+const INITIAL_MARGIN = FOLDER_HEIGHT - TAB_HEIGHT; // Shows only the tab initially
+const ANIMATION_DURATION = 1000;
 
 export default function HomeScreen() {
   const router = useRouter();
-  const topFolderMargin = useSharedValue(-5);
+  const topFolderMargin = useSharedValue(INITIAL_MARGIN);
 
-  // const swipeGesture = () => {
-  const onFling = (event) => {
+  const onFling = () => {
     topFolderMargin.value = withTiming(
-      -51,
+      0,
       {
-        duration: 1000,
+        duration: ANIMATION_DURATION,
       },
       () => {
         topFolderMargin.value = withDelay(
-          1000,
-          withTiming(0, {
-            duration: 1000,
+          ANIMATION_DURATION,
+          withTiming(INITIAL_MARGIN, {
+            duration: ANIMATION_DURATION,
           })
         );
       }
     );
   };
-  // };
-
-  // const composedGesture = Gesture.Exclusive(swipeGesture);
-
-  const handleSwipe = () => {
-    // console.log(height.value);
-    // return {
-    // topFolderMargin.value = withTiming(
-    //   -51,
-    //   {
-    //     duration: 1000,
-    //   },
-    //   () => {
-    //     topFolderMargin.value = withDelay(
-    //       1000,
-    //       withTiming(0, {
-    //         duration: 1000,
-    //       })
-    //     );
-    //   }
-    // );
-    // backgroundColor: color.value,
-    // opacity: toggled.value ? withTiming(0.2) : withTiming(1),
-    // transform: [{ translateY: translateY.value }],
-    // };
-  };
-  // const handleSwipe = () => {
-  //   topFolderMargin.value = withTiming(0, {
-  //     duration: 1000,
-  //   });
-  //   topFolderMargin.value = withDelay(
-  //     1000,
-  //     withTiming(51, {
-  //       duration: 1000,
-  //     })
-  //   );
-  // };
 
   return (
     <GestureHandlerRootView>
       <View style={styles.mainContainer}>
-        {/* <ScrollView style={styles.container}> */}
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.title}>Plated</Text>
@@ -108,8 +68,8 @@ export default function HomeScreen() {
             />
           </TouchableOpacity>
         </View>
+
         {/* Filters */}
-        {/* Filter Icon */}
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <TouchableOpacity onPress={() => router.push("/(tabs)/home/filters")}>
             <Image
@@ -136,6 +96,7 @@ export default function HomeScreen() {
             </View>
           </ScrollView>
         </View>
+
         {/* Recipe Card */}
         <TouchableOpacity>
           <View style={styles.cardStack}>
@@ -203,23 +164,14 @@ export default function HomeScreen() {
         </TouchableOpacity>
 
         <View style={styles.footer}>
-          {/* Redo button */}
-
-          {/* Saved Recipes Button */}
-          <Animated.View style={{ top: topFolderMargin }}>
-            <TouchableOpacity
-              onPress={handleSwipe}
-              style={styles.buttonContainer}
-            >
+          <Animated.View
+            style={[styles.folderContainer, { top: topFolderMargin }]}
+          >
+            <TouchableOpacity onPress={onFling} style={styles.buttonContainer}>
               <Image
                 source={require("assets/swiping_images/saved_recipes_folder_cropped.png")}
                 style={styles.savedRecipes}
               />
-              {/* <Text style={styles.savedText}>Saved Recipes</Text> */}
-              {/* <Image
-          source={require("assets/saved_bookmark.png")}
-          style={styles.savedRecipesButton}
-        /> */}
             </TouchableOpacity>
           </Animated.View>
         </View>
@@ -244,15 +196,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginTop: 45,
-    //marginBottom: 5,
   },
   footer: {
     width: "100%",
-    height: 70,
+    height: FOLDER_HEIGHT,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: "blue",
+    position: "absolute",
+    bottom: 0,
+    overflow: "hidden",
   },
   title: {
     fontSize: 50,
@@ -267,11 +220,9 @@ const styles = StyleSheet.create({
   },
   filtersContainer: {
     flexDirection: "row",
-    //marginBottom:,
     marginTop: 10,
   },
   filter: {
-    // backgroundColor: "#FFEDE1",
     borderWidth: 1,
     borderColor: "#A52A2A",
     borderRadius: 20,
@@ -326,8 +277,8 @@ const styles = StyleSheet.create({
     color: "white",
   },
   icon: {
-    width: windowWidth * 0.05,
-    height: windowWidth * 0.05,
+    width: 20,
+    height: 20,
     resizeMode: "contain",
   },
   detailText: {
@@ -355,31 +306,20 @@ const styles = StyleSheet.create({
     height: 35,
     margin: 5,
   },
-
   buttonContainer: {
     alignItems: "center",
     justifyContent: "center",
-    width: 405,
-    height: 70,
-    top: 51,
+    width: "100%",
+    height: FOLDER_HEIGHT,
     overflow: "hidden",
   },
   savedRecipes: {
     width: "100%",
     height: "100%",
-    marginBottom: -8,
     resizeMode: "contain",
-  },
-  savedRecipesButtonText: {
-    color: "#FFF",
-    fontSize: 17,
-    fontWeight: "bold",
-    fontFamily: "Poppins",
-    position: "absolute",
-    bottom: 4,
+    marginBottom: -SCREEN_HEIGHT * 0.01,
   },
   cardStack: {
-    //position: "relative",
     marginBottom: 20,
     marginHorizontal: 5,
   },
@@ -395,7 +335,6 @@ const styles = StyleSheet.create({
   stackLayer2: {
     position: "absolute",
     bottom: -5,
-
     left: 8,
     right: 8,
     height: 500,
@@ -405,7 +344,6 @@ const styles = StyleSheet.create({
   stackLayer1: {
     position: "absolute",
     bottom: 0,
-
     left: 4,
     right: 4,
     height: 500,
@@ -418,28 +356,19 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: "white",
   },
-  redoButtonContainer: {
-    position: "relative",
-  },
   redoButton: {
     width: 70,
     height: 70,
     alignSelf: "flex-start",
-    //     resizeMode: "contain",
-    //     justifyContent: "center",
-    //     alignItems: "center",
-
-    //     position: "absolute",
-    //     left: 7,
-    //     bottom: 0,
   },
   redoIcon: {
     color: "#A52A2A",
     fontSize: 24,
   },
-  savedText: {
-    fontFamily: "Poppins",
-    fontSize: 14,
-    color: "white",
+  folderContainer: {
+    position: "absolute",
+    width: "100%",
+    height: FOLDER_HEIGHT,
+    bottom: 0,
   },
 });
