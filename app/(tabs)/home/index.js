@@ -9,6 +9,7 @@ import {
   Dimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { useState, useEffect } from "react";
 import Animated, {
   useSharedValue, // https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue
   useAnimatedStyle, // https://docs.swmansion.com/react-native-reanimated/docs/core/useAnimatedStyle
@@ -26,6 +27,7 @@ import {
   FlingGestureHandler,
   Directions,
 } from "react-native-gesture-handler";
+import { supabase } from "backend/supabaseClient";
 
 // Dynamic dimensions so it fits on any screen size
 const SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -35,8 +37,26 @@ const INITIAL_MARGIN = FOLDER_HEIGHT - TAB_HEIGHT; // Shows only the tab initial
 const ANIMATION_DURATION = 1000;
 
 export default function HomeScreen() {
+  // const [mine, setMine] = useState(null);
   const router = useRouter();
   const topFolderMargin = useSharedValue(INITIAL_MARGIN);
+
+  // const fetchMine = async () => {
+  //   try {
+  //     const response = await supabase
+  //       .from("Recipes")
+  //       .select()
+  //       .eq("Name", "Banana Nut Bread");
+  //     //setMine();
+  //     console.log(response.data);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchMine();
+  // }, []);
 
   const onFling = () => {
     topFolderMargin.value = withTiming(
@@ -98,7 +118,21 @@ export default function HomeScreen() {
         </View>
 
         {/* Recipe Card */}
-        <TouchableOpacity>
+        <TouchableOpacity
+        // onPress={() =>
+        //   router.push({
+        //     pathname: "/(tabs)/home/recipe_details1",
+        //     params: {
+        //       recipe_title: mine.Name,
+        //       the_image: mine.image_url,
+        //       servings: mine.servings,
+        //       time: mine.TotalTime,
+        //       difficulty: mine.difficulty,
+        //       chef_name: mine.AuthorName,
+        //     },
+        //   })
+        // }
+        >
           <View style={styles.cardStack}>
             <View style={styles.stackLayer3} />
             <View style={styles.stackLayer2} />
@@ -109,7 +143,7 @@ export default function HomeScreen() {
             >
               <View style={styles.imageContainer}>
                 <Image
-                  source={require("assets/recipe_images/recipe_image_7.jpeg")}
+                  source={require("assets/recipe_images/recipe_image_1.jpeg")}
                   style={styles.recipeImage}
                 />
                 <View style={styles.blurOverlay}>
