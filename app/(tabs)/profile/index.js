@@ -29,7 +29,7 @@ export default function Page() {
         .select("*")
         .eq("is_mine", true);
       setMine(user_response.data);
-      //console.log(mine);
+      //console.log(user_response);
     } catch (err) {
       console.error(err);
     }

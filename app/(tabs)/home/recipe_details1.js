@@ -91,8 +91,6 @@ export default function RecipeDetails() {
     //console.log(ingredients);
   }, []);
 
-  const format_time = time.slice(2);
-
   return (
     <ScrollView style={styles.container}>
       <View style={styles.rowContainter}>
@@ -130,7 +128,7 @@ export default function RecipeDetails() {
                   height: windowWidth * 0.085,
                 }}
               />
-              <Text style={styles.body}>{format_time}</Text>
+              <Text style={styles.body}>{time}</Text>
             </View>
             <View
               style={{

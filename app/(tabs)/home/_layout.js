@@ -50,6 +50,7 @@ export default function StackLayout() {
           headerTintColor: "black",
         }}
       />
+      <Stack.Screen name="recipe_details1" />
     </Stack>
   );
 }
