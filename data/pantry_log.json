@@ -1,0 +1,68 @@
+[
+  {
+    "name": "Grains",
+    "image": "bread",
+    "contents": [
+      "2 loaves of bread",
+      "jasmine rice",
+      "everything bagels",
+      "steel cut oats"
+    ],
+    "isStatic": "FALSE"
+  },
+  {
+    "name": "Vegetables",
+    "image": "carrot",
+    "contents": [
+      "bunch of carrots",
+      "bag of brussle sprouts",
+      "7 tomatoes",
+      "3 lbs russet potatoes",
+      "frozen peas and carrots",
+      "onions"
+    ],
+    "isStatic": "FALSE"
+  },
+  {
+    "name": "This Week",
+    "image": "lime",
+    "contents": [
+      "honey greek yogurt",
+      "strawberries",
+      "ground turkey",
+      "zucchini",
+      "romaine",
+      "ravioli pasta",
+      "milk",
+      "sourdough bread",
+      "bananas",
+      "american cheese",
+      "leftover chicken piccata"
+    ],
+    "isStatic": "FALSE"
+  },
+  {
+    "name": "Fridge",
+    "image": "onion",
+    "contents": [
+      "milk",
+      "eggs",
+      "cookie dough",
+      "blueberries",
+      "strawberries",
+      "iced coffee"
+    ],
+    "isStatic": "FALSE"
+  },
+  {
+    "name": "Freezer",
+    "image": "fish",
+    "contents": [
+      "frozen pizza",
+      "ice cream",
+      "frozen acai mix",
+      "peas and carrots"
+    ],
+    "isStatic": "FALSE"
+  }
+]

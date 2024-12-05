@@ -160,6 +160,8 @@ const styles = StyleSheet.create({
     height: 450,
     width: "100%",
     overflow: "hidden",
+    borderWidth: 4,
+    borderColor: "#B5300B",
   },
   camera: {
     flex: 1,
@@ -175,6 +177,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#EEEEEE",
     justifyContent: "center",
     alignItems: "center",
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
   },
   captureButtonInner: {
     width: 60,
