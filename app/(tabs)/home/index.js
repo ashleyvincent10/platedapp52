@@ -34,22 +34,24 @@ import {
 } from "react-native-gesture-handler";
 
 const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
+console.log(windowHeight);
 
 export default function HomeScreen() {
   const router = useRouter();
-  const topFolderMargin = useSharedValue(-5);
+  const topFolderMargin = useSharedValue(-88);
 
   // const swipeGesture = () => {
   const onFling = (event) => {
     topFolderMargin.value = withTiming(
-      -51,
+      -122,
       {
         duration: 1000,
       },
       () => {
         topFolderMargin.value = withDelay(
           1000,
-          withTiming(0, {
+          withTiming(-88, {
             duration: 1000,
           })
         );
@@ -137,66 +139,66 @@ export default function HomeScreen() {
           </ScrollView>
         </View>
         {/* Recipe Card */}
-        <TouchableOpacity>
-          <View style={styles.cardStack}>
-            <View style={styles.stackLayer3} />
-            <View style={styles.stackLayer2} />
-            <View style={styles.stackLayer1} />
-            <FlingGestureHandler
-              direction={Directions.DOWN}
-              onActivated={onFling}
-            >
-              <View style={styles.imageContainer}>
-                <Image
-                  source={require("assets/recipe_images/recipe_image_7.jpeg")}
-                  style={styles.recipeImage}
-                />
-                <View style={styles.blurOverlay}>
-                  <View style={styles.overlayContent}>
-                    <View style={styles.profileContainer}>
-                      <Image
-                        source={require("assets/personprofile.png")}
-                        style={styles.profileImage}
-                      />
-                    </View>
-                    <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text>
+        {/* <TouchableOpacity> */}
+        <View style={styles.cardStack}>
+          <View style={styles.stackLayer3} />
+          <View style={styles.stackLayer2} />
+          <View style={styles.stackLayer1} />
+          <FlingGestureHandler
+            direction={Directions.DOWN}
+            onActivated={onFling}
+          >
+            <View style={styles.imageContainer}>
+              <Image
+                source={require("assets/recipe_images/recipe_image_7.jpeg")}
+                style={styles.recipeImage}
+              />
+              <View style={styles.blurOverlay}>
+                <View style={styles.overlayContent}>
+                  <View style={styles.profileContainer}>
+                    <Image
+                      source={require("assets/personprofile.png")}
+                      style={styles.profileImage}
+                    />
                   </View>
+                  <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text>
+                </View>
 
-                  <View style={styles.recipeDetailsOverlay}>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/forkkk.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>4 people</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/whiteclock.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>1 hr</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/whitefire.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>easy</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/whitebookmark.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>147</Text>
-                    </View>
+                <View style={styles.recipeDetailsOverlay}>
+                  <View style={{ flexDirection: "row" }}>
+                    <Image
+                      source={require("assets/forkkk.png")}
+                      style={styles.icon}
+                    />
+                    <Text style={styles.detailText}>4 people</Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Image
+                      source={require("assets/whiteclock.png")}
+                      style={styles.icon}
+                    />
+                    <Text style={styles.detailText}>1 hr</Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Image
+                      source={require("assets/whitefire.png")}
+                      style={styles.icon}
+                    />
+                    <Text style={styles.detailText}>easy</Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Image
+                      source={require("assets/whitebookmark.png")}
+                      style={styles.icon}
+                    />
+                    <Text style={styles.detailText}>147</Text>
                   </View>
                 </View>
               </View>
-            </FlingGestureHandler>
-          </View>
-        </TouchableOpacity>
+            </View>
+          </FlingGestureHandler>
+        </View>
+        {/* </TouchableOpacity> */}
 
         <TouchableOpacity style={styles.redoButton}>
           <Image source={require("assets/redo.png")} style={styles.redoIcon} />
