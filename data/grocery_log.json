@@ -1,22 +1,22 @@
 [
   {
     "name": "2 lemons",
-    "done": "FALSE"
+    "done": false
   },
   {
     "name": "2 cloves of garlic",
-    "done": "TRUE"
+    "done": true
   },
   {
     "name": "tortilla chips",
-    "done": "FALSE"
+    "done": false
   },
   {
     "name": "salsa",
-    "done": "FALSE"
+    "done": false
   },
   {
     "name": "pickles",
-    "done": "TRUE"
+    "done": true
   }
 ]

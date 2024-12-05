@@ -211,7 +211,6 @@ export default function HomeScreen() {
           </FlingGestureHandler>
         </View>
         {/* </TouchableOpacity> */}
-
         <TouchableOpacity style={styles.redoButton}>
           <Image source={require("assets/redo.png")} style={styles.redoIcon} />
         </TouchableOpacity>

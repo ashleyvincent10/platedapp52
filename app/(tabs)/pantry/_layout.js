@@ -11,8 +11,6 @@ import {
 
 import { useNavigation } from "expo-router";
 
-const windowWidth = Dimensions.get("window").width;
-
 export default function StackLayout() {
   const navigation = useNavigation();
   const router = useRouter();

@@ -1,5 +1,6 @@
 [
   {
+    "index": 1,
     "name": "Grains",
     "image": "bread",
     "contents": [
@@ -8,9 +9,10 @@
       "everything bagels",
       "steel cut oats"
     ],
-    "isStatic": "FALSE"
+    "isStatic": false
   },
   {
+    "index": 2,
     "name": "Vegetables",
     "image": "carrot",
     "contents": [
@@ -21,9 +23,10 @@
       "frozen peas and carrots",
       "onions"
     ],
-    "isStatic": "FALSE"
+    "isStatic": false
   },
   {
+    "index": 3,
     "name": "This Week",
     "image": "lime",
     "contents": [
@@ -39,9 +42,10 @@
       "american cheese",
       "leftover chicken piccata"
     ],
-    "isStatic": "FALSE"
+    "isStatic": false
   },
   {
+    "index": 4,
     "name": "Fridge",
     "image": "onion",
     "contents": [
@@ -52,9 +56,10 @@
       "strawberries",
       "iced coffee"
     ],
-    "isStatic": "FALSE"
+    "isStatic": false
   },
   {
+    "index": 5,
     "name": "Freezer",
     "image": "fish",
     "contents": [
@@ -63,6 +68,6 @@
       "frozen acai mix",
       "peas and carrots"
     ],
-    "isStatic": "FALSE"
+    "isStatic": false
   }
 ]

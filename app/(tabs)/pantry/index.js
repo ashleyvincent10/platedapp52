@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 
 import { supabase } from "backend/supabaseClient";
 
+import PANTRY_DATA from "data/pantry_log.json";
 // const windowWidth = Dimensions.get("window").width;
 
 export default function Page() {
@@ -48,7 +49,10 @@ export default function Page() {
     </View>
   );
 
-  const pantriesWithNew = [...pantries, { name: "Add pantry", isStatic: true }];
+  const pantriesWithNew = [
+    ...PANTRY_DATA,
+    { name: "Add pantry", contents: [], isStatic: true },
+  ];
 
   const images = {
     bread: require("assets/pantry_images/bread.png"),
@@ -62,7 +66,7 @@ export default function Page() {
     <View style={styles.main}>
       <FlatList
         data={pantriesWithNew}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.index}
         numColumns={2}
         scrollEnabled={true}
         ListHeaderComponent={renderHeader}
@@ -80,7 +84,9 @@ export default function Page() {
           ) : (
             <TouchableOpacity
               style={styles.itemContainer}
-              onPress={() => navigation.navigate("details", { pantry: item })}
+              onPress={() =>
+                navigation.navigate("details", { pantry: item.index })
+              }
             >
               <Text style={styles.itemLabel}>{item.name}</Text>
               <View style={styles.regularIconContainer}>
