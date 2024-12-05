@@ -135,77 +135,76 @@ export default function HomeScreen() {
         </View>
 
         {/* Recipe Card */}
-        <TouchableOpacity
-        // onPress={() =>
-        //   router.push({
-        //     pathname: "/(tabs)/home/recipe_details1",
-        //     params: {
-        //       recipe_title: mine.Name,
-        //       the_image: mine.image_url,
-        //       servings: mine.servings,
-        //       time: mine.TotalTime,
-        //       difficulty: mine.difficulty,
-        //       chef_name: mine.AuthorName,
-        //     },
-        //   })
-        // }
-        >
-          <View style={styles.cardStack}>
-            <View style={styles.stackLayer3} />
-            <View style={styles.stackLayer2} />
-            {/* <View style={[styles.stackLayer1, { bottom: bottomCardMargin }]} /> */}
-            <View style={styles.stackLayer1} />
-            <FlingGestureHandler
-              direction={Directions.DOWN}
-              onActivated={onFling}
-            >
-              <View style={styles.imageContainer}>
-                <Image
-                  source={require("assets/recipe_images/recipe_image_1.jpeg")}
-                  style={styles.recipeImage}
-                />
-                <View style={styles.blurOverlay}>
-                  <View style={styles.overlayContent}>
-                    <View style={styles.profileContainer}>
-                      <Image
-                        source={require("assets/personprofile.png")}
-                        style={styles.profileImage}
-                      />
-                    </View>
-                    <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text>
+        {/* <TouchableOpacity
+          onPress={() =>
+            router.push({
+              pathname: "/(tabs)/home/recipe_details1",
+              params: {
+                recipe_title: mine.Name,
+                the_image: mine.image_url,
+                servings: mine.servings,
+                time: mine.TotalTime,
+                difficulty: mine.difficulty,
+                chef_name: mine.AuthorName,
+              },
+            })
+          }
+        > */}
+        <View style={styles.cardStack}>
+          <View style={styles.stackLayer3} />
+          <View style={styles.stackLayer2} />
+          {/* <View style={[styles.stackLayer1, { bottom: bottomCardMargin }]} /> */}
+          <View style={styles.stackLayer1} />
+          <FlingGestureHandler
+            direction={Directions.DOWN}
+            onActivated={onFling}
+          >
+            <View style={styles.imageContainer}>
+              <Image
+                source={require("assets/recipe_images/recipe_image_1.jpeg")}
+                style={styles.recipeImage}
+              />
+              <View style={styles.blurOverlay}>
+                <View style={styles.overlayContent}>
+                  <View style={styles.profileContainer}>
+                    <Image
+                      source={require("assets/personprofile.png")}
+                      style={styles.profileImage}
+                    />
                   </View>
                   <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text>
                 </View>
+                {/* <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text> */}
+              </View>
 
-                <View style={styles.recipeDetailsOverlay}>
-                  <View style={{ flexDirection: "row" }}>
-                    <Image
-                      source={require("assets/forkkk.png")}
-                      style={styles.icon}
-                    />
-                    <Text style={styles.detailText}>4 people</Text>
-                  </View>
-                  <View style={{ flexDirection: "row" }}>
-                    <Image
-                      source={require("assets/whiteclock.png")}
-                      style={styles.icon}
-                    />
-                    <Text style={styles.detailText}>1 hr</Text>
-                  </View>
-                  <View style={{ flexDirection: "row" }}>
-                    <Image
-                      source={require("assets/whitefire.png")}
-                      style={styles.icon}
-                    />
-                    <Text style={styles.detailText}>easy</Text>
-                  </View>
-                  <View style={{ flexDirection: "row" }}>
-                    <Image
-                      source={require("assets/whitebookmark.png")}
-                      style={styles.icon}
-                    />
-                    <Text style={styles.detailText}>147</Text>
-                  </View>
+              <View style={styles.recipeDetailsOverlay}>
+                <View style={{ flexDirection: "row" }}>
+                  <Image
+                    source={require("assets/forkkk.png")}
+                    style={styles.icon}
+                  />
+                  <Text style={styles.detailText}>4 people</Text>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                  <Image
+                    source={require("assets/whiteclock.png")}
+                    style={styles.icon}
+                  />
+                  <Text style={styles.detailText}>1 hr</Text>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                  <Image
+                    source={require("assets/whitefire.png")}
+                    style={styles.icon}
+                  />
+                  <Text style={styles.detailText}>easy</Text>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                  <Image
+                    source={require("assets/whitebookmark.png")}
+                    style={styles.icon}
+                  />
+                  <Text style={styles.detailText}>147</Text>
                 </View>
               </View>
             </View>
