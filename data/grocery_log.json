@@ -1,0 +1,22 @@
+[
+  {
+    "name": "2 lemons",
+    "done": "FALSE"
+  },
+  {
+    "name": "2 cloves of garlic",
+    "done": "TRUE"
+  },
+  {
+    "name": "tortilla chips",
+    "done": "FALSE"
+  },
+  {
+    "name": "salsa",
+    "done": "FALSE"
+  },
+  {
+    "name": "pickles",
+    "done": "TRUE"
+  }
+]
