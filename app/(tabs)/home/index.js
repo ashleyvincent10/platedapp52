@@ -90,7 +90,13 @@ export default function HomeScreen() {
         </View>
 
         {/* Filters */}
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginBottom: 5,
+          }}
+        >
           <TouchableOpacity onPress={() => router.push("/(tabs)/home/filters")}>
             <Image
               source={require("assets/filter.png")}
@@ -394,6 +400,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     alignSelf: "flex-start",
+    marginLeft: 15,
   },
   redoIcon: {
     color: "#A52A2A",
