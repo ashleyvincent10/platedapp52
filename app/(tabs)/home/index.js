@@ -1,4 +1,5 @@
 import React from "react";
+import { fetchRecipes } from "./filters";
 import {
   StyleSheet,
   Text,
@@ -26,6 +27,8 @@ import {
   FlingGestureHandler,
   Directions,
 } from "react-native-gesture-handler";
+
+import { supabase } from "backend/supabaseClient";
 
 // Dynamic dimensions so it fits on any screen size
 const SCREEN_HEIGHT = Dimensions.get("window").height;
