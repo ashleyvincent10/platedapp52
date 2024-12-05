@@ -8,21 +8,18 @@ import {
   Dimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { supabase } from "backend/supabaseClient";
+import { useFilters } from "./FilterContext"; // Import the useFilters hook
 
 const windowWidth = Dimensions.get("window").width;
 
 export default function Page() {
   const router = useRouter();
-  const [selectedFilters, setSelectedFilters] = useState({
-    ingredients: [],
-    cuisine: "",
-    servings: "",
-    time: "",
-    difficulty: "",
-  });
+  const { selectedFilters, updateFilters } = useFilters();
+  const [tempFilters, setTempFilters] = useState(selectedFilters);
 
   const handleFilterPress = (category, item) => {
-    setSelectedFilters((prev) => {
+    setTempFilters((prev) => {
       if (category === "ingredients") {
         const newIngredients = prev.ingredients.includes(item)
           ? prev.ingredients.filter((i) => i !== item)
@@ -33,11 +30,57 @@ export default function Page() {
     });
   };
 
+  // Update the onPress handler of the Save Button
+  const handleSavePress = async () => {
+    updateFilters(tempFilters);
+    router.back();
+  };
+
+  const fetchRecipes = async () => {
+    try {
+      let query = supabase.from("Recipes").select("*"); // Select all fields
+
+      // Apply difficulty filter if it's not empty
+      if (selectedFilters.difficulty) {
+        query = query.eq("difficulty_1", selectedFilters.difficulty);
+      }
+
+      // Apply cuisine filter if it's not empty
+      if (selectedFilters.cuisine) {
+        query = query.eq("cuisine", selectedFilters.cuisine);
+      }
+
+      // Apply ingredients filter if there are selected ingredients
+      if (selectedFilters.ingredients.length > 0) {
+        // Loop through each selected ingredient and apply the filter
+        selectedFilters.ingredients.forEach((ingredient) => {
+          query = query.filter(
+            "RecipeIngredientParts",
+            "ilike",
+            `%${ingredient}%`
+          ); // Check if ingredient_search contains the ingredient
+        });
+      }
+
+      const { data, error } = await query; // Execute the query
+
+      if (error) {
+        console.error("Error fetching recipes:", error.message); // Log the error message
+        return [];
+      }
+
+      console.log("Fetched Recipes:", data); // Log the fetched data
+      return data;
+    } catch (err) {
+      console.error("Error in fetchRecipes:", err); // Log any unexpected errors
+    }
+  };
+
   const FilterChip = ({ text, category, locked = false }) => {
     const isSelected =
       category === "ingredients"
-        ? selectedFilters.ingredients.includes(text)
-        : selectedFilters[category] === text;
+        ? tempFilters.ingredients.includes(text)
+        : tempFilters[category] === text;
 
     return (
       <TouchableOpacity
@@ -87,17 +130,18 @@ export default function Page() {
               "My Veggies",
               "My Grains",
               "This week",
-              "Lemon",
-              "Kale",
-              "Chicken",
-              "Basil",
-              "Beef",
-              "Sriracha",
-              "Rice",
-              "Celery",
-              "Onion",
-              "Potato",
-              "Lettuce",
+              "lemon",
+              "kale",
+              "chicken",
+              "basil",
+              "beef",
+              "sriracha",
+              "rice",
+              "celery",
+              "onion",
+              "potato",
+              "eggs",
+              "lettuce",
             ].map((item) => (
               <FilterChip key={item} text={item} category="ingredients" />
             ))}
@@ -116,10 +160,11 @@ export default function Page() {
           <View style={styles.chipContainer}>
             {[
               "American",
-              "Indian",
-              "Chinese",
-              "Japanese",
               "Thai",
+              "Mexican",
+              "Portuguese",
+              "French",
+              "Russian",
               "Italian",
             ].map((item) => (
               <FilterChip key={item} text={item} category="cuisine" />
@@ -183,7 +228,7 @@ export default function Page() {
         <View style={styles.bottomContainer}>
           <TouchableOpacity
             style={styles.saveButton}
-            onPress={() => router.back()}
+            onPress={handleSavePress} // Updated to use the new handler
           >
             <Text style={styles.saveButtonText}>Save & Return to swiping</Text>
           </TouchableOpacity>
@@ -299,3 +344,5 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
 });
+
+//export { fetchRecipes }; // Export the fetchRecipes function

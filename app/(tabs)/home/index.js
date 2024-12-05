@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { fetchRecipes } from "./filters";
 import {
   StyleSheet,
   Text,
@@ -27,7 +28,6 @@ import {
   FlingGestureHandler,
   Directions,
 } from "react-native-gesture-handler";
-import { supabase } from "backend/supabaseClient";
 
 // Dynamic dimensions so it fits on any screen size
 const SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -42,24 +42,6 @@ export default function HomeScreen() {
   // const [mine, setMine] = useState(null);
   const router = useRouter();
   const topFolderMargin = useSharedValue(INITIAL_MARGIN);
-  const bottomCardMargin = useSharedValue(0);
-
-  // const fetchMine = async () => {
-  //   try {
-  //     const response = await supabase
-  //       .from("Recipes")
-  //       .select()
-  //       .eq("Name", "Banana Nut Bread");
-  //     //setMine();
-  //     console.log(response.data);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchMine();
-  // }, []);
 
   const onFling = () => {
     topFolderMargin.value = withTiming(
