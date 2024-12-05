@@ -16,19 +16,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "backend/supabaseClient";
 const windowWidth = Dimensions.get("window").width;
 
-const DATA = [
-  "3 eggs",
-  "2 pumpkins",
-  "1 cup evaporated milk",
-  "1 1/3 tablespoons white sugar",
-  "1/2 tablespoon brown sugar",
-  "1/4 tablespoon ground cinnamon",
-  "1 tablespoon ground ginger",
-  "1/2 tablespoon ground cloves",
-];
-
 export default function RecipeDetails() {
   const [ingredients, setIngredients] = useState([]);
+  const [steps, SetSteps] = useState([]);
+
   const { recipe_title, the_image, servings, time, difficulty, chef_name } =
     useLocalSearchParams();
 
@@ -59,8 +50,13 @@ export default function RecipeDetails() {
           .from("Recipes")
           .select("FormattedIngredients")
           .eq("Name", recipe_title);
-        //setIngredients(data);
-        console.log(data);
+        //process the data
+        let unprocData = data[0].FormattedIngredients;
+        let procData = unprocData.slice(2, -2);
+        const splitArray = procData.split('", "');
+
+        setIngredients(splitArray);
+        //console.log(data[0].FormattedIngredients);
       } catch (err) {
         console.error(err);
       }
@@ -69,6 +65,33 @@ export default function RecipeDetails() {
     fetchIngredients();
     //console.log(ingredients);
   }, []);
+
+  useEffect(() => {
+    const fetchSteps = async () => {
+      try {
+        //console.log(recipe_title);
+        const { data, error } = await supabase
+          .from("Recipes")
+          .select("RecipeInstructions")
+          .eq("Name", recipe_title);
+        //process the data
+        let unprocData = data[0].RecipeInstructions;
+        //console.log(unprocData);
+        let procData = unprocData.slice(5, -4);
+        const splitArray = procData.split('\\", \\"');
+        //console.log(splitArray);
+        SetSteps(splitArray);
+        //console.log(data[0].FormattedIngredients);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchSteps();
+    //console.log(ingredients);
+  }, []);
+
+  const format_time = time.slice(2);
 
   return (
     <ScrollView style={styles.container}>
@@ -107,7 +130,7 @@ export default function RecipeDetails() {
                   height: windowWidth * 0.085,
                 }}
               />
-              <Text style={styles.body}>{time}</Text>
+              <Text style={styles.body}>{format_time}</Text>
             </View>
             <View
               style={{
@@ -171,7 +194,15 @@ export default function RecipeDetails() {
 
       {/* STEPS */}
       <View marginBottom={10}>
-        <Text style={styles.title}> Steps </Text>
+        <Text style={styles.title} marginBottom={10}>
+          {" "}
+          Steps{" "}
+        </Text>
+        {steps.map((str, index) => (
+          <Text style={styles.ingredientText} marginBottom={10}>
+            {index}) {str}
+          </Text>
+        ))}
       </View>
 
       <View
