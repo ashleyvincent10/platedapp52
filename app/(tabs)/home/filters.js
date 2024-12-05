@@ -9,21 +9,17 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { supabase } from "backend/supabaseClient";
+import { useFilters } from "./FilterContext"; // Import the useFilters hook
 
 const windowWidth = Dimensions.get("window").width;
 
 export default function Page() {
   const router = useRouter();
-  const [selectedFilters, setSelectedFilters] = useState({
-    ingredients: [],
-    cuisine: "",
-    servings: "",
-    time: "",
-    difficulty: "",
-  });
+  const { selectedFilters, updateFilters } = useFilters();
+  const [tempFilters, setTempFilters] = useState(selectedFilters);
 
   const handleFilterPress = (category, item) => {
-    setSelectedFilters((prev) => {
+    setTempFilters((prev) => {
       if (category === "ingredients") {
         const newIngredients = prev.ingredients.includes(item)
           ? prev.ingredients.filter((i) => i !== item)
@@ -36,9 +32,8 @@ export default function Page() {
 
   // Update the onPress handler of the Save Button
   const handleSavePress = async () => {
-    const recipes = await fetchRecipes();
-    //console.log(recipes); // Print the array of recipes
-    //router.back();
+    updateFilters(tempFilters);
+    router.back();
   };
 
   const fetchRecipes = async () => {
@@ -84,8 +79,8 @@ export default function Page() {
   const FilterChip = ({ text, category, locked = false }) => {
     const isSelected =
       category === "ingredients"
-        ? selectedFilters.ingredients.includes(text)
-        : selectedFilters[category] === text;
+        ? tempFilters.ingredients.includes(text)
+        : tempFilters[category] === text;
 
     return (
       <TouchableOpacity

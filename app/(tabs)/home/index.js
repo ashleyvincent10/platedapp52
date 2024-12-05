@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { fetchRecipes } from "./filters";
 import {
   StyleSheet,
@@ -29,6 +29,7 @@ import {
 } from "react-native-gesture-handler";
 
 import { supabase } from "backend/supabaseClient";
+import { useFilters } from "./FilterContext"; // Import the useFilters hook
 
 // Dynamic dimensions so it fits on any screen size
 const SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -40,6 +41,64 @@ const ANIMATION_DURATION = 1000;
 export default function HomeScreen() {
   const router = useRouter();
   const topFolderMargin = useSharedValue(INITIAL_MARGIN);
+  const { selectedFilters } = useFilters(); // Access the selected filters
+
+  const [recipes, setRecipes] = useState([]); // State to hold recipes
+
+  // Fetch recipes based on selected filters
+  const fetchRecipes = async () => {
+    try {
+      let query = supabase.from("Recipes").select("*"); // Select all fields
+
+      // Apply difficulty filter if it's not empty
+      if (selectedFilters.difficulty) {
+        query = query.eq("difficulty_1", selectedFilters.difficulty);
+      }
+
+      // Apply cuisine filter if it's not empty
+      if (selectedFilters.cuisine) {
+        query = query.eq("cuisine", selectedFilters.cuisine);
+      }
+
+      // Apply ingredients filter if there are selected ingredients
+      if (selectedFilters.ingredients.length > 0) {
+        selectedFilters.ingredients.forEach((ingredient) => {
+          query = query.filter(
+            "RecipeIngredientParts",
+            "ilike",
+            `%${ingredient}%`
+          ); // Check if ingredient_search contains the ingredient
+        });
+      }
+
+      const { data, error } = await query; // Execute the query
+
+      if (error) {
+        console.error("Error fetching recipes:", error.message); // Log the error message
+        return [];
+      }
+
+      console.log("Fetched Recipes:", data); // Log the fetched data
+      return data;
+    } catch (err) {
+      console.error("Error in fetchRecipes:", err); // Log any unexpected errors
+    }
+  };
+
+  // Add useEffect to fetch recipes when selected filters update
+  useEffect(() => {
+    const getRecipes = async () => {
+      const fetchedRecipes = await fetchRecipes(); // Fetch recipes based on filters
+      setRecipes(fetchedRecipes); // Update state with fetched recipes
+    };
+
+    getRecipes(); // Call the function to fetch recipes
+  }, [selectedFilters]); // Dependency array to trigger on updates
+
+  // Add useEffect to log selected filters when they update
+  useEffect(() => {
+    console.log("Selected Filters:", selectedFilters);
+  }, [selectedFilters]); // Dependency array to trigger on updates
 
   const onFling = () => {
     topFolderMargin.value = withTiming(
