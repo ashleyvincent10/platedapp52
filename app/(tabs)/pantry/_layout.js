@@ -22,7 +22,7 @@ export default function StackLayout() {
         headerTitleStyle: { color: "white" },
         headerTintColor: "white",
         headerShown: false,
-        backgroundColor: "#FAF9F6",
+        backgroundColor: "red",
       }}
     >
       <Stack.Screen
@@ -33,6 +33,7 @@ export default function StackLayout() {
           headerStyle: {
             backgroundColor: "#FAF9F6",
           },
+          backgroundColor: "red",
           headerTitleStyle: {
             fontFamily: "Prata-Regular",
             fontSize: 34,

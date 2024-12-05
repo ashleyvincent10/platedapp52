@@ -8,27 +8,29 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Dimensions,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 
 import { Link } from "expo-router";
-import { useNavigation } from "expo-router";
+import { useNavigation, useLocalSearchParams } from "expo-router";
 import { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 
-import PANTRY_DATA from "data/pantry_log.json";
-
-const width = Dimensions.get("window").width;
+// import PANTRY_DATA from "data/pantry_log.json";
 
 export default function Details(index) {
   const [newMessage, setNewMessage] = useState("");
-  // const { name, contents, isStatic } = route.params;
-  const currIndex = index;
-  console.log(currIndex);
+  const [isFocused, setIsFocused] = useState(false);
+  const params = useLocalSearchParams();
+  // console.log(currIndex);
   const navigation = useNavigation();
+  // console.log(params.contents);
+  const contentsArray = params.contents.split(",");
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: PANTRY_DATA[0].name,
+      headerTitle: params.name,
       headerLeft: () => (
         <TouchableOpacity
           style={styles.iconButton}
@@ -44,25 +46,32 @@ export default function Details(index) {
     // Validation to ensure all fields are filled
     if (newMessage != "") {
       alert("This feature is under construction!");
-      navigation.goBack();
     }
+    setNewMessage("");
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.main}>
-        <FlatList
-          data={PANTRY_DATA[0].contents}
-          keyExtractor={(item, index) => `${item}-${index}`}
-          scrollEnabled={true}
-          renderItem={({ item }) => (
-            <Text style={styles.itemLabel}>{item}</Text>
-          )}
-        />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <View style={styles.main}>
+          <FlatList
+            data={contentsArray}
+            keyExtractor={(item, index) => `${item}-${index}`}
+            scrollEnabled={true}
+            renderItem={({ item }) => (
+              <View style={styles.itemContainer}>
+                <Text style={styles.itemLabel}>{item}</Text>
+              </View>
+            )}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+          />
+        </View>
         <KeyboardAvoidingView>
           <View style={styles.inputContainer}>
             <TextInput
-              style={styles.input}
+              style={[styles.input, isFocused && styles.focusedStyle]}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
               placeholder="Add items here..."
               value={newMessage}
               onChangeText={setNewMessage}
@@ -73,7 +82,7 @@ export default function Details(index) {
           </View>
         </KeyboardAvoidingView>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -81,13 +90,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    padding: 24,
+    paddingLeft: 24,
+    paddingRight: 24,
+    paddingTop: 12,
+    paddingBottom: 12,
+    backgroundColor: "#FAF9F6",
   },
   main: {
     flex: 1,
     justifyContent: "center",
     maxWidth: 960,
     marginHorizontal: "auto",
+    // backgroundColor: "red",
+    width: "100%",
   },
   title: {
     fontSize: 64,
@@ -99,15 +114,16 @@ const styles = StyleSheet.create({
   },
   itemLabel: {
     color: "black",
-    fontFamily: "Prata-Regular",
+    fontFamily: "Poppins",
     fontSize: 20,
     fontWeight: 400,
     margin: 5,
+    // backgroundColor: "blue",
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "flex-start",
-    width: width - 44,
+    marginHorizontal: "auto",
   },
   input: {
     flex: 1,
@@ -127,5 +143,20 @@ const styles = StyleSheet.create({
   sendButtonText: {
     color: "#fff",
     fontFamily: "Poppins-Regular",
+  },
+  separator: {
+    height: 1,
+    backgroundColor: "#B5300B",
+  },
+  itemContainer: {
+    height: 48,
+    justifyContent: "center",
+  },
+  focusedStyle: {
+    borderColor: "#B5300B",
+    shadowColor: "#B5300B",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.22,
+    shadowRadius: 3,
   },
 });
