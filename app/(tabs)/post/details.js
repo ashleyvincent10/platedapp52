@@ -304,20 +304,28 @@ export default function Details() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Ingredients</Text>
-            <View style={styles.singleCircle}>
-              <Image
-                source={require("assets/wand.png")}
-                style={styles.iconInsideCircle}
-              />
-              <Image
-                source={require("assets/pdf.png")}
-                style={styles.iconInsideCircle}
-              />
-              <Image
-                source={require("assets/microphone.png")}
-                style={styles.iconInsideCircle}
-              />
-            </View>
+            <TouchableOpacity
+              onPress={() =>
+                alert(
+                  "🚧whoops this feature is under construction!🚧, please return back"
+                )
+              }
+            >
+              <View style={styles.singleCircle}>
+                <Image
+                  source={require("assets/wand.png")}
+                  style={styles.iconInsideCircle}
+                />
+                <Image
+                  source={require("assets/pdf.png")}
+                  style={styles.iconInsideCircle}
+                />
+                <Image
+                  source={require("assets/microphone.png")}
+                  style={styles.iconInsideCircle}
+                />
+              </View>
+            </TouchableOpacity>
           </View>
           <TextInput
             style={[
