@@ -757,7 +757,7 @@ export default function HomeScreen() {
               marginRight: 15,
               borderTopLeftRadius: 5,
               borderTopRightRadius: 5,
-              width: 400,
+              width: HIGH_WIDTH + 20,
               bottom: 0,
               zIndex: 5,
               backgroundColor: lineVisible ? "#444" : "transparent",
@@ -923,7 +923,7 @@ const styles = StyleSheet.create({
   },
   recipeTitle: {
     flex: 1,
-    fontSize: 25,
+    fontSize: SCREEN_WIDTH * 0.0581,
     fontWeight: "bold",
     fontFamily: "Prata",
     color: "white",
@@ -940,13 +940,13 @@ const styles = StyleSheet.create({
   },
 
   profileImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: SCREEN_WIDTH * 0.1395,
+    height: SCREEN_WIDTH * 0.1395,
+    borderRadius: (SCREEN_WIDTH * 0.1395) / 2,
   },
   recipeImage: {
     width: "100%",
-    height: 400,
+    height: HIGH_WIDTH * 1.05,
     resizeMode: "cover",
   },
   profileAndTitle: {
@@ -985,7 +985,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 120,
+    height: HIGH_HEIGHT - HIGH_WIDTH * 1.05,
     padding: 16,
   },
 });
