@@ -60,7 +60,7 @@ export default function StackLayout() {
         name="info"
         options={{
           headerTitle: "Chef Su Info Page",
-          // headerBackTitle: "Back",
+          headerBackButtonDisplayMode: "minimal",
           headerTintColor: "black",
           headerShown: true,
           headerStyle: {

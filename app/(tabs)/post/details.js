@@ -12,6 +12,11 @@ import {
   ScrollView,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
+//import ImagePicker from "react-native-image-crop-picker";
+
+import { supabase } from "backend/supabaseClient";
+
+import { postRecipeToDatabase } from "./recipePosting";
 
 export default function Details() {
   const router = useRouter();
@@ -34,13 +39,6 @@ export default function Details() {
   // State for focus management
   const [focusedInput, setFocusedInput] = useState(null);
 
-  // State for tracking filled inputs
-  const [filledInputs, setFilledInputs] = useState({
-    recipeName: false,
-    ingredients: false,
-    steps: false,
-  });
-
   // Dropdown options
   const difficultyOptions = ["Easy", "Medium", "Hard"];
   const servingsOptions = ["2", "4", "6", "8"];
@@ -53,34 +51,14 @@ export default function Details() {
     "Japanese",
   ];
 
-  const handleInputChange = (field, value) => {
-    // Update the value
-    switch (field) {
-      case "recipeName":
-        setRecipeName(value);
-        break;
-      case "ingredients":
-        setIngredients(value);
-        break;
-      case "steps":
-        setSteps(value);
-        break;
-    }
-
-    // Update filled state
-    setFilledInputs((prev) => ({
-      ...prev,
-      [field]: value.trim().length > 0,
-    }));
-  };
-
-  const handlePost = () => {
+  const handlePost = async () => {
+    // Check if all required fields are filled
     if (!recipeName || !ingredients || !steps) {
       alert("Please fill out all fields before posting!");
       return;
     }
 
-    console.log({
+    console.log("Recipe data before posting:", {
       recipeName,
       ingredients,
       steps,
@@ -93,8 +71,90 @@ export default function Details() {
       },
     });
 
-    alert("Recipe Posted!");
-    router.back();
+    // Prepare the recipe data to be posted
+    const recipeData = {
+      Name: recipeName,
+      is_mine: true, // Adjust this value as necessary
+      under_construction: true, // Adjust this value as necessary
+      image_url: image,
+    };
+
+    try {
+      // Check if image is provided and handle upload
+      let publicURL = null;
+
+      if (image) {
+        console.log("Starting image upload...");
+
+        // Fetch the image and convert it to Base64
+        const response = await fetch(image);
+        const blob = await response.blob();
+        const reader = new FileReader();
+
+        publicURL = await new Promise((resolve, reject) => {
+          reader.onloadend = async () => {
+            const base64Image = reader.result; // This will be the Base64 string
+
+            const fileName = `${Date.now()}_${recipeName}.jpeg`;
+            console.log("File name for upload:", fileName);
+
+            // Create a FormData object
+            const formData = new FormData();
+            formData.append("file", {
+              uri: base64Image,
+              name: fileName,
+              type: "image/jpeg",
+            });
+
+            const { data: uploadData, error: uploadError } =
+              await supabase.storage
+                .from("Recipes")
+                .upload(fileName, formData, {
+                  cacheControl: "3600",
+                  upsert: false,
+                });
+
+            if (uploadError) {
+              console.error("Error uploading image:", uploadError);
+              reject(uploadError);
+            } else {
+              console.log("Upload successful:", uploadData);
+            }
+
+            // Construct the public URL manually
+            const projectId = "yribjypwwexuqoravaph"; // Replace with your actual project ID
+            const bucketName = "Recipes"; // Your bucket name
+            const filePath = `${bucketName}/${fileName}`;
+            const publicURL = `https://yribjypwwexuqoravaph.supabase.co/storage/v1/object/public/${filePath}?t=${new Date().toISOString()}`;
+
+            console.log("Public URL obtained:", publicURL);
+            resolve(publicURL); // Resolve the promise with the constructed public URL
+          };
+
+          reader.readAsDataURL(blob); // Convert blob to Base64
+        });
+      }
+
+      // Update the recipe data with the public URL
+      recipeData.image_url = publicURL;
+
+      // Log the recipe data to check the image_url
+      console.log("Recipe data after obtaining public URL:", recipeData);
+
+      // Call the function to post the recipe to the database
+      const { error: dbError } = await postRecipeToDatabase(recipeData);
+
+      if (dbError) {
+        console.error("Error posting recipe:", dbError);
+        alert("Failed to post recipe. Please try again.");
+      } else {
+        alert("Recipe Posted!");
+        router.back();
+      }
+    } catch (error) {
+      console.error("Unexpected error:", error);
+      alert("An unexpected error occurred.");
+    }
   };
 
   const dismissKeyboard = () => {
@@ -156,22 +216,24 @@ export default function Details() {
           ) : (
             <Image style={styles.recipeImage} />
           )}
-
           <View style={styles.recipeInfo}>
             <Text style={styles.recipeLabel}>Recipe Name</Text>
-            <TextInput
+            <View
               style={[
-                styles.recipeNameText,
-                styles.defaultInput,
+                styles.recipeNameBox,
                 focusedInput === "recipeName" && styles.focusedInput,
-                filledInputs.recipeName && styles.filledInput,
               ]}
-              value={recipeName}
-              onChangeText={(text) => handleInputChange("recipeName", text)}
-              placeholder="Enter recipe name..."
-              onFocus={() => setFocusedInput("recipeName")}
-              onBlur={() => setFocusedInput(null)}
-            />
+            >
+              <TextInput
+                style={styles.recipeNameText}
+                value={recipeName}
+                onChangeText={setRecipeName}
+                placeholder="Enter recipe name..."
+                onFocus={() => setFocusedInput("recipeName")}
+                onBlur={() => setFocusedInput(null)}
+                onTouchStart={() => setFocusedInput("recipeName")}
+              />
+            </View>
             <View style={styles.tagsContainer}>
               <TouchableOpacity
                 style={styles.tag}
@@ -243,33 +305,39 @@ export default function Details() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Ingredients</Text>
-            <View style={styles.singleCircle}>
-              <Image
-                source={require("assets/wand.png")}
-                style={styles.iconInsideCircle}
-              />
-              <Image
-                source={require("assets/pdf.png")}
-                style={styles.iconInsideCircle}
-              />
-              <Image
-                source={require("assets/microphone.png")}
-                style={styles.iconInsideCircle}
-              />
-            </View>
+            <TouchableOpacity
+              onPress={() =>
+                alert(
+                  "🚧whoops this feature is under construction!🚧, please return back"
+                )
+              }
+            >
+              <View style={styles.singleCircle}>
+                <Image
+                  source={require("assets/wand.png")}
+                  style={styles.iconInsideCircle}
+                />
+                <Image
+                  source={require("assets/pdf.png")}
+                  style={styles.iconInsideCircle}
+                />
+                <Image
+                  source={require("assets/microphone.png")}
+                  style={styles.iconInsideCircle}
+                />
+              </View>
+            </TouchableOpacity>
           </View>
           <TextInput
             style={[
               styles.textArea,
               styles.ingredientsBox,
-              styles.defaultInput,
               focusedInput === "ingredients" && styles.focusedInput,
-              filledInputs.ingredients && styles.filledInput,
             ]}
             multiline
             placeholder="List your ingredients here..."
             value={ingredients}
-            onChangeText={(text) => handleInputChange("ingredients", text)}
+            onChangeText={setIngredients}
             onFocus={() => setFocusedInput("ingredients")}
             onBlur={() => setFocusedInput(null)}
           />
@@ -281,14 +349,12 @@ export default function Details() {
             style={[
               styles.textArea,
               styles.stepsBox,
-              styles.defaultInput,
               focusedInput === "steps" && styles.focusedInput,
-              filledInputs.steps && styles.filledInput,
             ]}
             multiline
             placeholder="Write your steps here..."
             value={steps}
-            onChangeText={(text) => handleInputChange("steps", text)}
+            onChangeText={setSteps}
             onFocus={() => setFocusedInput("steps")}
             onBlur={() => setFocusedInput(null)}
           />
@@ -305,11 +371,6 @@ export default function Details() {
 }
 
 const styles = StyleSheet.create({
-  defaultInput: {
-    borderWidth: 1,
-    borderColor: "#CCCCCC",
-    backgroundColor: "#F5F5F5",
-  },
   focusedInput: {
     borderColor: "#A52A2A",
     borderWidth: 2,
@@ -318,12 +379,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
-    backgroundColor: "#FFF",
-  },
-  filledInput: {
-    borderColor: "#A52A2A",
-    borderWidth: 1,
-    backgroundColor: "#FFF",
   },
   container: {
     flex: 1,
@@ -367,14 +422,14 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins",
   },
   recipeNameBox: {
+    borderWidth: 1,
+    borderColor: "#A52A2A",
     padding: 8,
     marginBottom: 8,
   },
   recipeNameText: {
     fontSize: 18,
     fontFamily: "Poppins",
-    padding: 8,
-    marginBottom: 8,
   },
   tagsContainer: {
     flexDirection: "row",
@@ -429,7 +484,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 3,
   },
   textArea: {
+    borderWidth: 1,
+    borderColor: "#CCC",
     padding: 8,
+    backgroundColor: "#FFF",
     textAlignVertical: "top",
     fontFamily: "Poppins",
   },

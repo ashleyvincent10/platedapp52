@@ -15,6 +15,7 @@ import {
   GestureHandlerRootView,
   FlingGestureHandler,
   Directions,
+  FlatList,
 } from "react-native-gesture-handler";
 
 import { supabase } from "backend/supabaseClient";
@@ -49,6 +50,7 @@ const FADE_TIMING = 300;
 export default function HomeScreen() {
   const router = useRouter();
   const { selectedFilters } = useFilters(); // Access the selected filters
+  const [filtersToggle, setFiltersToggle] = useState(false);
 
   // Replace useSharedValue with Animated.Value
   const topFolderMargin = useRef(new Animated.Value(INITIAL_MARGIN)).current;
@@ -125,6 +127,7 @@ export default function HomeScreen() {
     const getRecipes = async () => {
       const fetchedRecipes = await fetchRecipesData(); // Fetch recipes based on filters
       setRecipes(fetchedRecipes); // Update state with fetched recipes
+      console.log(recipes);
     };
     getRecipes(); // Call the function to fetch recipes
   }, [selectedFilters]);
@@ -132,9 +135,16 @@ export default function HomeScreen() {
   // Add useEffect to log selected filters when they update
   useEffect(() => {
     //console.log("Selected Filters:", selectedFilters);
+    setFiltersToggle((current) => (current === false ? true : false));
   }, [selectedFilters]); // Dependency array to trigger on updates
 
-  console.log(recipes);
+  // Extract only the values from the object
+  const values = Object.values(selectedFilters);
+
+  // If some values are arrays (like "ingredients"), flatten them to render them as strings
+  const flattenedValues = values.flatMap((value) =>
+    Array.isArray(value) ? value : [value]
+  );
 
   const onFlingDown = () => {
     // Animate topFolderMargin to 0
@@ -494,24 +504,24 @@ export default function HomeScreen() {
               style={styles.filterIcon}
             />
           </TouchableOpacity>
-          <ScrollView
-            horizontal
+          <View style={styles.filter}>
+            <Text style={styles.filterText}>Nut Allergy 🔒</Text>
+          </View>
+          <FlatList
+            horizontal={true}
             showsHorizontalScrollIndicator={false}
             style={styles.filtersContainer}
-          >
-            <View style={styles.filter}>
-              <Text style={styles.filterText}>Nut Allergy 🔒</Text>
-            </View>
-            <View style={styles.filter}>
-              <Text style={styles.filterText}>{"Gluten Free 🔒"}</Text>
-            </View>
-            <View style={styles.filter}>
-              <Text style={styles.filterText}>{"<30 min ✓"}</Text>
-            </View>
-            <View style={styles.filter}>
-              <Text style={styles.filterText}> Novice ✓</Text>
-            </View>
-          </ScrollView>
+            data={flattenedValues}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.filter}>
+                <Text style={styles.filterText}>
+                  {item}
+                  {"✓"}
+                </Text>
+              </View>
+            )}
+          />
         </View>
 
         {/* Recipe Cards */}
@@ -578,7 +588,7 @@ export default function HomeScreen() {
                           style={styles.profileImage}
                         />
                       </View> */}
-                  <Text style={styles.recipeTitle}>{recipes[index].Name}</Text>
+                  <Text style={styles.recipeTitle}>{recipes[0].Name}</Text>
                   {/* </View>
                   </View>
 
