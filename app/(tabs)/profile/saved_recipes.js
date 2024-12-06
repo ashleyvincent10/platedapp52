@@ -8,13 +8,15 @@ import {
 import { useState, useEffect } from "react";
 import RecipeBox from "components/recipeBox";
 import { supabase } from "backend/supabaseClient";
-import { useRouter } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
+import Icon from "react-native-vector-icons/Ionicons";
 
 import { Link } from "expo-router";
 
 export default function Page() {
   const [saved, setSaved] = useState(null);
   const router = useRouter();
+  const navigation = useNavigation();
   const fetchSaved = async () => {
     try {
       const user_response = await supabase
@@ -31,6 +33,20 @@ export default function Page() {
   useEffect(() => {
     fetchSaved();
   }, []);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: "Saved Recipes",
+      headerLeft: () => (
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Icon name="chevron-back-sharp" size={24} color="black" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   return (
     <View style={styles.container}>

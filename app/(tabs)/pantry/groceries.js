@@ -10,6 +10,7 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   Keyboard,
+  Platform,
 } from "react-native";
 
 import { Link } from "expo-router";
@@ -22,6 +23,7 @@ import GROCERY_DATA from "data/grocery_log.json";
 export default function GroceryCart() {
   const [newMessage, setNewMessage] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+  const [groceries, setGroceries] = useState(GROCERY_DATA);
   // console.log(currIndex);
   const navigation = useNavigation();
   // console.log(GROCERY_DATA);
@@ -42,51 +44,61 @@ export default function GroceryCart() {
   }, [navigation]);
 
   const handleSend = () => {
-    // Validation to ensure all fields are filled
     if (newMessage != "") {
       alert("This feature is under construction!");
     }
     setNewMessage("");
   };
 
+  const toggleDone = (index) => {
+    const updatedData = [...groceries];
+    updatedData[index].done = !updatedData[index].done;
+    setGroceries(updatedData);
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+        style={styles.container}
+      >
         <View style={styles.main}>
           <FlatList
             data={GROCERY_DATA}
-            keyExtractor={(item, index) => `${item}-${index}`}
+            keyExtractor={(item, index) => `${item.name}-${index}`}
             scrollEnabled={true}
-            renderItem={({ item }) => (
+            renderItem={({ item, index }) => (
               <View style={styles.itemContainer}>
                 <Text style={styles.itemLabel}>{item.name}</Text>
-                <View
+                <TouchableOpacity
                   style={[
                     styles.circle,
                     { backgroundColor: item.done ? "#B5300B" : "transparent" },
                   ]}
+                  onPress={() => {
+                    toggleDone(index);
+                  }}
                 />
               </View>
             )}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
           />
         </View>
-        <KeyboardAvoidingView>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={[styles.input, isFocused && styles.focusedStyle]}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-              placeholder="Add items here..."
-              value={newMessage}
-              onChangeText={setNewMessage}
-            />
-            <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
-              <Icon name="arrow-up-sharp" size={24} color="white" />
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
-      </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={[styles.input, isFocused && styles.focusedStyle]}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            placeholder="Add items here..."
+            value={newMessage}
+            onChangeText={setNewMessage}
+          />
+          <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
+            <Icon name="arrow-up-sharp" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 }
@@ -130,6 +142,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     marginHorizontal: "auto",
+    marginBottom: 10,
   },
   input: {
     flex: 1,
