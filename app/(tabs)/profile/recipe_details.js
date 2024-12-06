@@ -14,6 +14,7 @@ import { useLocalSearchParams } from "expo-router";
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { supabase } from "backend/supabaseClient";
+import RecreationBox from "components/recreationBox";
 const windowWidth = Dimensions.get("window").width;
 
 export default function RecipeDetails() {
@@ -42,6 +43,7 @@ export default function RecipeDetails() {
     headerBackButtonDisplayMode: "minimal",
   });
 
+  //recipe ingredients
   useEffect(() => {
     const fetchIngredients = async () => {
       try {
@@ -66,6 +68,7 @@ export default function RecipeDetails() {
     //console.log(ingredients);
   }, []);
 
+  //recipe instructions
   useEffect(() => {
     const fetchSteps = async () => {
       try {
@@ -150,6 +153,7 @@ export default function RecipeDetails() {
             </View>
           </View>
         </View>
+
         {/* chef su and save recipe */}
         <View style={styles.vertCenterContainer}>
           <TouchableOpacity>
@@ -161,21 +165,6 @@ export default function RecipeDetails() {
                 marginBottom: "15%",
               }}
             />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Image source={require("../../../assets/save_tab_2.png")} />
-            <Text
-              style={{
-                fontSize: 15,
-                fontFamily: "Poppins",
-                color: "white",
-                position: "absolute",
-                left: "13%",
-                bottom: "20%",
-              }}
-            >
-              Save Recipe +
-            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -205,6 +194,7 @@ export default function RecipeDetails() {
         ))}
       </View>
 
+      {/* RECREATIONS & CHEF NAME */}
       <View
         style={{
           flexDirection: "row",
@@ -213,7 +203,13 @@ export default function RecipeDetails() {
         }}
       >
         <Text style={styles.title}> Recreations </Text>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            alert(
+              "🚧whoops this page is under construction!🚧, please return back"
+            )
+          }
+        >
           <Image
             source={require("../../../assets/arrow.png")}
             style={{
@@ -224,23 +220,15 @@ export default function RecipeDetails() {
           />
         </TouchableOpacity>
       </View>
-      <ScrollView marginBottom={10}>
-        <TouchableOpacity>
-          <View style={styles.recreationContainer}>
-            <View style={{ flexDirection: "column" }}>
-              <View style={{ flexDirection: "row" }}>
-                <Image
-                  source={require("../../../assets/chef_prof.png")}
-                  style={styles.profPic}
-                ></Image>
-              </View>
-            </View>
-          </View>
-        </TouchableOpacity>
-      </ScrollView>
+      <RecreationBox />
 
       <Text style={styles.title}>The Chef</Text>
-      <TouchableOpacity marginBottom={10}>
+      <TouchableOpacity
+        marginBottom={10}
+        onPress={() =>
+          alert("🚧whoops this is under construction!🚧, please return back")
+        }
+      >
         <View style={styles.chefContainer}>
           <View style={{ flexDirection: "row" }}>
             <Image
@@ -307,6 +295,7 @@ const styles = StyleSheet.create({
     height: windowWidth * 0.15,
     width: windowWidth * 0.15,
     margin: 5,
+    borderRadius: 100,
   },
   chefContainer: {
     backgroundColor: "white",

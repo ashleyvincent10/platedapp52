@@ -210,6 +210,7 @@ export default function RecipeDetails() {
           justifyContent: "space-between",
         }}
       >
+        {/* RECREATIONS AND CHEF NAME */}
         <Text style={styles.title}> Recreations </Text>
         <TouchableOpacity>
           <Image
@@ -222,20 +223,7 @@ export default function RecipeDetails() {
           />
         </TouchableOpacity>
       </View>
-      <ScrollView marginBottom={10}>
-        <TouchableOpacity>
-          <View style={styles.recreationContainer}>
-            <View style={{ flexDirection: "column" }}>
-              <View style={{ flexDirection: "row" }}>
-                <Image
-                  source={require("../../../assets/chef_prof.png")}
-                  style={styles.profPic}
-                ></Image>
-              </View>
-            </View>
-          </View>
-        </TouchableOpacity>
-      </ScrollView>
+      <RecreationBox />
 
       <Text style={styles.title}>The Chef</Text>
       <TouchableOpacity marginBottom={10}>
