@@ -8,7 +8,10 @@ export default function Page() {
       <View style={styles.main}>
         <Text style={styles.subtitle}>
           this is where you would set your preferences like your permanent
-          dietary restriction filters
+          dietary restriction filters and other user settings {"\n"}
+          {"\n"} Right now your permanent filters are hard coded! {"\n"}
+          {"\n"}
+          we haven't developed this page yet! sorry!
         </Text>
       </View>
     </View>
@@ -32,7 +35,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   subtitle: {
-    fontSize: 36,
+    fontSize: 27,
     color: "#38434D",
   },
 });

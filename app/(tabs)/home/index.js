@@ -111,7 +111,7 @@ export default function HomeScreen() {
         return [];
       }
 
-      console.log("Fetched Recipes:", data); // Log the fetched data
+      //console.log("Fetched Recipes:", data); // Log the fetched data
       return data;
     } catch (err) {
       console.error("Error in fetchRecipes:", err); // Log any unexpected errors
@@ -130,8 +130,8 @@ export default function HomeScreen() {
 
   // Add useEffect to log selected filters when they update
   useEffect(() => {
-    console.log("Selected Filters:", selectedFilters);
-  }, [selectedFilters]);
+    //console.log("Selected Filters:", selectedFilters);
+  }, [selectedFilters]); // Dependency array to trigger on updates
 
   const onFlingDown = () => {
     // Animate topFolderMargin to 0

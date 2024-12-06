@@ -13,8 +13,10 @@ import { useState, useEffect } from "react";
 import CollapsibleView from "components/collapsibleView";
 import RecipeBox from "components/recipeBox";
 import { supabase } from "backend/supabaseClient";
+import { BlurView } from "expo-blur";
 
 import { Link } from "expo-router";
+import CookBookBox from "components/cookbookBox";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -39,6 +41,21 @@ export default function Page() {
     fetchMine();
   }, []);
 
+  const recreation_data = [
+    {
+      path: require("../../../assets/cookie.png"),
+      name: "Chocolate Chip Cookie",
+    },
+    { path: require("../../../assets/feta.png"), name: "Whipped Feta" },
+    {
+      path: require("../../../assets/salmon.png"),
+      name: "Salmon Cesear Salad",
+    },
+    {
+      path: require("../../../assets/penne.png"),
+      name: "Vodka Penna Pasta",
+    },
+  ];
   return (
     <View style={styles.container}>
       <View style={styles.fullHeader}>
@@ -76,13 +93,24 @@ export default function Page() {
         <Text style={styles.title} marginTop={10} edit={true}>
           Cookbooks
         </Text>
-        <View backgroundColor="#FAF9F6">
-          <RecipeBox
-            title="Healthy recipes"
-            image={"assets/recipe_images/recipe_image_1.jpeg"}
-            edit={true}
-          ></RecipeBox>
-        </View>
+        <ScrollView backgroundColor="#FAF9F6" horizontal={true}>
+          <CookBookBox
+            type="is_healthy_book"
+            name="Healthy Recipes"
+          ></CookBookBox>
+          <View>
+            <CookBookBox
+              type="is_family_book"
+              name="Family Recipes"
+            ></CookBookBox>
+          </View>
+          <View>
+            <CookBookBox
+              type="is_dessert_book"
+              name="Dessert Recipes"
+            ></CookBookBox>
+          </View>
+        </ScrollView>
 
         <Text style={styles.title} marginTop={10}>
           Your Recipes
@@ -121,11 +149,40 @@ export default function Page() {
           Recreations
         </Text>
         <View backgroundColor="#FAF9F6">
-          <RecipeBox
-            title="Healthy recipes"
-            image={"assets/recipe_images/recipe_image_1.jpeg"}
-            edit={true}
-          ></RecipeBox>
+          <FlatList
+            horizontal={true}
+            data={recreation_data}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() =>
+                  alert(
+                    "🚧whoops our recreations page is under construction!🚧, please return back"
+                  )
+                }
+              >
+                <View style={styles.boxContainer}>
+                  <Image
+                    source={item.path}
+                    style={styles.image}
+                    resizeMode="cover"
+                  />
+                  <BlurView style={styles.footer} intensity={10}>
+                    <Text style={styles.boxTitle}>{item.name}</Text>
+                    <TouchableOpacity
+                      style={styles.editButton}
+                      onPress={() =>
+                        alert(
+                          "🚧whoops this feature is under construction!🚧, please return back"
+                        )
+                      }
+                    >
+                      <Text style={styles.editText}>✎</Text>
+                    </TouchableOpacity>
+                  </BlurView>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
         </View>
         {/* <Text style={styles.title}> All Recipes</Text>
         <FlatList horizontal="true"></FlatList> */}
@@ -195,5 +252,55 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "black",
     fontFamily: "Poppins",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+  },
+  boxContainer: {
+    width: 150, // Adjust to match your layout
+    height: 150,
+    borderWidth: 2,
+    //overflow: "hidden",
+    borderColor: "#B5300B",
+    backgroundColor: "white",
+    margin: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
+    // flexDirection: "column",
+    // justifyContent: "space-between",
+  },
+  footer: {
+    flexDirection: "row",
+    width: "100%",
+    paddingHorizontal: 4,
+    paddingVertical: 4,
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
+    position: "absolute",
+    bottom: "0",
+    left: "0",
+
+    //  blur(7.5px),
+  },
+  boxTitle: {
+    fontSize: 14,
+    //fontWeight: "bold",
+    color: "black",
+    fontStyle: "Poppins-Regular",
+    overflow: "hidden",
+    marginHorizontal: 2,
+  },
+  editButton: {
+    padding: 2,
+    right: "2%",
+    bottom: "2%",
+    position: "absolute",
+  },
+  editText: {
+    fontSize: 16,
+    color: "black", // Edit button color
   },
 });
