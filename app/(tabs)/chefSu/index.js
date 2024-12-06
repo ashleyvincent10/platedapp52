@@ -33,6 +33,7 @@ const chat = model.startChat(); //start chat comes from gemini API for these kin
 export default function ChatApp() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
   const toggled = useSharedValue(false);
   // useRef allows us to get direct access to a React component and call methods
   // on it imperatively. We use this ref to scroll
@@ -98,7 +99,7 @@ export default function ChatApp() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : undefined}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 65 : 0}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
       style={styles.container}
     >
       <Animated.View style={[styles.imageContainer, animatedStyle]}>
@@ -134,7 +135,9 @@ export default function ChatApp() {
       />
       <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, isFocused && styles.focusedStyle]}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           placeholder="Ask your cooking questions..."
           value={newMessage}
           onChangeText={setNewMessage}
@@ -200,7 +203,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 10,
-    padding: 8,
   },
   input: {
     flex: 1,
@@ -219,5 +221,12 @@ const styles = StyleSheet.create({
   sendButtonText: {
     color: "#fff",
     fontFamily: "Poppins-Regular",
+  },
+  focusedStyle: {
+    borderColor: "#B5300B",
+    shadowColor: "#B5300B",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.22,
+    shadowRadius: 3,
   },
 });
