@@ -288,8 +288,10 @@ const styles = StyleSheet.create({
     borderColor: "#A52A2A",
     borderRadius: 20,
     paddingVertical: 5,
-    paddingHorizontal: 15,
+    paddingHorizontal: 12,
     marginRight: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
   filterText: {
     fontSize: 14,
