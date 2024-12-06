@@ -125,6 +125,7 @@ export default function HomeScreen() {
     const getRecipes = async () => {
       const fetchedRecipes = await fetchRecipesData(); // Fetch recipes based on filters
       setRecipes(fetchedRecipes); // Update state with fetched recipes
+      console.log(recipes);
     };
     getRecipes(); // Call the function to fetch recipes
   }, [selectedFilters]);
@@ -566,7 +567,7 @@ export default function HomeScreen() {
                           style={styles.profileImage}
                         />
                       </View> */}
-                  <Text style={styles.recipeTitle}>{recipes[index].Name}</Text>
+                  <Text style={styles.recipeTitle}>{recipes[3].Name}</Text>
                   {/* </View>
                   </View>
 
