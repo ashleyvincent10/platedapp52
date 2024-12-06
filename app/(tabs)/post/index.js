@@ -123,7 +123,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#FAF9F6",
   },
   header: {
     height: 60,
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: "#EEEEEE",
-    backgroundColor: "white",
+    backgroundColor: "#FAF9F6",
   },
   headerText: {
     fontSize: 24,

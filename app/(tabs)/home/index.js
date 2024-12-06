@@ -21,6 +21,7 @@ import Animated, {
   withSequence, // https://docs.swmansion.com/react-native-reanimated/docs/animations/withSequence/
   withRepeat, // https://docs.swmansion.com/react-native-reanimated/docs/animations/withRepeat/
   withDelay, // https://docs.swmansion.com/react-native-reanimated/docs/animations/withDelay/
+  runOnJS,
 } from "react-native-reanimated";
 import {
   GestureHandlerRootView,
@@ -29,18 +30,26 @@ import {
 } from "react-native-gesture-handler";
 
 import { supabase } from "backend/supabaseClient";
+
+import Icon from "react-native-vector-icons/FontAwesome5";
+
 import { useFilters } from "./FilterContext"; // Import the useFilters hook
 
 // Dynamic dimensions so it fits on any screen size
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 const FOLDER_HEIGHT = SCREEN_HEIGHT * 0.08; // Height of the full folder
+// const FOLDER_HEIGHT = 200;
 const TAB_HEIGHT = SCREEN_HEIGHT * 0.029; // Height of just the tab
-const INITIAL_MARGIN = FOLDER_HEIGHT - TAB_HEIGHT; // Shows only the tab initially
-const ANIMATION_DURATION = 1000;
+const INITIAL_MARGIN = FOLDER_HEIGHT - TAB_HEIGHT + 5; // Shows only the tab initially
+const ANIMATION_DURATION = 700;
 
+const BOTTOM_MARGIN = -800;
+const TOP_MARGIN = 1000;
 export default function HomeScreen() {
   const router = useRouter();
   const topFolderMargin = useSharedValue(INITIAL_MARGIN);
+  const bottomCardMargin = useSharedValue(0);
+  const [lineVisible, setLineVisible] = useState(false);
   const { selectedFilters } = useFilters(); // Access the selected filters
 
   const [recipes, setRecipes] = useState([]); // State to hold recipes
@@ -100,30 +109,69 @@ export default function HomeScreen() {
     //console.log("Selected Filters:", selectedFilters);
   }, [selectedFilters]); // Dependency array to trigger on updates
 
-  const onFling = () => {
+  const onFlingDown = () => {
     topFolderMargin.value = withTiming(
       0,
       {
         duration: ANIMATION_DURATION,
       },
       () => {
-        topFolderMargin.value = withDelay(
-          ANIMATION_DURATION,
-          withTiming(INITIAL_MARGIN, {
-            duration: ANIMATION_DURATION,
-          })
+        runOnJS(setLineVisible)(true);
+        bottomCardMargin.value = withTiming(
+          BOTTOM_MARGIN,
+          {
+            duration: 500,
+          },
+          () => {
+            runOnJS(setLineVisible)(false);
+            topFolderMargin.value = withDelay(
+              ANIMATION_DURATION,
+              withTiming(INITIAL_MARGIN, {
+                duration: ANIMATION_DURATION,
+              })
+            );
+          }
         );
       }
     );
   };
 
+  const onFlingUp = () => {
+    bottomCardMargin.value = withTiming(TOP_MARGIN, {
+      duration: ANIMATION_DURATION / 3,
+    });
+  };
+
   return (
     <GestureHandlerRootView>
       <View style={styles.mainContainer}>
+        <View
+          style={[
+            {
+              position: "absolute",
+              height: 20,
+              marginLeft: 15,
+              marginRight: 15,
+              borderTopLeftRadius: 5,
+              borderTopRightRadius: 5,
+              width: 400,
+              bottom: 0,
+              zIndex: 5,
+              backgroundColor: lineVisible ? "#444" : "transparent",
+            },
+          ]}
+        />
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.title}>Plated</Text>
-          <TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() =>
+              alert(
+                "🚧whoops this feature is under construction!🚧 Please go back and find your recipe manually."
+              )
+            }
+          >
             <Image
               source={require("assets/magnifier.png")}
               style={styles.searchIcon}
@@ -160,18 +208,25 @@ export default function HomeScreen() {
         </View>
 
         {/* Recipe Card */}
-        <TouchableOpacity>
-          <View style={styles.cardStack}>
-            <View style={styles.stackLayer3} />
-            <View style={styles.stackLayer2} />
-            <View style={styles.stackLayer1} />
+
+        <View style={styles.stackLayer3} />
+        <View style={styles.stackLayer2} />
+        <View style={styles.stackLayer1} />
+
+        <Animated.View
+          style={[styles.cardStack, { bottom: bottomCardMargin, zIndex: 2 }]}
+        >
+          <FlingGestureHandler
+            direction={Directions.DOWN}
+            onActivated={onFlingDown}
+          >
             <FlingGestureHandler
-              direction={Directions.DOWN}
-              onActivated={onFling}
+              direction={Directions.UP}
+              onActivated={onFlingUp}
             >
               <View style={styles.imageContainer}>
                 <Image
-                  source={require("assets/recipe_images/recipe_image_7.jpeg")}
+                  source={require("assets/recipe_images/recipe_image_1.jpeg")}
                   style={styles.recipeImage}
                 />
                 <View style={styles.blurOverlay}>
@@ -184,51 +239,60 @@ export default function HomeScreen() {
                     </View>
                     <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text>
                   </View>
+                  {/* <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text> */}
+                </View>
 
-                  <View style={styles.recipeDetailsOverlay}>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/forkkk.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>4 people</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/whiteclock.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>1 hr</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/whitefire.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>easy</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/whitebookmark.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>147</Text>
-                    </View>
+                <View style={styles.recipeDetailsOverlay}>
+                  <View style={{ flexDirection: "row" }}>
+                    <Image
+                      source={require("assets/forkkk.png")}
+                      style={styles.icon}
+                    />
+                    <Text style={styles.detailText}>4 people</Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Image
+                      source={require("assets/whiteclock.png")}
+                      style={styles.icon}
+                    />
+                    <Text style={styles.detailText}>1 hr</Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Image
+                      source={require("assets/whitefire.png")}
+                      style={styles.icon}
+                    />
+                    <Text style={styles.detailText}>easy</Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Image
+                      source={require("assets/whitebookmark.png")}
+                      style={styles.icon}
+                    />
+                    <Text style={styles.detailText}>147</Text>
                   </View>
                 </View>
               </View>
             </FlingGestureHandler>
-          </View>
-        </TouchableOpacity>
+          </FlingGestureHandler>
+        </Animated.View>
+        {/* </TouchableOpacity> */}
         <TouchableOpacity style={styles.redoButton}>
-          <Image source={require("assets/redo.png")} style={styles.redoIcon} />
+          <Icon name="redo" size={20} color="#B5300B" />
         </TouchableOpacity>
 
         <View style={styles.footer}>
           <Animated.View
             style={[styles.folderContainer, { top: topFolderMargin }]}
           >
-            <TouchableOpacity onPress={onFling} style={styles.buttonContainer}>
+            {/* <Image
+              source={require("assets/swiping_images/saved_recipes_front.png")}
+              style={[styles.savedRecipes, { bottom: -20, zIndex: 3 }]}
+            /> */}
+            <TouchableOpacity
+              onPress={() => router.push("/(tabs)/profile/saved_recipes")}
+              style={[styles.buttonContainer, { zIndex: 1 }]}
+            >
               <Image
                 source={require("assets/swiping_images/saved_recipes_folder_cropped.png")}
                 style={styles.savedRecipes}
@@ -264,7 +328,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    position: "absolute",
     bottom: 0,
     overflow: "hidden",
   },
@@ -288,8 +351,10 @@ const styles = StyleSheet.create({
     borderColor: "#A52A2A",
     borderRadius: 20,
     paddingVertical: 5,
-    paddingHorizontal: 15,
+    paddingHorizontal: 12,
     marginRight: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
   filterText: {
     fontSize: 14,
@@ -309,7 +374,6 @@ const styles = StyleSheet.create({
   recipeImage: {
     width: "100%",
     height: 500,
-    borderRadius: 8,
   },
   blurOverlay: {
     position: "absolute",
@@ -373,12 +437,14 @@ const styles = StyleSheet.create({
     width: "100%",
     height: FOLDER_HEIGHT,
     overflow: "hidden",
+    position: "absolute",
   },
   savedRecipes: {
     width: "100%",
     height: "100%",
     resizeMode: "contain",
     marginBottom: -SCREEN_HEIGHT * 0.01,
+    position: "absolute",
   },
   cardStack: {
     marginBottom: 20,
@@ -391,6 +457,7 @@ const styles = StyleSheet.create({
     right: 15,
     height: 500,
     backgroundColor: "#8B0000",
+    //backgroundColor: "blue",
     opacity: 0.3,
   },
   stackLayer2: {
@@ -403,12 +470,13 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   stackLayer1: {
-    position: "absolute",
+    //position: "absolute",
     bottom: 0,
     left: 4,
     right: 4,
     height: 500,
-    backgroundColor: "#8B0000",
+    backgroundColor: "black",
+    // bottom: 10,
   },
   imageContainer: {
     position: "relative",
@@ -418,18 +486,21 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   redoButton: {
-    width: 70,
-    height: 70,
-    alignSelf: "flex-start",
+    width: 20,
+    height: 20,
+    alignItems: "center",
+    marginLeft: 15,
+    // position: "absolute",
+    transform: [{ scaleX: -1 }],
   },
   redoIcon: {
-    color: "#A52A2A",
-    fontSize: 24,
+    position: "absolute",
+    resizeMode: "contain",
   },
   folderContainer: {
-    position: "absolute",
+    // position: "absolute",
     width: "100%",
     height: FOLDER_HEIGHT,
-    bottom: 0,
+    // bottom: 0,
   },
 });

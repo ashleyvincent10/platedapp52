@@ -8,6 +8,8 @@ import {
   Image,
   Keyboard,
   TouchableWithoutFeedback,
+  Modal,
+  ScrollView,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 
@@ -20,91 +22,224 @@ export default function Details() {
   const [ingredients, setIngredients] = useState("");
   const [steps, setSteps] = useState("");
 
+  // State for filter selections
+  const [difficulty, setDifficulty] = useState("Easy");
+  const [servings, setServings] = useState("4");
+  const [time, setTime] = useState("30 min");
+  const [cuisine, setCuisine] = useState("Italian");
+
+  // State for controlling dropdowns
+  const [activeDropdown, setActiveDropdown] = useState(null);
+
+  // State for focus management
+  const [focusedInput, setFocusedInput] = useState(null);
+
+  // State for tracking filled inputs
+  const [filledInputs, setFilledInputs] = useState({
+    recipeName: false,
+    ingredients: false,
+    steps: false,
+  });
+
+  // Dropdown options
+  const difficultyOptions = ["Easy", "Medium", "Hard"];
+  const servingsOptions = ["2", "4", "6", "8"];
+  const timeOptions = ["15 min", "30 min", "45 min", "60 min"];
+  const cuisineOptions = [
+    "Italian",
+    "Chinese",
+    "Mexican",
+    "Indian",
+    "Japanese",
+  ];
+
+  const handleInputChange = (field, value) => {
+    // Update the value
+    switch (field) {
+      case "recipeName":
+        setRecipeName(value);
+        break;
+      case "ingredients":
+        setIngredients(value);
+        break;
+      case "steps":
+        setSteps(value);
+        break;
+    }
+
+    // Update filled state
+    setFilledInputs((prev) => ({
+      ...prev,
+      [field]: value.trim().length > 0,
+    }));
+  };
+
   const handlePost = () => {
-    // Validation to ensure all fields are filled
     if (!recipeName || !ingredients || !steps) {
       alert("Please fill out all fields before posting!");
       return;
     }
 
-    // Mock post function (replace with actual API call or logic)
     console.log({
       recipeName,
       ingredients,
       steps,
       image,
+      filters: {
+        difficulty,
+        servings,
+        time,
+        cuisine,
+      },
     });
 
     alert("Recipe Posted!");
-    router.back(); // Navigate back after posting
+    router.back();
   };
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
+    setActiveDropdown(null);
+    setFocusedInput(null);
+  };
+
+  // Function to render dropdown content
+  const renderDropdown = (options, currentValue, onSelect, title) => {
+    return (
+      <Modal
+        visible={true}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setActiveDropdown(null)}
+      >
+        <TouchableWithoutFeedback onPress={() => setActiveDropdown(null)}>
+          <View style={styles.modalOverlay}>
+            <View style={styles.dropdownContainer}>
+              <Text style={styles.dropdownTitle}>{title}</Text>
+              <ScrollView>
+                {options.map((option) => (
+                  <TouchableOpacity
+                    key={option}
+                    style={[
+                      styles.dropdownItem,
+                      currentValue === option && styles.selectedItem,
+                    ]}
+                    onPress={() => {
+                      onSelect(option);
+                      setActiveDropdown(null);
+                    }}
+                  >
+                    <Text
+                      style={[
+                        styles.dropdownItemText,
+                        currentValue === option && styles.selectedItemText,
+                      ]}
+                    >
+                      {option}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+    );
   };
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.title}>Plating...</Text>
-        </View>
-
-        {/* Recipe Section */}
         <View style={styles.recipeSection}>
           {image ? (
             <Image source={{ uri: image }} style={styles.recipeImage} />
           ) : (
-            <Image
-              // source={require("../../assets/recipe_images/recipe_image_7.jpeg")}
-              style={styles.recipeImage}
-            />
+            <Image style={styles.recipeImage} />
           )}
+
           <View style={styles.recipeInfo}>
             <Text style={styles.recipeLabel}>Recipe Name</Text>
-            <View style={styles.recipeNameBox}>
-              <TextInput
-                style={styles.recipeNameText}
-                value={recipeName}
-                onChangeText={setRecipeName}
-                placeholder="Enter recipe name..."
-              />
-            </View>
+            <TextInput
+              style={[
+                styles.recipeNameText,
+                styles.defaultInput,
+                focusedInput === "recipeName" && styles.focusedInput,
+                filledInputs.recipeName && styles.filledInput,
+              ]}
+              value={recipeName}
+              onChangeText={(text) => handleInputChange("recipeName", text)}
+              placeholder="Enter recipe name..."
+              onFocus={() => setFocusedInput("recipeName")}
+              onBlur={() => setFocusedInput(null)}
+            />
             <View style={styles.tagsContainer}>
-              <View style={styles.tag}>
+              <TouchableOpacity
+                style={styles.tag}
+                onPress={() => setActiveDropdown("difficulty")}
+              >
                 <Image
                   source={require("assets/fire.png")}
                   style={styles.iconInsideCircle}
                 />
-                <Text style={styles.tagText}> Easy</Text>
-              </View>
-              <View style={styles.tag}>
+                <Text style={styles.tagText}>{difficulty}</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.tag}
+                onPress={() => setActiveDropdown("servings")}
+              >
                 <Image
                   source={require("assets/fork.png")}
                   style={styles.iconInsideCircle}
                 />
-                <Text style={styles.tagText}> 4</Text>
-              </View>
-              <View style={styles.tag}>
+                <Text style={styles.tagText}>{servings}</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.tag}
+                onPress={() => setActiveDropdown("time")}
+              >
                 <Image
                   source={require("assets/clock.png")}
                   style={styles.iconInsideCircle}
                 />
-                <Text style={styles.tagText}> 30 min</Text>
-              </View>
-              <View style={styles.tag}>
+                <Text style={styles.tagText}>{time}</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.tag}
+                onPress={() => setActiveDropdown("cuisine")}
+              >
                 <Image
                   source={require("assets/dinner.png")}
                   style={styles.iconInsideCircle}
                 />
-                <Text style={styles.tagText}> Italian</Text>
-              </View>
+                <Text style={styles.tagText}>{cuisine}</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
 
-        {/* Ingredients Section */}
+        {/* Render active dropdown */}
+        {activeDropdown === "difficulty" &&
+          renderDropdown(
+            difficultyOptions,
+            difficulty,
+            setDifficulty,
+            "Select Difficulty"
+          )}
+        {activeDropdown === "servings" &&
+          renderDropdown(
+            servingsOptions,
+            servings,
+            setServings,
+            "Select Servings"
+          )}
+        {activeDropdown === "time" &&
+          renderDropdown(timeOptions, time, setTime, "Select Time")}
+        {activeDropdown === "cuisine" &&
+          renderDropdown(cuisineOptions, cuisine, setCuisine, "Select Cuisine")}
+
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Ingredients</Text>
@@ -124,27 +259,41 @@ export default function Details() {
             </View>
           </View>
           <TextInput
-            style={[styles.textArea, styles.ingredientsBox]}
+            style={[
+              styles.textArea,
+              styles.ingredientsBox,
+              styles.defaultInput,
+              focusedInput === "ingredients" && styles.focusedInput,
+              filledInputs.ingredients && styles.filledInput,
+            ]}
             multiline
             placeholder="List your ingredients here..."
             value={ingredients}
-            onChangeText={setIngredients}
+            onChangeText={(text) => handleInputChange("ingredients", text)}
+            onFocus={() => setFocusedInput("ingredients")}
+            onBlur={() => setFocusedInput(null)}
           />
         </View>
 
-        {/* Steps Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Steps</Text>
           <TextInput
-            style={[styles.textArea, styles.stepsBox]}
+            style={[
+              styles.textArea,
+              styles.stepsBox,
+              styles.defaultInput,
+              focusedInput === "steps" && styles.focusedInput,
+              filledInputs.steps && styles.filledInput,
+            ]}
             multiline
             placeholder="Write your steps here..."
             value={steps}
-            onChangeText={setSteps}
+            onChangeText={(text) => handleInputChange("steps", text)}
+            onFocus={() => setFocusedInput("steps")}
+            onBlur={() => setFocusedInput(null)}
           />
         </View>
 
-        {/* Footer */}
         <View style={styles.footer}>
           <TouchableOpacity style={styles.postButton} onPress={handlePost}>
             <Text style={styles.postButtonText}>POST</Text>
@@ -156,6 +305,26 @@ export default function Details() {
 }
 
 const styles = StyleSheet.create({
+  defaultInput: {
+    borderWidth: 1,
+    borderColor: "#CCCCCC",
+    backgroundColor: "#F5F5F5",
+  },
+  focusedInput: {
+    borderColor: "#A52A2A",
+    borderWidth: 2,
+    shadowColor: "#A52A2A",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+    backgroundColor: "#FFF",
+  },
+  filledInput: {
+    borderColor: "#A52A2A",
+    borderWidth: 1,
+    backgroundColor: "#FFF",
+  },
   container: {
     flex: 1,
     backgroundColor: "#FAF9F6",
@@ -198,14 +367,14 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins",
   },
   recipeNameBox: {
-    borderWidth: 1,
-    borderColor: "#A52A2A",
     padding: 8,
     marginBottom: 8,
   },
   recipeNameText: {
     fontSize: 18,
     fontFamily: "Poppins",
+    padding: 8,
+    marginBottom: 8,
   },
   tagsContainer: {
     flexDirection: "row",
@@ -230,7 +399,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   section: {
-    marginBottom: 12, // Reduced from 16
+    marginBottom: 12,
   },
   sectionHeader: {
     flexDirection: "row",
@@ -260,23 +429,20 @@ const styles = StyleSheet.create({
     marginHorizontal: 3,
   },
   textArea: {
-    borderWidth: 1,
-    borderColor: "#CCC",
     padding: 8,
-    backgroundColor: "#FFF",
     textAlignVertical: "top",
     fontFamily: "Poppins",
   },
   ingredientsBox: {
-    minHeight: 100, // Reduced from 120
+    minHeight: 100,
   },
   stepsBox: {
-    minHeight: 120, // Reduced from 140
+    minHeight: 120,
   },
   footer: {
     alignItems: "center",
-    marginTop: 8, // Reduced from 16
-    marginBottom: 20, // Added to prevent button from being cut off
+    marginTop: 8,
+    marginBottom: 20,
   },
   postButton: {
     backgroundColor: "#A52A2A",
@@ -296,5 +462,42 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     textAlign: "center",
     fontFamily: "Poppins",
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  dropdownContainer: {
+    backgroundColor: "white",
+    borderRadius: 8,
+    padding: 16,
+    width: "80%",
+    maxHeight: "50%",
+  },
+  dropdownTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 16,
+    textAlign: "center",
+    fontFamily: "Poppins",
+  },
+  dropdownItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#EEEEEE",
+  },
+  selectedItem: {
+    backgroundColor: "#A52A2A20",
+  },
+  dropdownItemText: {
+    fontSize: 16,
+    fontFamily: "Poppins",
+  },
+  selectedItemText: {
+    color: "#A52A2A",
+    fontWeight: "600",
   },
 });

@@ -10,6 +10,7 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   Keyboard,
+  Platform,
 } from "react-native";
 
 import { Link } from "expo-router";
@@ -52,7 +53,11 @@ export default function Details(index) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+        style={styles.container}
+      >
         <View style={styles.main}>
           <FlatList
             data={contentsArray}
@@ -66,22 +71,20 @@ export default function Details(index) {
             ItemSeparatorComponent={() => <View style={styles.separator} />}
           />
         </View>
-        <KeyboardAvoidingView>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={[styles.input, isFocused && styles.focusedStyle]}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-              placeholder="Add items here..."
-              value={newMessage}
-              onChangeText={setNewMessage}
-            />
-            <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
-              <Icon name="arrow-up-sharp" size={24} color="white" />
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
-      </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={[styles.input, isFocused && styles.focusedStyle]}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            placeholder="Add items here..."
+            value={newMessage}
+            onChangeText={setNewMessage}
+          />
+          <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
+            <Icon name="arrow-up-sharp" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 }
@@ -124,6 +127,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     marginHorizontal: "auto",
+    marginBottom: 10,
   },
   input: {
     flex: 1,
