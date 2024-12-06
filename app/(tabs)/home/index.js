@@ -135,15 +135,13 @@ export default function HomeScreen() {
     //console.log("Selected Filters:", selectedFilters);
   }, [selectedFilters]); // Dependency array to trigger on updates
 
-   // Extract only the values from the object
- const values = Object.values(selectedFilters);
+  // Extract only the values from the object
+  const values = Object.values(selectedFilters);
 
-
- // If some values are arrays (like "ingredients"), flatten them to render them as strings
- const flattenedValues = values.flatMap((value) =>
-   Array.isArray(value) ? value : [value]
- );
-
+  // If some values are arrays (like "ingredients"), flatten them to render them as strings
+  const flattenedValues = values.flatMap((value) =>
+    Array.isArray(value) ? value : [value]
+  );
 
   console.log(recipes);
 
@@ -491,25 +489,24 @@ export default function HomeScreen() {
               style={styles.filterIcon}
             />
           </TouchableOpacity>
-        <View style={styles.filter}>
-           <Text style={styles.filterText}>Nut Allergy 🔒</Text>
-         </View>
-         <FlatList
-           horizontal={true}
-           showsHorizontalScrollIndicator={false}
-           style={styles.filtersContainer}
-           data={flattenedValues}
-           keyExtractor={(item, index) => index.toString()}
-           renderItem={({ item }) => (
-             <View style={styles.filter}>
-               <Text style={styles.filterText}>
-                 {item}
-                 {"✓"}
-               </Text>
-             </View>
-           )}
-         />
-
+          <View style={styles.filter}>
+            <Text style={styles.filterText}>Nut Allergy 🔒</Text>
+          </View>
+          <FlatList
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            style={styles.filtersContainer}
+            data={flattenedValues}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.filter}>
+                <Text style={styles.filterText}>
+                  {item}
+                  {"✓"}
+                </Text>
+              </View>
+            )}
+          />
         </View>
 
         {/* Recipe Cards */}
@@ -572,13 +569,16 @@ export default function HomeScreen() {
                       style={styles.recipeImage}
                     />
                     <View style={styles.redBoxContent}>
-                      {/* Profile and Recipe Title */}
                       <View style={styles.profileAndTitle}>
                         <Image
                           source={require("assets/chef_prof.png")}
                           style={styles.profileImage}
                         />
-                        <Text style={styles.recipeTitle}>
+                        <Text
+                          numberOfLines={2}
+                          ellipsizeMode="tail"
+                          style={styles.recipeTitle}
+                        >
                           {recipes[index].Name}
                         </Text>
                       </View>
@@ -594,6 +594,7 @@ export default function HomeScreen() {
                             {recipes[index].servings}
                           </Text>
                         </View>
+
                         <View style={styles.detailRow}>
                           <Image
                             source={require("assets/whiteclock.png")}
@@ -603,6 +604,7 @@ export default function HomeScreen() {
                             {recipes[index].TotalTime}
                           </Text>
                         </View>
+
                         <View style={styles.detailRow}>
                           <Image
                             source={require("assets/whitefire.png")}
@@ -612,6 +614,7 @@ export default function HomeScreen() {
                             {recipes[index].difficulty}
                           </Text>
                         </View>
+
                         <View style={styles.detailRow}>
                           <Image
                             source={require("assets/whitebookmark.png")}
@@ -651,47 +654,44 @@ export default function HomeScreen() {
         </View>
 
         {/* Animation Line */}
-       <View
-         style={[
-           {
-             position: "absolute",
-             height: 20,
-             marginLeft: 15,
-             marginRight: 15,
-             borderTopLeftRadius: 5,
-             borderTopRightRadius: 5,
-             width: 400,
-             bottom: 0,
-             zIndex: 5,
-             backgroundColor: lineVisible ? "#444" : "transparent",
-           },
-         ]}
-       >
-         <TouchableOpacity
-           style={[
-             {
-               position: "absolute",
-               height: 20,
-               marginLeft: 15,
-               marginRight: 15,
-               borderTopLeftRadius: 5,
-               borderTopRightRadius: 5,
-               width: 180,
+        <View
+          style={[
+            {
+              position: "absolute",
+              height: 20,
+              marginLeft: 15,
+              marginRight: 15,
+              borderTopLeftRadius: 5,
+              borderTopRightRadius: 5,
+              width: 400,
+              bottom: 0,
+              zIndex: 5,
+              backgroundColor: lineVisible ? "#444" : "transparent",
+            },
+          ]}
+        >
+          <TouchableOpacity
+            style={[
+              {
+                position: "absolute",
+                height: 20,
+                marginLeft: 15,
+                marginRight: 15,
+                borderTopLeftRadius: 5,
+                borderTopRightRadius: 5,
+                width: 180,
 
+                alignSelf: "center",
 
-               alignSelf: "center",
-
-
-               // backgroundColor: "blue",
-             },
-           ]}
-           onPress={() => router.push("(tabs)/profile/saved_recipes")}
-         />
-         <View />
-       </View>
-     </View>
-   </GestureHandlerRootView>
-
+                // backgroundColor: "blue",
+              },
+            ]}
+            onPress={() => router.push("(tabs)/profile/saved_recipes")}
+          />
+          <View />
+        </View>
+      </View>
+    </GestureHandlerRootView>
   );
 }
 
@@ -700,6 +700,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FAF9F6",
     justifyContent: "space-between",
+  },
+  redBox: {
+    flex: 1,
+    backgroundColor: "#B5300B",
   },
   container: {
     flex: 1,
@@ -812,33 +816,32 @@ const styles = StyleSheet.create({
     height: FOLDER_HEIGHT,
   },
   recipeTitle: {
+    flex: 1,
     fontSize: 25,
     fontWeight: "bold",
     fontFamily: "Prata",
     color: "white",
-    marginLeft: 80,
-    //position: "absolute",
-    top: 5,
+    marginLeft: 16,
+    numberOfLines: 2,
+    ellipsizeMode: "tail",
   },
 
   profileAndTitle: {
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginHorizontal: 16, // Adjust for spacing between title and profile image
+    alignItems: "flex-start",
+    height: 70,
+    position: "relative",
   },
 
   profileImage: {
     width: 60,
     height: 60,
     borderRadius: 30,
-    position: "absolute",
-    top: 5,
-    left: 16,
   },
   recipeImage: {
     width: "100%",
     height: 400,
+    resizeMode: "cover",
   },
   profileAndTitle: {
     flexDirection: "row",
@@ -847,17 +850,18 @@ const styles = StyleSheet.create({
 
   recipeDetails: {
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    marginTop: 80,
-    left: 30,
     position: "absolute",
+    bottom: 8,
+    left: 16,
+    right: 16,
+    height: 24,
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   detailRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginLeft: 12,
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
   },
   icon: {
     width: 18,
@@ -867,6 +871,14 @@ const styles = StyleSheet.create({
   detailText: {
     color: "white",
     fontSize: 16,
-    space: 5,
+    fontFamily: "Poppins",
+  },
+  redBoxContent: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 120,
+    padding: 16,
   },
 });
