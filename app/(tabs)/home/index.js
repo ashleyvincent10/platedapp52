@@ -153,9 +153,9 @@ export default function HomeScreen() {
       }).start(() => {
         setLineVisible(false);
         setIndex((prevIndex) => prevIndex + 1);
+
         // Delay and then return topFolderMargin back
         Animated.sequence([
-          // After topFolderMargin returns, animate the card properties
           Animated.parallel([
             Animated.timing(topFolderMargin, {
               toValue: INITIAL_MARGIN,
@@ -291,7 +291,21 @@ export default function HomeScreen() {
               duration: 0,
               useNativeDriver: false,
             }),
-          ]).start();
+          ]).start(async () => {
+            // Make a call to update your Supabase database
+            try {
+              const { error } = await supabase
+                .from("Recipes") // Replace "Recipes" with your table name
+                .update({ is_saved: true }) // Replace with your actual update logic
+                .eq("recipeid", recipes[index].recipeid); // Replace with your actual condition
+
+              if (error) {
+                console.error("Error updating database:", error.message);
+              }
+            } catch (err) {
+              console.error("Error during database update:", err);
+            }
+          });
         });
       });
     });
@@ -452,7 +466,7 @@ export default function HomeScreen() {
           <TouchableOpacity
             onPress={() =>
               Alert.alert(
-                "🚧whoops this feature is under construction!🚧 Please go back and find your recipe manually."
+                "🚧 Whoops this feature is under construction! 🚧 Please go back and find your recipe manually."
               )
             }
           >
@@ -607,7 +621,12 @@ export default function HomeScreen() {
         </View>
 
         {/* Redo button */}
-        <TouchableOpacity style={[styles.redoButton, { zIndex: 6 }]}>
+        <TouchableOpacity
+          style={[styles.redoButton, { zIndex: 6 }]}
+          onPress={() =>
+            Alert.alert("🚧 Whoops this feature is under construction! 🚧")
+          }
+        >
           <Icon name="redo" size={20} color="#B5300B" />
         </TouchableOpacity>
 
@@ -616,20 +635,16 @@ export default function HomeScreen() {
           <Animated.View
             style={[styles.folderContainer, { top: topFolderMargin }]}
           >
-            <TouchableOpacity
-              onPress={() => router.push("/(tabs)/profile/saved_recipes")}
-              style={[styles.buttonContainer, { zIndex: 1 }]}
-            >
-              <Image
-                source={require("assets/swiping_images/saved_recipes_folder_cropped.png")}
-                style={styles.savedRecipes}
-              />
-            </TouchableOpacity>
+            <Image
+              source={require("assets/swiping_images/saved_recipes_folder_cropped.png")}
+              style={[styles.savedRecipes, { zIndex: 1 }]}
+            />
           </Animated.View>
         </View>
 
         {/* Animation Line */}
-        <View
+        {/* <TouchableOpacity
+          onPress={() => router.push("/(tabs)/profile/saved_recipes")}
           style={[
             {
               position: "absolute",
@@ -642,10 +657,34 @@ export default function HomeScreen() {
               bottom: 0,
               zIndex: 5,
               backgroundColor: lineVisible ? "#444" : "transparent",
-              backgroundColor: "blue",
             },
           ]}
-        />
+        /> */}
+        <View
+          style={{
+            position: "absolute",
+            height: 20,
+            marginLeft: 15,
+            marginRight: 15,
+            borderTopLeftRadius: 5,
+            borderTopRightRadius: 5,
+            width: 400,
+            bottom: 0,
+            zIndex: 5,
+            backgroundColor: lineVisible ? "#444" : "transparent",
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              height: 20,
+              marginLeft: 15,
+              marginRight: 15,
+              width: 150,
+            }}
+            onPress={() => router.push("(tabs)/profile/saved_recipes")}
+          />
+        </View>
       </View>
     </GestureHandlerRootView>
   );
@@ -668,7 +707,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 45,
+    marginTop: 50,
   },
   footer: {
     width: "100%",
@@ -676,7 +715,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    bottom: 0,
+    // bottom: 37,
     overflow: "hidden",
   },
   cardStack: {
@@ -684,7 +723,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "relative",
     width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT - FOLDER_HEIGHT - 300,
+    height: SCREEN_HEIGHT - FOLDER_HEIGHT - 400,
+    marginTop: 100,
   },
   stackLayer: {
     height: 520,
@@ -757,10 +797,12 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   redoButton: {
-    width: 20,
-    height: 20,
+    width: 30,
+    height: 30,
     alignItems: "center",
+    justifyContent: "center",
     marginLeft: 15,
+    marginTop: 15,
     transform: [{ scaleX: -1 }],
   },
   folderContainer: {
