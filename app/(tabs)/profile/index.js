@@ -121,19 +121,26 @@ export default function Page() {
             data={mine}
             renderItem={({ item }) => (
               <TouchableOpacity
-                onPress={() =>
-                  router.push({
-                    pathname: "/(tabs)/profile/recipe_details",
-                    params: {
-                      recipe_title: item.Name,
-                      the_image: item.image_url,
-                      servings: item.servings,
-                      time: item.TotalTime,
-                      difficulty: item.difficulty,
-                      chef_name: item.AuthorName,
-                    },
-                  })
-                }
+                onPress={() => {
+                  if (item.under_construction) {
+                    // Check if under construction
+                    alert(
+                      "🚧whoops our recently posted page is under construction!🚧, please return back"
+                    );
+                  } else {
+                    router.push({
+                      pathname: "/(tabs)/profile/recipe_details",
+                      params: {
+                        recipe_title: item.Name,
+                        the_image: item.image_url,
+                        servings: item.servings,
+                        time: item.TotalTime,
+                        difficulty: item.difficulty,
+                        chef_name: item.AuthorName,
+                      },
+                    });
+                  }
+                }}
               >
                 <RecipeBox
                   title={item.Name}

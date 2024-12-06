@@ -508,8 +508,8 @@ export default function HomeScreen() {
           {"\n"}Welcome to Plated!{"\n"}
           {"\n"}Navigate to the filters icon in the top left of the screen and
           set your filters to start swiping. {"\n"}
-          {"\n"}To swipe through all the recipes in our database set ONLY your
-          serving filter to "for 4-5"
+          {"\n"}To swipe through all the recipes in our database set no filters
+          and save!
         </Text>
       </View>
     );
