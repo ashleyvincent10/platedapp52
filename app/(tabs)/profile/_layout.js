@@ -38,7 +38,7 @@ export default function StackLayout() {
           },
           headerTitleStyle: {
             fontFamily: "Prata-Regular",
-            fontSize: 24,
+            fontSize: 30,
             color: "black",
           },
           headerRight: () => (
@@ -90,7 +90,7 @@ export default function StackLayout() {
           },
           headerTitleStyle: {
             fontFamily: "Prata-Regular",
-            fontSize: 20,
+            fontSize: 30,
             color: "black",
           },
           headerLeft: () => (

@@ -19,7 +19,7 @@ export default function PostLayout() {
         },
         headerTitleStyle: {
           fontFamily: "Prata-Regular",
-          fontSize: 24,
+          fontSize: 30,
           color: "black",
         },
         headerTintColor: "black",

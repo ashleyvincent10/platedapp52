@@ -36,7 +36,7 @@ export default function StackLayout() {
           },
           headerTitleStyle: {
             fontFamily: "Prata-Regular",
-            fontSize: 34,
+            fontSize: 30,
             color: "black",
           },
           headerRight: () => (
@@ -60,7 +60,7 @@ export default function StackLayout() {
         name="info"
         options={{
           headerTitle: "Chef Su Info Page",
-          headerBackTitle: "Back",
+          // headerBackTitle: "Back",
           headerTintColor: "black",
           headerShown: true,
           headerStyle: {
@@ -68,7 +68,7 @@ export default function StackLayout() {
           },
           headerTitleStyle: {
             fontFamily: "Prata-Regular",
-            fontSize: 20,
+            fontSize: 30,
             color: "black",
           },
         }}
