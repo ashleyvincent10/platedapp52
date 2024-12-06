@@ -231,6 +231,7 @@ export default function Details() {
                 placeholder="Enter recipe name..."
                 onFocus={() => setFocusedInput("recipeName")}
                 onBlur={() => setFocusedInput(null)}
+                onTouchStart={() => setFocusedInput("recipeName")}
               />
             </View>
             <View style={styles.tagsContainer}>
