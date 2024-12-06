@@ -129,6 +129,7 @@ export default function HomeScreen() {
       setRecipes(fetchedRecipes); // Update state with fetched recipes
     };
     getRecipes(); // Call the function to fetch recipes
+    setIndex(0);
   }, [selectedFilters]);
 
   // Add useEffect to log selected filters when they update
@@ -137,14 +138,29 @@ export default function HomeScreen() {
   }, [selectedFilters]); // Dependency array to trigger on updates
 
   // Extract only the values from the object
-  const values = Object.values(selectedFilters);
+  // const values = Object.values(selectedFilters);
+  // console.log(selectedFilters);
 
-  // If some values are arrays (like "ingredients"), flatten them to render them as strings
-  const flattenedValues = values.flatMap((value) =>
-    Array.isArray(value) ? value : [value]
-  );
+  function flattenMapValues(mapObject) {
+    // Use Object.values to get all values from the map
+    return Object.values(mapObject).flatMap((value) => {
+      // If the value is an array, return the array; if not, return it as a single value
+      if (Array.isArray(value)) {
+        return value; // Flatten the array into individual elements
+      }
+      // Return the value if it's truthy (not empty string, undefined, null, etc.)
+      return value ? [value] : [];
+    });
+  }
 
-  console.log(recipes);
+  const flattenedValues1 = flattenMapValues(selectedFilters);
+
+  // // If some values are arrays (like "ingredients"), flatten them to render them as strings
+  // const flattenedValues = values.flatMap((value) =>
+  //   Array.isArray(value) ? value : [value]
+  // );
+
+  //console.log(recipes);
 
   const onFlingDown = () => {
     // Animate topFolderMargin to 0
@@ -452,6 +468,111 @@ export default function HomeScreen() {
     });
   };
 
+  //TOGGLE THE CARD VERSUS NO CARDS LEFT
+  let content_displayed = null;
+  if (index >= recipes.length) {
+    content_displayed = (
+      <View style={styles.redBoxAlt}>
+        <Text style={styles.recipeTitle}>
+          {"\n"}
+          {"\n"}We're sorry... our database ran out of or doesn't have recipes
+          associated with those filters!{"\n"} {"\n"}
+          {"\n"} Please navigate back to filters and set new ones or set
+          servings to 4-5 to swipe through all recipes!
+        </Text>
+      </View>
+    );
+  } else if (flattenedValues1.length === 0) {
+    content_displayed = (
+      <View style={styles.redBoxAlt}>
+        <Text style={styles.recipeTitle}>
+          {"\n"}
+          {"\n"}Welcome to Plated!{"\n"}
+          {"\n"} Navigate to the filters icon in the top left of the screen and
+          set your filters to start swiping. {"\n"}
+          {"\n"} To swipe through all the recipes in our database set ONLY your
+          serving filter to "for 4-5"
+        </Text>
+      </View>
+    );
+  } else {
+    content_displayed = (
+      <View style={styles.redBox}>
+        <Pressable
+          onPress={() =>
+            router.push({
+              pathname: "/(tabs)/home/recipe_details1",
+              params: {
+                recipe_title: recipes[index].Name,
+                the_image: recipes[index].image_url,
+                servings: recipes[index].servings,
+                time: recipes[index].TotalTime,
+                difficulty: recipes[index].difficulty,
+                chef_name: recipes[index].AuthorName,
+              },
+            })
+          }
+        >
+          <Image
+            source={{ uri: recipes[index].image_url }}
+            style={styles.recipeImage}
+          />
+        </Pressable>
+        <View style={styles.redBoxContent}>
+          <View style={styles.profileAndTitle}>
+            <Image
+              source={require("assets/chef_prof.png")}
+              style={styles.profileImage}
+            />
+            <Text
+              numberOfLines={2}
+              ellipsizeMode="tail"
+              style={styles.recipeTitle}
+            >
+              {recipes[index].Name}
+            </Text>
+          </View>
+
+          {/* Recipe Details */}
+          <View style={styles.recipeDetails}>
+            <View style={styles.detailRow}>
+              <Image
+                source={require("assets/forkkk.png")}
+                style={styles.icon}
+              />
+              <Text style={styles.detailText}>{recipes[index].servings}</Text>
+            </View>
+
+            <View style={styles.detailRow}>
+              <Image
+                source={require("assets/whiteclock.png")}
+                style={styles.icon}
+              />
+              <Text style={styles.detailText}>
+                {recipes[index]?.TotalTime?.slice(2)}
+              </Text>
+            </View>
+
+            <View style={styles.detailRow}>
+              <Image
+                source={require("assets/whitefire.png")}
+                style={styles.icon}
+              />
+              <Text style={styles.detailText}>{recipes[index].difficulty}</Text>
+            </View>
+
+            <View style={styles.detailRow}>
+              <Image
+                source={require("assets/whitebookmark.png")}
+                style={styles.icon}
+              />
+              <Text style={styles.detailText}>147</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  }
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.mainContainer}>
@@ -497,8 +618,8 @@ export default function HomeScreen() {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             style={styles.filtersContainer}
-            data={flattenedValues}
-            keyExtractor={(item, index) => index.toString()}
+            data={flattenedValues1}
+            //keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <View style={styles.filter}>
                 <Text style={styles.filterText}>
@@ -563,86 +684,11 @@ export default function HomeScreen() {
               >
                 <View style={styles.cardInternal}>
                   {/* Red Box Overlay */}
-                  <View style={styles.redBox}>
-                    {/* create a useEffect that when the recipe array is empty renders a card to reset filters */}
-                    {/* Recipe Image */}
-                    <Pressable
-                      onPress={() =>
-                        router.push({
-                          pathname: "/(tabs)/home/recipe_details1",
-                          params: {
-                            recipe_title: recipes[index].Name,
-                            the_image: recipes[index].image_url,
-                            servings: recipes[index].servings,
-                            time: recipes[index].TotalTime,
-                            difficulty: recipes[index].difficulty,
-                            chef_name: recipes[index].AuthorName,
-                          },
-                        })
-                      }
-                    >
-                      <Image
-                        source={{ uri: recipes[index].image_url }}
-                        style={styles.recipeImage}
-                      />
-                    </Pressable>
-                    <View style={styles.redBoxContent}>
-                      <View style={styles.profileAndTitle}>
-                        <Image
-                          source={require("assets/chef_prof.png")}
-                          style={styles.profileImage}
-                        />
-                        <Text
-                          numberOfLines={2}
-                          ellipsizeMode="tail"
-                          style={styles.recipeTitle}
-                        >
-                          {recipes[index].Name}
-                        </Text>
-                      </View>
-
-                      {/* Recipe Details */}
-                      <View style={styles.recipeDetails}>
-                        <View style={styles.detailRow}>
-                          <Image
-                            source={require("assets/forkkk.png")}
-                            style={styles.icon}
-                          />
-                          <Text style={styles.detailText}>
-                            {recipes[index].servings}
-                          </Text>
-                        </View>
-
-                        <View style={styles.detailRow}>
-                          <Image
-                            source={require("assets/whiteclock.png")}
-                            style={styles.icon}
-                          />
-                          <Text style={styles.detailText}>
-                            {recipes[index].TotalTime.slice(2)}
-                          </Text>
-                        </View>
-
-                        <View style={styles.detailRow}>
-                          <Image
-                            source={require("assets/whitefire.png")}
-                            style={styles.icon}
-                          />
-                          <Text style={styles.detailText}>
-                            {recipes[index].difficulty}
-                          </Text>
-                        </View>
-
-                        <View style={styles.detailRow}>
-                          <Image
-                            source={require("assets/whitebookmark.png")}
-                            style={styles.icon}
-                          />
-                          <Text style={styles.detailText}>147</Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
+                  {/* <View style={styles.redBox}> */}
+                  {/* create a useEffect that when the recipe array is empty renders a card to reset filters */}
+                  {/* Recipe Image */}
+                  {content_displayed}
+                  {/* </View> */}
                 </View>
               </Animated.View>
             </FlingGestureHandler>
@@ -650,7 +696,14 @@ export default function HomeScreen() {
         </View>
 
         {/* Redo button */}
-        <TouchableOpacity style={[styles.redoButton, { zIndex: 6 }]}>
+        <TouchableOpacity
+          style={[styles.redoButton, { zIndex: 6 }]}
+          onPress={() =>
+            alert(
+              "🚧whoops redo is not functional right now!🚧, re render the stack to go back!"
+            )
+          }
+        >
           <Icon name="redo" size={20} color="#B5300B" />
         </TouchableOpacity>
 
@@ -722,6 +775,13 @@ const styles = StyleSheet.create({
   redBox: {
     flex: 1,
     backgroundColor: "#B5300B",
+  },
+  redBoxAlt: {
+    flex: 1,
+    backgroundColor: "#B5300B",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
   container: {
     flex: 1,
