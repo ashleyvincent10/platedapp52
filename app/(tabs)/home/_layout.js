@@ -1,18 +1,6 @@
 import { Stack } from "expo-router";
 import { useRouter } from "expo-router";
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-  Link,
-} from "react-native";
-
-import { useNavigation } from "expo-router";
-
-const windowWidth = Dimensions.get("window").width;
+import { FilterProvider } from "./FilterContext";
 
 export default function StackLayout() {
   const router = useRouter();
