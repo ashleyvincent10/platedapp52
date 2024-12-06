@@ -9,6 +9,7 @@ import {
   Dimensions,
   Animated,
   Alert,
+  FlatList,
 } from "react-native";
 import { useRouter } from "expo-router";
 import {
@@ -133,6 +134,16 @@ export default function HomeScreen() {
   useEffect(() => {
     //console.log("Selected Filters:", selectedFilters);
   }, [selectedFilters]); // Dependency array to trigger on updates
+
+   // Extract only the values from the object
+ const values = Object.values(selectedFilters);
+
+
+ // If some values are arrays (like "ingredients"), flatten them to render them as strings
+ const flattenedValues = values.flatMap((value) =>
+   Array.isArray(value) ? value : [value]
+ );
+
 
   console.log(recipes);
 
@@ -446,7 +457,7 @@ export default function HomeScreen() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.mainContainer}>
         {/* Header */}
-        <View style={[styles.header, { zIndex: 2, backgroundColor: "red" }]}>
+        <View style={[styles.header, { zIndex: 2 }]}>
           <Text style={styles.title}>Plated</Text>
 
           <TouchableOpacity
@@ -469,7 +480,7 @@ export default function HomeScreen() {
             flexDirection: "row",
             alignItems: "center",
             zIndex: 1,
-            backgroundColor: "orange",
+            //backgroundColor: "orange",
             paddingLeft: 5,
             justifyContent: "center",
           }}
@@ -480,30 +491,29 @@ export default function HomeScreen() {
               style={styles.filterIcon}
             />
           </TouchableOpacity>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.filtersContainer}
-          >
-            <View style={styles.filter}>
-              <Text style={styles.filterText}>Nut Allergy 🔒</Text>
-            </View>
-            <View style={styles.filter}>
-              <Text style={styles.filterText}>{"Gluten Free 🔒"}</Text>
-            </View>
-            <View style={styles.filter}>
-              <Text style={styles.filterText}>{"<30 min ✓"}</Text>
-            </View>
-            <View style={styles.filter}>
-              <Text style={styles.filterText}> Novice ✓</Text>
-            </View>
-          </ScrollView>
+        <View style={styles.filter}>
+           <Text style={styles.filterText}>Nut Allergy 🔒</Text>
+         </View>
+         <FlatList
+           horizontal={true}
+           showsHorizontalScrollIndicator={false}
+           style={styles.filtersContainer}
+           data={flattenedValues}
+           keyExtractor={(item, index) => index.toString()}
+           renderItem={({ item }) => (
+             <View style={styles.filter}>
+               <Text style={styles.filterText}>
+                 {item}
+                 {"✓"}
+               </Text>
+             </View>
+           )}
+         />
+
         </View>
 
         {/* Recipe Cards */}
-        <View
-          style={[styles.cardStack, { zIndex: 4, backgroundColor: "yellow" }]}
-        >
+        <View style={[styles.cardStack, { zIndex: 4 }]}>
           {/* Since these are static layers, just leave them as Views or Animated.View with no dynamic props */}
           <Animated.View
             style={[
@@ -565,9 +575,7 @@ export default function HomeScreen() {
                       {/* Profile and Recipe Title */}
                       <View style={styles.profileAndTitle}>
                         <Image
-                          source={{
-                            uri: recipes[index]?.image_url,
-                          }}
+                          source={require("assets/chef_prof.png")}
                           style={styles.profileImage}
                         />
                         <Text style={styles.recipeTitle}>
@@ -601,7 +609,7 @@ export default function HomeScreen() {
                             style={styles.icon}
                           />
                           <Text style={styles.detailText}>
-                            {recipes[index].diff}
+                            {recipes[index].difficulty}
                           </Text>
                         </View>
                         <View style={styles.detailRow}>
@@ -626,7 +634,7 @@ export default function HomeScreen() {
         </TouchableOpacity>
 
         {/* Footer */}
-        <View style={[styles.footer, { zIndex: 3, backgroundColor: "green" }]}>
+        <View style={[styles.footer, { zIndex: 3 }]}>
           <Animated.View
             style={[styles.folderContainer, { top: topFolderMargin }]}
           >
@@ -643,25 +651,47 @@ export default function HomeScreen() {
         </View>
 
         {/* Animation Line */}
-        <View
-          style={[
-            {
-              position: "absolute",
-              height: 20,
-              marginLeft: 15,
-              marginRight: 15,
-              borderTopLeftRadius: 5,
-              borderTopRightRadius: 5,
-              width: 400,
-              bottom: 0,
-              zIndex: 5,
-              backgroundColor: lineVisible ? "#444" : "transparent",
-              backgroundColor: "blue",
-            },
-          ]}
-        />
-      </View>
-    </GestureHandlerRootView>
+       <View
+         style={[
+           {
+             position: "absolute",
+             height: 20,
+             marginLeft: 15,
+             marginRight: 15,
+             borderTopLeftRadius: 5,
+             borderTopRightRadius: 5,
+             width: 400,
+             bottom: 0,
+             zIndex: 5,
+             backgroundColor: lineVisible ? "#444" : "transparent",
+           },
+         ]}
+       >
+         <TouchableOpacity
+           style={[
+             {
+               position: "absolute",
+               height: 20,
+               marginLeft: 15,
+               marginRight: 15,
+               borderTopLeftRadius: 5,
+               borderTopRightRadius: 5,
+               width: 180,
+
+
+               alignSelf: "center",
+
+
+               // backgroundColor: "blue",
+             },
+           ]}
+           onPress={() => router.push("(tabs)/profile/saved_recipes")}
+         />
+         <View />
+       </View>
+     </View>
+   </GestureHandlerRootView>
+
   );
 }
 
@@ -782,11 +812,13 @@ const styles = StyleSheet.create({
     height: FOLDER_HEIGHT,
   },
   recipeTitle: {
-    fontSize: 24,
+    fontSize: 25,
     fontWeight: "bold",
     fontFamily: "Prata",
     color: "white",
     marginLeft: 80,
+    //position: "absolute",
+    top: 5,
   },
 
   profileAndTitle: {
@@ -817,12 +849,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
-    marginTop: 8,
+    marginTop: 80,
+    left: 30,
+    position: "absolute",
   },
   detailRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginLeft: 16,
+    marginLeft: 12,
+    justifyContent: "space-between",
   },
   icon: {
     width: 18,
@@ -831,6 +866,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     color: "white",
-    fontSize: 14,
+    fontSize: 16,
+    space: 5,
   },
 });
