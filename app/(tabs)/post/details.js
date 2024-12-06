@@ -34,6 +34,13 @@ export default function Details() {
   // State for focus management
   const [focusedInput, setFocusedInput] = useState(null);
 
+  // State for tracking filled inputs
+  const [filledInputs, setFilledInputs] = useState({
+    recipeName: false,
+    ingredients: false,
+    steps: false,
+  });
+
   // Dropdown options
   const difficultyOptions = ["Easy", "Medium", "Hard"];
   const servingsOptions = ["2", "4", "6", "8"];
@@ -45,6 +52,27 @@ export default function Details() {
     "Indian",
     "Japanese",
   ];
+
+  const handleInputChange = (field, value) => {
+    // Update the value
+    switch (field) {
+      case "recipeName":
+        setRecipeName(value);
+        break;
+      case "ingredients":
+        setIngredients(value);
+        break;
+      case "steps":
+        setSteps(value);
+        break;
+    }
+
+    // Update filled state
+    setFilledInputs((prev) => ({
+      ...prev,
+      [field]: value.trim().length > 0,
+    }));
+  };
 
   const handlePost = () => {
     if (!recipeName || !ingredients || !steps) {
@@ -128,23 +156,22 @@ export default function Details() {
           ) : (
             <Image style={styles.recipeImage} />
           )}
+
           <View style={styles.recipeInfo}>
             <Text style={styles.recipeLabel}>Recipe Name</Text>
-            <View
+            <TextInput
               style={[
-                styles.recipeNameBox,
+                styles.recipeNameText,
+                styles.defaultInput,
                 focusedInput === "recipeName" && styles.focusedInput,
+                filledInputs.recipeName && styles.filledInput,
               ]}
-            >
-              <TextInput
-                style={styles.recipeNameText}
-                value={recipeName}
-                onChangeText={setRecipeName}
-                placeholder="Enter recipe name..."
-                onFocus={() => setFocusedInput("recipeName")}
-                onBlur={() => setFocusedInput(null)}
-              />
-            </View>
+              value={recipeName}
+              onChangeText={(text) => handleInputChange("recipeName", text)}
+              placeholder="Enter recipe name..."
+              onFocus={() => setFocusedInput("recipeName")}
+              onBlur={() => setFocusedInput(null)}
+            />
             <View style={styles.tagsContainer}>
               <TouchableOpacity
                 style={styles.tag}
@@ -235,12 +262,14 @@ export default function Details() {
             style={[
               styles.textArea,
               styles.ingredientsBox,
+              styles.defaultInput,
               focusedInput === "ingredients" && styles.focusedInput,
+              filledInputs.ingredients && styles.filledInput,
             ]}
             multiline
             placeholder="List your ingredients here..."
             value={ingredients}
-            onChangeText={setIngredients}
+            onChangeText={(text) => handleInputChange("ingredients", text)}
             onFocus={() => setFocusedInput("ingredients")}
             onBlur={() => setFocusedInput(null)}
           />
@@ -252,12 +281,14 @@ export default function Details() {
             style={[
               styles.textArea,
               styles.stepsBox,
+              styles.defaultInput,
               focusedInput === "steps" && styles.focusedInput,
+              filledInputs.steps && styles.filledInput,
             ]}
             multiline
             placeholder="Write your steps here..."
             value={steps}
-            onChangeText={setSteps}
+            onChangeText={(text) => handleInputChange("steps", text)}
             onFocus={() => setFocusedInput("steps")}
             onBlur={() => setFocusedInput(null)}
           />
@@ -274,6 +305,11 @@ export default function Details() {
 }
 
 const styles = StyleSheet.create({
+  defaultInput: {
+    borderWidth: 1,
+    borderColor: "#CCCCCC",
+    backgroundColor: "#F5F5F5",
+  },
   focusedInput: {
     borderColor: "#A52A2A",
     borderWidth: 2,
@@ -282,6 +318,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
+    backgroundColor: "#FFF",
+  },
+  filledInput: {
+    borderColor: "#A52A2A",
+    borderWidth: 1,
+    backgroundColor: "#FFF",
   },
   container: {
     flex: 1,
@@ -325,14 +367,14 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins",
   },
   recipeNameBox: {
-    borderWidth: 1,
-    borderColor: "#A52A2A",
     padding: 8,
     marginBottom: 8,
   },
   recipeNameText: {
     fontSize: 18,
     fontFamily: "Poppins",
+    padding: 8,
+    marginBottom: 8,
   },
   tagsContainer: {
     flexDirection: "row",
@@ -387,10 +429,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 3,
   },
   textArea: {
-    borderWidth: 1,
-    borderColor: "#CCC",
     padding: 8,
-    backgroundColor: "#FFF",
     textAlignVertical: "top",
     fontFamily: "Poppins",
   },
