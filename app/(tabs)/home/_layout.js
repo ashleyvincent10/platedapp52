@@ -17,7 +17,7 @@ export default function StackLayout() {
             },
             headerTitleStyle: {
               fontFamily: "Prata-Regular",
-              fontSize: 34,
+              fontSize: 30,
               color: "black",
             },
           }}
@@ -33,7 +33,7 @@ export default function StackLayout() {
             headerTitle: "Set Filters",
             headerTitleStyle: {
               fontFamily: "Prata-Regular",
-              fontSize: 34,
+              fontSize: 30,
               color: "black",
             },
             headerTintColor: "black",

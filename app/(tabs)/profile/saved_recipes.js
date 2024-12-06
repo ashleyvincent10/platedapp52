@@ -37,6 +37,11 @@ export default function Page() {
   useEffect(() => {
     navigation.setOptions({
       headerTitle: "Saved Recipes",
+      headerTitleStyle: {
+        fontFamily: "Prata-Regular",
+        fontSize: 30,
+        color: "black",
+      },
       headerLeft: () => (
         <TouchableOpacity
           style={styles.iconButton}
@@ -87,7 +92,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    padding: 24,
+    paddingTop: 24,
     backgroundColor: "#FAF9F6",
   },
 });

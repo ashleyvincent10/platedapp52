@@ -131,8 +131,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#EEEEEE",
+    // borderBottomWidth: 1,
+    // borderBottomColor: "#EEEEEE",
     backgroundColor: "#FAF9F6",
   },
   headerText: {
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   cameraWrapper: {
     paddingHorizontal: 16,
     paddingTop: 16,
-    backgroundColor: "white",
+    backgroundColor: "#FAF9F6",
   },
   cameraContainer: {
     height: 450,

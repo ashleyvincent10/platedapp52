@@ -27,7 +27,7 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const FOLDER_HEIGHT = SCREEN_HEIGHT * 0.08; // Height of the full folder
 const TAB_HEIGHT = SCREEN_HEIGHT * 0.029; // Height of just the tab
-const INITIAL_MARGIN = FOLDER_HEIGHT - TAB_HEIGHT + 5; // Shows only the tab initially
+const INITIAL_MARGIN = FOLDER_HEIGHT - TAB_HEIGHT + 6; // Shows only the tab initially
 const BOTTOM_MARGIN = -800;
 const TOP_MARGIN = 1000;
 const INVISIBLE_HEIGHT = 460;
@@ -470,7 +470,7 @@ export default function HomeScreen() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.mainContainer}>
         {/* Header */}
-        <View style={[styles.header, { zIndex: 2, backgroundColor: "red" }]}>
+        <View style={[styles.header, { zIndex: 2 }]}>
           <Text style={styles.title}>Plated</Text>
 
           <TouchableOpacity
@@ -493,7 +493,7 @@ export default function HomeScreen() {
             flexDirection: "row",
             alignItems: "center",
             zIndex: 1,
-            backgroundColor: "orange",
+            // backgroundColor: "orange",
             paddingLeft: 5,
             justifyContent: "center",
           }}
@@ -525,9 +525,7 @@ export default function HomeScreen() {
         </View>
 
         {/* Recipe Cards */}
-        <View
-          style={[styles.cardStack, { zIndex: 4, backgroundColor: "yellow" }]}
-        >
+        <View style={[styles.cardStack, { zIndex: 4 }]}>
           {/* Since these are static layers, just leave them as Views or Animated.View with no dynamic props */}
           <Animated.View
             style={[
@@ -641,7 +639,7 @@ export default function HomeScreen() {
         </TouchableOpacity>
 
         {/* Footer */}
-        <View style={[styles.footer, { zIndex: 3, backgroundColor: "green" }]}>
+        <View style={[styles.footer, { zIndex: 3 }]}>
           <Animated.View
             style={[styles.folderContainer, { top: topFolderMargin }]}
           >
