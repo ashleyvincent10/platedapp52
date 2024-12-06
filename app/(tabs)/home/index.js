@@ -16,6 +16,7 @@ import {
   GestureHandlerRootView,
   FlingGestureHandler,
   Directions,
+  Pressable,
 } from "react-native-gesture-handler";
 
 import { supabase } from "backend/supabaseClient";
@@ -563,11 +564,28 @@ export default function HomeScreen() {
                 <View style={styles.cardInternal}>
                   {/* Red Box Overlay */}
                   <View style={styles.redBox}>
+                    {/* create a useEffect that when the recipe array is empty renders a card to reset filters */}
                     {/* Recipe Image */}
-                    <Image
-                      source={{ uri: recipes[index].image_url }}
-                      style={styles.recipeImage}
-                    />
+                    <Pressable
+                      onPress={() =>
+                        router.push({
+                          pathname: "/(tabs)/home/recipe_details1",
+                          params: {
+                            recipe_title: recipes[index].Name,
+                            the_image: recipes[index].image_url,
+                            servings: recipes[index].servings,
+                            time: recipes[index].TotalTime,
+                            difficulty: recipes[index].difficulty,
+                            chef_name: recipes[index].AuthorName,
+                          },
+                        })
+                      }
+                    >
+                      <Image
+                        source={{ uri: recipes[index].image_url }}
+                        style={styles.recipeImage}
+                      />
+                    </Pressable>
                     <View style={styles.redBoxContent}>
                       <View style={styles.profileAndTitle}>
                         <Image
@@ -601,7 +619,7 @@ export default function HomeScreen() {
                             style={styles.icon}
                           />
                           <Text style={styles.detailText}>
-                            {recipes[index].TotalTime}
+                            {recipes[index].TotalTime.slice(2)}
                           </Text>
                         </View>
 
@@ -864,8 +882,9 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   icon: {
-    width: 18,
-    height: 18,
+    width: 20,
+    height: 20,
+    resizeMode: "contain",
     marginRight: 4,
   },
   detailText: {

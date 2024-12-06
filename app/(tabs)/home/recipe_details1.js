@@ -14,6 +14,7 @@ import { useLocalSearchParams } from "expo-router";
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { supabase } from "backend/supabaseClient";
+import RecreationBox from "components/recreationBox";
 const windowWidth = Dimensions.get("window").width;
 
 export default function RecipeDetails() {
@@ -128,7 +129,7 @@ export default function RecipeDetails() {
                   height: windowWidth * 0.085,
                 }}
               />
-              <Text style={styles.body}>{time}</Text>
+              <Text style={styles.body}>{time.slice(2)}</Text>
             </View>
             <View
               style={{
