@@ -16,7 +16,7 @@ import { supabase } from "backend/supabaseClient";
 export default function CookBookBox({ type, name }) {
   const [cookBookData, setCookBookData] = useState([]);
   const router = useRouter();
-  console.log(type);
+  //console.log(type);
   useEffect(() => {
     const fetchCookBook = async () => {
       try {
@@ -24,7 +24,7 @@ export default function CookBookBox({ type, name }) {
           .from("Recipes")
           .select("image_url")
           .eq(type, true);
-        console.log(user_response.data);
+        //console.log(user_response.data);
         setCookBookData(user_response.data);
       } catch (err) {
         console.error(err);
