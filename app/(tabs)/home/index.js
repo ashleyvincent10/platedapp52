@@ -123,7 +123,14 @@ export default function HomeScreen() {
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.title}>Plated</Text>
-          <TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() =>
+              alert(
+                "🚧whoops this feature is under construction!🚧 Please go back and find your recipe manually."
+              )
+            }
+          >
             <Image
               source={require("assets/magnifier.png")}
               style={styles.searchIcon}
