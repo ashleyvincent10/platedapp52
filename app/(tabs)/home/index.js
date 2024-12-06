@@ -21,6 +21,7 @@ import {
 
 import { supabase } from "backend/supabaseClient";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useFilters } from "./FilterContext"; // Import the useFilters hook
 
 // Dynamic dimensions so it fits on any screen size
@@ -31,14 +32,17 @@ const TAB_HEIGHT = SCREEN_HEIGHT * 0.029; // Height of just the tab
 const INITIAL_MARGIN = FOLDER_HEIGHT - TAB_HEIGHT + 5; // Shows only the tab initially
 const BOTTOM_MARGIN = -800;
 const TOP_MARGIN = 1000;
-const INVISIBLE_HEIGHT = 460;
-const LOW_HEIGHT = 480;
-const MEDIUM_HEIGHT = 500;
-const HIGH_HEIGHT = 520;
-const INVISIBLE_WIDTH = 330;
-const LOW_WIDTH = 350;
-const MEDIUM_WIDTH = 370;
-const HIGH_WIDTH = 390;
+
+const INVISIBLE_WIDTH = SCREEN_WIDTH - 120;
+const LOW_WIDTH = SCREEN_WIDTH - 100;
+const MEDIUM_WIDTH = SCREEN_WIDTH - 80;
+const HIGH_WIDTH = SCREEN_WIDTH - 60;
+
+const INVISIBLE_HEIGHT = INVISIBLE_WIDTH * 1.4;
+const LOW_HEIGHT = LOW_WIDTH * 1.4;
+const MEDIUM_HEIGHT = MEDIUM_WIDTH * 1.4;
+const HIGH_HEIGHT = HIGH_WIDTH * 1.4;
+
 const INVISIBLE_PLACEMENT = -21;
 const LOW_PLACEMENT = -14;
 const MEDIUM_PLACEMENT = -7;
@@ -179,9 +183,9 @@ export default function HomeScreen() {
       }).start(() => {
         setLineVisible(false);
         setIndex((prevIndex) => prevIndex + 1);
+
         // Delay and then return topFolderMargin back
         Animated.sequence([
-          // After topFolderMargin returns, animate the card properties
           Animated.parallel([
             Animated.timing(topFolderMargin, {
               toValue: INITIAL_MARGIN,
@@ -317,7 +321,21 @@ export default function HomeScreen() {
               duration: 0,
               useNativeDriver: false,
             }),
-          ]).start();
+          ]).start(async () => {
+            // Make a call to update your Supabase database
+            try {
+              const { error } = await supabase
+                .from("Recipes") // Replace "Recipes" with your table name
+                .update({ is_saved: true }) // Replace with your actual update logic
+                .eq("recipeid", recipes[index].recipeid); // Replace with your actual condition
+
+              if (error) {
+                console.error("Error updating database:", error.message);
+              }
+            } catch (err) {
+              console.error("Error during database update:", err);
+            }
+          });
         });
       });
     });
@@ -473,24 +491,24 @@ export default function HomeScreen() {
   if (index >= recipes.length) {
     content_displayed = (
       <View style={styles.redBoxAlt}>
-        <Text style={styles.recipeTitle}>
+        <Text style={[styles.recipeTitle, { fontFamily: "Poppins-Regular" }]}>
           {"\n"}
           {"\n"}We're sorry... our database ran out of or doesn't have recipes
           associated with those filters!{"\n"} {"\n"}
-          {"\n"} Please navigate back to filters and set new ones or set
-          servings to 4-5 to swipe through all recipes!
+          {"\n"}Please navigate back to filters and set new ones or set servings
+          to 4-5 to swipe through all recipes!
         </Text>
       </View>
     );
   } else if (flattenedValues1.length === 0) {
     content_displayed = (
       <View style={styles.redBoxAlt}>
-        <Text style={styles.recipeTitle}>
+        <Text style={[styles.recipeTitle, { fontFamily: "Poppins-Regular" }]}>
           {"\n"}
           {"\n"}Welcome to Plated!{"\n"}
-          {"\n"} Navigate to the filters icon in the top left of the screen and
+          {"\n"}Navigate to the filters icon in the top left of the screen and
           set your filters to start swiping. {"\n"}
-          {"\n"} To swipe through all the recipes in our database set ONLY your
+          {"\n"}To swipe through all the recipes in our database set ONLY your
           serving filter to "for 4-5"
         </Text>
       </View>
@@ -578,18 +596,18 @@ export default function HomeScreen() {
       <View style={styles.mainContainer}>
         {/* Header */}
         <View style={[styles.header, { zIndex: 2 }]}>
-          <Text style={styles.title}>Plated</Text>
+          <Text style={[styles.title, { bottom: -10 }]}>Plated</Text>
 
           <TouchableOpacity
             onPress={() =>
               Alert.alert(
-                "🚧whoops this feature is under construction!🚧 Please go back and find your recipe manually."
+                "🚧 Whoops this feature is under construction! 🚧 Please go back and find your recipe manually."
               )
             }
           >
             <Image
               source={require("assets/magnifier.png")}
-              style={styles.searchIcon}
+              style={[styles.searchIcon, { bottom: -5 }]}
             />
           </TouchableOpacity>
         </View>
@@ -600,7 +618,7 @@ export default function HomeScreen() {
             flexDirection: "row",
             alignItems: "center",
             zIndex: 1,
-            //backgroundColor: "orange",
+            // backgroundColor: "orange",
             paddingLeft: 5,
             justifyContent: "center",
           }}
@@ -679,7 +697,12 @@ export default function HomeScreen() {
               <Animated.View
                 style={[
                   styles.stackLayer,
-                  { bottom: bottomCardMargin, zIndex: 2 },
+                  {
+                    height: HIGH_HEIGHT,
+                    width: HIGH_WIDTH,
+                    bottom: bottomCardMargin,
+                    zIndex: 2,
+                  },
                 ]}
               >
                 <View style={styles.cardInternal}>
@@ -700,7 +723,7 @@ export default function HomeScreen() {
           style={[styles.redoButton, { zIndex: 6 }]}
           onPress={() =>
             alert(
-              "🚧whoops redo is not functional right now!🚧, re render the stack to go back!"
+              "🚧 Whoops redo is not functional right now! 🚧, re render the stack to go back!"
             )
           }
         >
@@ -757,7 +780,11 @@ export default function HomeScreen() {
                 // backgroundColor: "blue",
               },
             ]}
-            onPress={() => router.push("(tabs)/profile/saved_recipes")}
+            onPress={() =>
+              router.push({
+                pathname: "/(tabs)/profile/saved_recipes",
+              })
+            }
           />
           <View />
         </View>
@@ -774,6 +801,7 @@ const styles = StyleSheet.create({
   },
   redBox: {
     flex: 1,
+    height: HIGH_HEIGHT / 4.5,
     backgroundColor: "#B5300B",
   },
   redBoxAlt: {
