@@ -75,7 +75,7 @@ export default function Details() {
     const recipeData = {
       Name: recipeName,
       is_mine: true, // Adjust this value as necessary
-      under_construction: false, // Adjust this value as necessary
+      under_construction: true, // Adjust this value as necessary
       image_url: image,
     };
 
@@ -91,53 +91,58 @@ export default function Details() {
         const blob = await response.blob();
         const reader = new FileReader();
 
-        reader.onloadend = async () => {
-          const base64Image = reader.result; // This will be the Base64 string
+        publicURL = await new Promise((resolve, reject) => {
+          reader.onloadend = async () => {
+            const base64Image = reader.result; // This will be the Base64 string
 
-          const fileName = `${Date.now()}_${recipeName}.jpeg`;
-          console.log("File name for upload:", fileName);
+            const fileName = `${Date.now()}_${recipeName}.jpeg`;
+            console.log("File name for upload:", fileName);
 
-          // Create a FormData object
-          const formData = new FormData();
-          formData.append("file", {
-            uri: base64Image, // Use the Base64 string
-            name: fileName,
-            type: "image/jpeg",
-          });
-
-          const { data: uploadData, error: uploadError } =
-            await supabase.storage.from("Recipes").upload(fileName, formData, {
-              cacheControl: "3600",
-              upsert: false,
+            // Create a FormData object
+            const formData = new FormData();
+            formData.append("file", {
+              uri: base64Image,
+              name: fileName,
+              type: "image/jpeg",
             });
 
-          if (uploadError) {
-            console.error("Error uploading image:", uploadError);
-            throw uploadError;
-          }
+            const { data: uploadData, error: uploadError } =
+              await supabase.storage
+                .from("Recipes")
+                .upload(fileName, formData, {
+                  cacheControl: "3600",
+                  upsert: false,
+                });
 
-          // Get the public URL of the uploaded image
-          const { publicURL: imagePublicURL, error: urlError } =
-            supabase.storage.from("Recipes").getPublicUrl(fileName);
+            if (uploadError) {
+              console.error("Error uploading image:", uploadError);
+              reject(uploadError);
+            } else {
+              console.log("Upload successful:", uploadData);
+            }
 
-          if (urlError) {
-            console.error("Error getting public URL:", urlError);
-            throw urlError;
-          }
-          console.log("Public URL obtained:", imagePublicURL);
-          publicURL = imagePublicURL; // Store the public URL
-        };
+            // Construct the public URL manually
+            const projectId = "yribjypwwexuqoravaph"; // Replace with your actual project ID
+            const bucketName = "Recipes"; // Your bucket name
+            const filePath = `${bucketName}/${fileName}`;
+            const publicURL = `https://yribjypwwexuqoravaph.supabase.co/storage/v1/object/public/${filePath}?t=${new Date().toISOString()}`;
 
-        reader.readAsDataURL(blob); // Convert blob to Base64
+            console.log("Public URL obtained:", publicURL);
+            resolve(publicURL); // Resolve the promise with the constructed public URL
+          };
+
+          reader.readAsDataURL(blob); // Convert blob to Base64
+        });
       }
 
+      // Update the recipe data with the public URL
+      recipeData.image_url = publicURL;
+
+      // Log the recipe data to check the image_url
+      console.log("Recipe data after obtaining public URL:", recipeData);
+
       // Call the function to post the recipe to the database
-      const { error: dbError } = await postRecipeToDatabase({
-        Name: recipeName,
-        image_url: publicURL,
-        is_mine: true,
-        under_construction: true,
-      });
+      const { error: dbError } = await postRecipeToDatabase(recipeData);
 
       if (dbError) {
         console.error("Error posting recipe:", dbError);
