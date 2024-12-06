@@ -46,7 +46,7 @@ export default function PostLayout() {
         name="details"
         options={{
           headerTitle: "Recipe Details",
-          headerBackTitle: "Back",
+          headerBackButtonDisplayMode: "minimal",
         }}
       />
     </Stack>

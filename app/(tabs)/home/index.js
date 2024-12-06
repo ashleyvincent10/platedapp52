@@ -590,7 +590,7 @@ export default function HomeScreen() {
                           style={styles.profileImage}
                         />
                       </View> */}
-                  <Text style={styles.recipeTitle}>{recipes[3].Name}</Text>
+                  <Text style={styles.recipeTitle}>{recipes[0].Name}</Text>
                   {/* </View>
                   </View>
 
