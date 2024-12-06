@@ -44,6 +44,7 @@ const HIGH_PLACEMENT = 0;
 const INVISIBLE_OPACITY = 0;
 const LOW_OPACITY = 0.4;
 const MEDIUM_OPACITY = 0.7;
+const FADE_TIMING = 300;
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -76,7 +77,8 @@ export default function HomeScreen() {
   ).current;
 
   const [lineVisible, setLineVisible] = useState(false);
-  const [recipes, setRecipes] = useState([]); // State to hold recipes
+  const [recipes, setRecipes] = useState([{ Name: "test" }]); // State to hold recipes
+  const [index, setIndex] = useState(0);
 
   // Fetch recipes based on selected filters
   const fetchRecipesData = async () => {
@@ -124,7 +126,6 @@ export default function HomeScreen() {
       const fetchedRecipes = await fetchRecipesData(); // Fetch recipes based on filters
       setRecipes(fetchedRecipes); // Update state with fetched recipes
     };
-
     getRecipes(); // Call the function to fetch recipes
   }, [selectedFilters]);
 
@@ -132,6 +133,8 @@ export default function HomeScreen() {
   useEffect(() => {
     //console.log("Selected Filters:", selectedFilters);
   }, [selectedFilters]); // Dependency array to trigger on updates
+
+  console.log(recipes);
 
   const onFlingDown = () => {
     // Animate topFolderMargin to 0
@@ -145,78 +148,78 @@ export default function HomeScreen() {
       // Animate bottomCardMargin
       Animated.timing(bottomCardMargin, {
         toValue: BOTTOM_MARGIN,
-        duration: 300,
+        duration: 400,
         useNativeDriver: false,
       }).start(() => {
         setLineVisible(false);
+        setIndex((prevIndex) => prevIndex + 1);
         // Delay and then return topFolderMargin back
         Animated.sequence([
-          Animated.delay(300),
-          Animated.timing(topFolderMargin, {
-            toValue: INITIAL_MARGIN,
-            duration: 700,
-            useNativeDriver: false,
-          }),
           // After topFolderMargin returns, animate the card properties
           Animated.parallel([
+            Animated.timing(topFolderMargin, {
+              toValue: INITIAL_MARGIN,
+              duration: FADE_TIMING,
+              useNativeDriver: false,
+            }),
             Animated.timing(invisibleCardHeight, {
               toValue: LOW_HEIGHT,
-              duration: 700,
+              duration: FADE_TIMING,
               useNativeDriver: false,
             }),
             Animated.timing(invisibleCardWidth, {
               toValue: LOW_WIDTH,
-              duration: 700,
+              duration: FADE_TIMING,
               useNativeDriver: false,
             }),
             Animated.timing(invisibleCardPlacement, {
               toValue: LOW_PLACEMENT,
-              duration: 700,
+              duration: FADE_TIMING,
               useNativeDriver: false,
             }),
             Animated.timing(lowCardHeight, {
               toValue: MEDIUM_HEIGHT,
-              duration: 700,
+              duration: FADE_TIMING,
               useNativeDriver: false,
             }),
             Animated.timing(lowCardWidth, {
               toValue: MEDIUM_WIDTH,
-              duration: 700,
+              duration: FADE_TIMING,
               useNativeDriver: false,
             }),
             Animated.timing(lowCardPlacement, {
               toValue: MEDIUM_PLACEMENT,
-              duration: 700,
+              duration: FADE_TIMING,
               useNativeDriver: false,
             }),
             Animated.timing(mediumCardHeight, {
               toValue: HIGH_HEIGHT,
-              duration: 700,
+              duration: FADE_TIMING,
               useNativeDriver: false,
             }),
             Animated.timing(mediumCardWidth, {
               toValue: HIGH_WIDTH,
-              duration: 700,
+              duration: FADE_TIMING,
               useNativeDriver: false,
             }),
             Animated.timing(mediumCardPlacement, {
               toValue: HIGH_PLACEMENT,
-              duration: 700,
+              duration: FADE_TIMING,
               useNativeDriver: false,
             }),
             Animated.timing(invisibleCardOpacity, {
               toValue: LOW_OPACITY,
-              duration: 700,
+              duration: FADE_TIMING,
               useNativeDriver: false,
             }),
             Animated.timing(lowCardOpacity, {
               toValue: MEDIUM_OPACITY,
-              duration: 700,
+              duration: FADE_TIMING,
               useNativeDriver: false,
             }),
             Animated.timing(mediumCardOpacity, {
               toValue: 1,
-              duration: 700,
+              duration: FADE_TIMING,
               useNativeDriver: false,
             }),
           ]),
@@ -295,146 +298,147 @@ export default function HomeScreen() {
   };
 
   const onFlingUp = () => {
-    // First, we want to run a sequence of animations. For example:
-    Animated.sequence([
-      // Animate bottomCardMargin first
-      Animated.timing(bottomCardMargin, {
-        toValue: TOP_MARGIN,
-        duration: 250,
-        useNativeDriver: false,
-      }),
-      // Then run parallel animations on card sizes and placements
+    // Run the first animation
+    Animated.timing(bottomCardMargin, {
+      toValue: TOP_MARGIN,
+      duration: 250,
+      useNativeDriver: false,
+    }).start(() => {
+      // Once the first animation finishes, update state
+      setIndex((prevIndex) => prevIndex + 1);
+
+      // Now run the parallel animations
       Animated.parallel([
         Animated.timing(invisibleCardHeight, {
           toValue: LOW_HEIGHT,
-          duration: 700,
+          duration: FADE_TIMING,
           useNativeDriver: false,
         }),
         Animated.timing(invisibleCardWidth, {
           toValue: LOW_WIDTH,
-          duration: 700,
+          duration: FADE_TIMING,
           useNativeDriver: false,
         }),
         Animated.timing(invisibleCardPlacement, {
           toValue: LOW_PLACEMENT,
-          duration: 700,
+          duration: FADE_TIMING,
           useNativeDriver: false,
         }),
         Animated.timing(lowCardHeight, {
           toValue: MEDIUM_HEIGHT,
-          duration: 700,
+          duration: FADE_TIMING,
           useNativeDriver: false,
         }),
         Animated.timing(lowCardWidth, {
           toValue: MEDIUM_WIDTH,
-          duration: 700,
+          duration: FADE_TIMING,
           useNativeDriver: false,
         }),
         Animated.timing(lowCardPlacement, {
           toValue: MEDIUM_PLACEMENT,
-          duration: 700,
+          duration: FADE_TIMING,
           useNativeDriver: false,
         }),
         Animated.timing(mediumCardHeight, {
           toValue: HIGH_HEIGHT,
-          duration: 700,
+          duration: FADE_TIMING,
           useNativeDriver: false,
         }),
         Animated.timing(mediumCardWidth, {
           toValue: HIGH_WIDTH,
-          duration: 700,
+          duration: FADE_TIMING,
           useNativeDriver: false,
         }),
         Animated.timing(mediumCardPlacement, {
           toValue: HIGH_PLACEMENT,
-          duration: 700,
+          duration: FADE_TIMING,
           useNativeDriver: false,
         }),
         Animated.timing(invisibleCardOpacity, {
           toValue: LOW_OPACITY,
-          duration: 700,
+          duration: FADE_TIMING,
           useNativeDriver: false,
         }),
         Animated.timing(lowCardOpacity, {
           toValue: MEDIUM_OPACITY,
-          duration: 700,
+          duration: FADE_TIMING,
           useNativeDriver: false,
         }),
         Animated.timing(mediumCardOpacity, {
           toValue: 1,
-          duration: 700,
+          duration: FADE_TIMING,
           useNativeDriver: false,
         }),
-      ]),
-    ]).start(() => {
-      // Once the entire sequence finishes
-      Animated.parallel([
-        Animated.timing(bottomCardMargin, {
-          toValue: 0,
-          duration: 0,
-          useNativeDriver: false,
-        }),
-        Animated.timing(invisibleCardHeight, {
-          toValue: INVISIBLE_HEIGHT,
-          duration: 0,
-          useNativeDriver: false,
-        }),
-        Animated.timing(invisibleCardWidth, {
-          toValue: INVISIBLE_WIDTH,
-          duration: 0,
-          useNativeDriver: false,
-        }),
-        Animated.timing(invisibleCardPlacement, {
-          toValue: INVISIBLE_PLACEMENT,
-          duration: 0,
-          useNativeDriver: false,
-        }),
-        Animated.timing(lowCardHeight, {
-          toValue: LOW_HEIGHT,
-          duration: 0,
-          useNativeDriver: false,
-        }),
-        Animated.timing(lowCardWidth, {
-          toValue: LOW_WIDTH,
-          duration: 0,
-          useNativeDriver: false,
-        }),
-        Animated.timing(lowCardPlacement, {
-          toValue: LOW_PLACEMENT,
-          duration: 0,
-          useNativeDriver: false,
-        }),
-        Animated.timing(mediumCardHeight, {
-          toValue: MEDIUM_HEIGHT,
-          duration: 0,
-          useNativeDriver: false,
-        }),
-        Animated.timing(mediumCardWidth, {
-          toValue: MEDIUM_WIDTH,
-          duration: 0,
-          useNativeDriver: false,
-        }),
-        Animated.timing(mediumCardPlacement, {
-          toValue: MEDIUM_PLACEMENT,
-          duration: 0,
-          useNativeDriver: false,
-        }),
-        Animated.timing(invisibleCardOpacity, {
-          toValue: INVISIBLE_OPACITY,
-          duration: 0,
-          useNativeDriver: false,
-        }),
-        Animated.timing(lowCardOpacity, {
-          toValue: LOW_OPACITY,
-          duration: 0,
-          useNativeDriver: false,
-        }),
-        Animated.timing(mediumCardOpacity, {
-          toValue: MEDIUM_OPACITY,
-          duration: 0,
-          useNativeDriver: false,
-        }),
-      ]).start();
+      ]).start(() => {
+        // Once the parallel animations finish, run the next reset parallel
+        Animated.parallel([
+          Animated.timing(bottomCardMargin, {
+            toValue: 0,
+            duration: 0,
+            useNativeDriver: false,
+          }),
+          Animated.timing(invisibleCardHeight, {
+            toValue: INVISIBLE_HEIGHT,
+            duration: 0,
+            useNativeDriver: false,
+          }),
+          Animated.timing(invisibleCardWidth, {
+            toValue: INVISIBLE_WIDTH,
+            duration: 0,
+            useNativeDriver: false,
+          }),
+          Animated.timing(invisibleCardPlacement, {
+            toValue: INVISIBLE_PLACEMENT,
+            duration: 0,
+            useNativeDriver: false,
+          }),
+          Animated.timing(lowCardHeight, {
+            toValue: LOW_HEIGHT,
+            duration: 0,
+            useNativeDriver: false,
+          }),
+          Animated.timing(lowCardWidth, {
+            toValue: LOW_WIDTH,
+            duration: 0,
+            useNativeDriver: false,
+          }),
+          Animated.timing(lowCardPlacement, {
+            toValue: LOW_PLACEMENT,
+            duration: 0,
+            useNativeDriver: false,
+          }),
+          Animated.timing(mediumCardHeight, {
+            toValue: MEDIUM_HEIGHT,
+            duration: 0,
+            useNativeDriver: false,
+          }),
+          Animated.timing(mediumCardWidth, {
+            toValue: MEDIUM_WIDTH,
+            duration: 0,
+            useNativeDriver: false,
+          }),
+          Animated.timing(mediumCardPlacement, {
+            toValue: MEDIUM_PLACEMENT,
+            duration: 0,
+            useNativeDriver: false,
+          }),
+          Animated.timing(invisibleCardOpacity, {
+            toValue: INVISIBLE_OPACITY,
+            duration: 0,
+            useNativeDriver: false,
+          }),
+          Animated.timing(lowCardOpacity, {
+            toValue: LOW_OPACITY,
+            duration: 0,
+            useNativeDriver: false,
+          }),
+          Animated.timing(mediumCardOpacity, {
+            toValue: MEDIUM_OPACITY,
+            duration: 0,
+            useNativeDriver: false,
+          }),
+        ]).start();
+      });
     });
   };
 
@@ -467,6 +471,7 @@ export default function HomeScreen() {
             zIndex: 1,
             backgroundColor: "orange",
             paddingLeft: 5,
+            justifyContent: "center",
           }}
         >
           <TouchableOpacity onPress={() => router.push("/(tabs)/home/filters")}>
@@ -560,9 +565,9 @@ export default function HomeScreen() {
                           source={require("assets/personprofile.png")}
                           style={styles.profileImage}
                         />
-                      </View>
-                      <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text>
-                    </View>
+                      </View> */}
+                  <Text style={styles.recipeTitle}>{recipes[index].Name}</Text>
+                  {/* </View>
                   </View>
 
                   <View style={styles.recipeDetailsOverlay}>
@@ -593,8 +598,8 @@ export default function HomeScreen() {
                         style={styles.icon}
                       />
                       <Text style={styles.detailText}>147</Text>
-                    </View>
-                  </View> */}
+                    </View> */}
+                  {/* </View> */}
                 </View>
               </Animated.View>
             </FlingGestureHandler>
@@ -700,7 +705,7 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderColor: "#B5300B",
     overflow: "hidden",
-    backgroundColor: "white",
+    backgroundColor: "#B5300B",
   },
   title: {
     fontSize: 50,
@@ -715,7 +720,6 @@ const styles = StyleSheet.create({
   },
   filtersContainer: {
     flexDirection: "row",
-    marginTop: 10,
   },
   filter: {
     borderWidth: 1,
@@ -733,8 +737,8 @@ const styles = StyleSheet.create({
     color: "#A52A2A",
   },
   filterIcon: {
-    width: 35,
-    height: 35,
+    width: 30,
+    height: 30,
     margin: 5,
   },
   buttonContainer: {
