@@ -112,9 +112,6 @@ export default function Page() {
           <View style={[styles.filterChip, styles.selectedChip]}>
             <Text style={styles.filterChipText}>Nut Allergy 🔒</Text>
           </View>
-          <View style={[styles.filterChip, styles.selectedChip]}>
-            <Text style={styles.filterChipText}>Gluten Free 🔒</Text>
-          </View>
         </View>
 
         {/* Ingredients Section */}
@@ -132,17 +129,22 @@ export default function Page() {
               "My Grains",
               "This week",
               "lemon",
-              "kale",
+              "butter",
               "chicken",
-              "basil",
               "beef",
-              "sriracha",
+              "lamb",
+              "basil",
               "rice",
-              "celery",
+              "tomatoes",
               "onion",
-              "potato",
+              "corn",
               "eggs",
               "lettuce",
+              "garlic",
+              "mushrooms",
+              "milk",
+              "vanilla",
+              "blueberries",
             ].map((item) => (
               <FilterChip key={item} text={item} category="ingredients" />
             ))}
