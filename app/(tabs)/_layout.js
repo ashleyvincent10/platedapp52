@@ -10,7 +10,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "black",
+        tabBarActiveTintColor: "#A52A2A",
         tabBarPosition: "bottom",
         headerShown: false,
         tabBarStyle: {
@@ -57,7 +57,7 @@ export default function TabLayout() {
           title: "Home",
           tabBarIcon: ({ size, color }) => (
             <Image
-              source={require("../../assets/home_icon.png")}
+              source={require("../../assets/home.png")}
               style={{ width: size, height: size, tintColor: color }}
             />
           ),
