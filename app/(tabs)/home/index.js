@@ -15,7 +15,6 @@ import {
   GestureHandlerRootView,
   FlingGestureHandler,
   Directions,
-  FlatList,
 } from "react-native-gesture-handler";
 
 import { supabase } from "backend/supabaseClient";
@@ -27,7 +26,7 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const FOLDER_HEIGHT = SCREEN_HEIGHT * 0.08; // Height of the full folder
 const TAB_HEIGHT = SCREEN_HEIGHT * 0.029; // Height of just the tab
-const INITIAL_MARGIN = FOLDER_HEIGHT - TAB_HEIGHT + 6; // Shows only the tab initially
+const INITIAL_MARGIN = FOLDER_HEIGHT - TAB_HEIGHT + 5; // Shows only the tab initially
 const BOTTOM_MARGIN = -800;
 const TOP_MARGIN = 1000;
 const INVISIBLE_HEIGHT = 460;
@@ -50,7 +49,6 @@ const FADE_TIMING = 300;
 export default function HomeScreen() {
   const router = useRouter();
   const { selectedFilters } = useFilters(); // Access the selected filters
-  const [filtersToggle, setFiltersToggle] = useState(false);
 
   // Replace useSharedValue with Animated.Value
   const topFolderMargin = useRef(new Animated.Value(INITIAL_MARGIN)).current;
@@ -127,7 +125,6 @@ export default function HomeScreen() {
     const getRecipes = async () => {
       const fetchedRecipes = await fetchRecipesData(); // Fetch recipes based on filters
       setRecipes(fetchedRecipes); // Update state with fetched recipes
-      console.log(recipes);
     };
     getRecipes(); // Call the function to fetch recipes
   }, [selectedFilters]);
@@ -135,16 +132,9 @@ export default function HomeScreen() {
   // Add useEffect to log selected filters when they update
   useEffect(() => {
     //console.log("Selected Filters:", selectedFilters);
-    setFiltersToggle((current) => (current === false ? true : false));
   }, [selectedFilters]); // Dependency array to trigger on updates
 
-  // Extract only the values from the object
-  const values = Object.values(selectedFilters);
-
-  // If some values are arrays (like "ingredients"), flatten them to render them as strings
-  const flattenedValues = values.flatMap((value) =>
-    Array.isArray(value) ? value : [value]
-  );
+  console.log(recipes);
 
   const onFlingDown = () => {
     // Animate topFolderMargin to 0
@@ -163,9 +153,9 @@ export default function HomeScreen() {
       }).start(() => {
         setLineVisible(false);
         setIndex((prevIndex) => prevIndex + 1);
-
         // Delay and then return topFolderMargin back
         Animated.sequence([
+          // After topFolderMargin returns, animate the card properties
           Animated.parallel([
             Animated.timing(topFolderMargin, {
               toValue: INITIAL_MARGIN,
@@ -301,21 +291,7 @@ export default function HomeScreen() {
               duration: 0,
               useNativeDriver: false,
             }),
-          ]).start(async () => {
-            // Make a call to update your Supabase database
-            try {
-              const { error } = await supabase
-                .from("Recipes") // Replace "Recipes" with your table name
-                .update({ is_saved: true }) // Replace with your actual update logic
-                .eq("recipeid", recipes[index].recipeid); // Replace with your actual condition
-
-              if (error) {
-                console.error("Error updating database:", error.message);
-              }
-            } catch (err) {
-              console.error("Error during database update:", err);
-            }
-          });
+          ]).start();
         });
       });
     });
@@ -470,13 +446,13 @@ export default function HomeScreen() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.mainContainer}>
         {/* Header */}
-        <View style={[styles.header, { zIndex: 2 }]}>
+        <View style={[styles.header, { zIndex: 2, backgroundColor: "red" }]}>
           <Text style={styles.title}>Plated</Text>
 
           <TouchableOpacity
             onPress={() =>
               Alert.alert(
-                "🚧 Whoops this feature is under construction! 🚧 Please go back and find your recipe manually."
+                "🚧whoops this feature is under construction!🚧 Please go back and find your recipe manually."
               )
             }
           >
@@ -493,7 +469,7 @@ export default function HomeScreen() {
             flexDirection: "row",
             alignItems: "center",
             zIndex: 1,
-            // backgroundColor: "orange",
+            backgroundColor: "orange",
             paddingLeft: 5,
             justifyContent: "center",
           }}
@@ -504,28 +480,30 @@ export default function HomeScreen() {
               style={styles.filterIcon}
             />
           </TouchableOpacity>
-          <View style={styles.filter}>
-            <Text style={styles.filterText}>Nut Allergy 🔒</Text>
-          </View>
-          <FlatList
-            horizontal={true}
+          <ScrollView
+            horizontal
             showsHorizontalScrollIndicator={false}
             style={styles.filtersContainer}
-            data={flattenedValues}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.filter}>
-                <Text style={styles.filterText}>
-                  {item}
-                  {"✓"}
-                </Text>
-              </View>
-            )}
-          />
+          >
+            <View style={styles.filter}>
+              <Text style={styles.filterText}>Nut Allergy 🔒</Text>
+            </View>
+            <View style={styles.filter}>
+              <Text style={styles.filterText}>{"Gluten Free 🔒"}</Text>
+            </View>
+            <View style={styles.filter}>
+              <Text style={styles.filterText}>{"<30 min ✓"}</Text>
+            </View>
+            <View style={styles.filter}>
+              <Text style={styles.filterText}> Novice ✓</Text>
+            </View>
+          </ScrollView>
         </View>
 
         {/* Recipe Cards */}
-        <View style={[styles.cardStack, { zIndex: 4 }]}>
+        <View
+          style={[styles.cardStack, { zIndex: 4, backgroundColor: "yellow" }]}
+        >
           {/* Since these are static layers, just leave them as Views or Animated.View with no dynamic props */}
           <Animated.View
             style={[
@@ -576,52 +554,66 @@ export default function HomeScreen() {
                 ]}
               >
                 <View style={styles.cardInternal}>
-                  {/* <Image
-                    source={require("assets/recipe_images/recipe_image_1.jpeg")}
-                    style={styles.recipeImage}
-                  />
-                  <View style={styles.blurOverlay}>
-                    <View style={styles.overlayContent}>
-                      <View style={styles.profileContainer}>
+                  {/* Red Box Overlay */}
+                  <View style={styles.redBox}>
+                    {/* Recipe Image */}
+                    <Image
+                      source={{ uri: recipes[index].image_url }}
+                      style={styles.recipeImage}
+                    />
+                    <View style={styles.redBoxContent}>
+                      {/* Profile and Recipe Title */}
+                      <View style={styles.profileAndTitle}>
                         <Image
-                          source={require("assets/personprofile.png")}
+                          source={{
+                            uri: recipes[index]?.image_url,
+                          }}
                           style={styles.profileImage}
                         />
-                      </View> */}
-                  <Text style={styles.recipeTitle}>{recipes[0].Name}</Text>
-                  {/* </View>
-                  </View>
+                        <Text style={styles.recipeTitle}>
+                          {recipes[index].Name}
+                        </Text>
+                      </View>
 
-                  <View style={styles.recipeDetailsOverlay}>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/forkkk.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>4 people</Text>
+                      {/* Recipe Details */}
+                      <View style={styles.recipeDetails}>
+                        <View style={styles.detailRow}>
+                          <Image
+                            source={require("assets/forkkk.png")}
+                            style={styles.icon}
+                          />
+                          <Text style={styles.detailText}>
+                            {recipes[index].servings}
+                          </Text>
+                        </View>
+                        <View style={styles.detailRow}>
+                          <Image
+                            source={require("assets/whiteclock.png")}
+                            style={styles.icon}
+                          />
+                          <Text style={styles.detailText}>
+                            {recipes[index].TotalTime}
+                          </Text>
+                        </View>
+                        <View style={styles.detailRow}>
+                          <Image
+                            source={require("assets/whitefire.png")}
+                            style={styles.icon}
+                          />
+                          <Text style={styles.detailText}>
+                            {recipes[index].diff}
+                          </Text>
+                        </View>
+                        <View style={styles.detailRow}>
+                          <Image
+                            source={require("assets/whitebookmark.png")}
+                            style={styles.icon}
+                          />
+                          <Text style={styles.detailText}>147</Text>
+                        </View>
+                      </View>
                     </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/whiteclock.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>1 hr</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/whitefire.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>easy</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/whitebookmark.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>147</Text>
-                    </View> */}
-                  {/* </View> */}
+                  </View>
                 </View>
               </Animated.View>
             </FlingGestureHandler>
@@ -629,30 +621,29 @@ export default function HomeScreen() {
         </View>
 
         {/* Redo button */}
-        <TouchableOpacity
-          style={[styles.redoButton, { zIndex: 6 }]}
-          onPress={() =>
-            Alert.alert("🚧 Whoops this feature is under construction! 🚧")
-          }
-        >
+        <TouchableOpacity style={[styles.redoButton, { zIndex: 6 }]}>
           <Icon name="redo" size={20} color="#B5300B" />
         </TouchableOpacity>
 
         {/* Footer */}
-        <View style={[styles.footer, { zIndex: 3 }]}>
+        <View style={[styles.footer, { zIndex: 3, backgroundColor: "green" }]}>
           <Animated.View
             style={[styles.folderContainer, { top: topFolderMargin }]}
           >
-            <Image
-              source={require("assets/swiping_images/saved_recipes_folder_cropped.png")}
-              style={[styles.savedRecipes, { zIndex: 1 }]}
-            />
+            <TouchableOpacity
+              onPress={() => router.push("/(tabs)/profile/saved_recipes")}
+              style={[styles.buttonContainer, { zIndex: 1 }]}
+            >
+              <Image
+                source={require("assets/swiping_images/saved_recipes_folder_cropped.png")}
+                style={styles.savedRecipes}
+              />
+            </TouchableOpacity>
           </Animated.View>
         </View>
 
         {/* Animation Line */}
-        {/* <TouchableOpacity
-          onPress={() => router.push("/(tabs)/profile/saved_recipes")}
+        <View
           style={[
             {
               position: "absolute",
@@ -665,34 +656,10 @@ export default function HomeScreen() {
               bottom: 0,
               zIndex: 5,
               backgroundColor: lineVisible ? "#444" : "transparent",
+              backgroundColor: "blue",
             },
           ]}
-        /> */}
-        <View
-          style={{
-            position: "absolute",
-            height: 20,
-            marginLeft: 15,
-            marginRight: 15,
-            borderTopLeftRadius: 5,
-            borderTopRightRadius: 5,
-            width: 400,
-            bottom: 0,
-            zIndex: 5,
-            backgroundColor: lineVisible ? "#444" : "transparent",
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              height: 20,
-              marginLeft: 15,
-              marginRight: 15,
-              width: 150,
-            }}
-            onPress={() => router.push("(tabs)/profile/saved_recipes")}
-          />
-        </View>
+        />
       </View>
     </GestureHandlerRootView>
   );
@@ -715,7 +682,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 50,
+    marginTop: 45,
   },
   footer: {
     width: "100%",
@@ -723,7 +690,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    // bottom: 37,
+    bottom: 0,
     overflow: "hidden",
   },
   cardStack: {
@@ -731,8 +698,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "relative",
     width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT - FOLDER_HEIGHT - 400,
-    marginTop: 100,
+    height: SCREEN_HEIGHT - FOLDER_HEIGHT - 300,
   },
   stackLayer: {
     height: 520,
@@ -805,16 +771,66 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   redoButton: {
-    width: 30,
-    height: 30,
+    width: 20,
+    height: 20,
     alignItems: "center",
-    justifyContent: "center",
     marginLeft: 15,
-    marginTop: 15,
     transform: [{ scaleX: -1 }],
   },
   folderContainer: {
     width: "100%",
     height: FOLDER_HEIGHT,
+  },
+  recipeTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    fontFamily: "Prata",
+    color: "white",
+    marginLeft: 80,
+  },
+
+  profileAndTitle: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginHorizontal: 16, // Adjust for spacing between title and profile image
+  },
+
+  profileImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    position: "absolute",
+    top: 5,
+    left: 16,
+  },
+  recipeImage: {
+    width: "100%",
+    height: 400,
+  },
+  profileAndTitle: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  recipeDetails: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    marginTop: 8,
+  },
+  detailRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: 16,
+  },
+  icon: {
+    width: 18,
+    height: 18,
+    marginRight: 4,
+  },
+  detailText: {
+    color: "white",
+    fontSize: 14,
   },
 });
