@@ -30,38 +30,27 @@ import {
 } from "react-native-gesture-handler";
 
 import { supabase } from "backend/supabaseClient";
-<<<<<<< HEAD
+
 import Icon from "react-native-vector-icons/FontAwesome5";
-=======
+
 import { useFilters } from "./FilterContext"; // Import the useFilters hook
->>>>>>> 20eaad21098c7d5b37a0af9885ac1409b9e5d07e
 
 // Dynamic dimensions so it fits on any screen size
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 const FOLDER_HEIGHT = SCREEN_HEIGHT * 0.08; // Height of the full folder
 // const FOLDER_HEIGHT = 200;
 const TAB_HEIGHT = SCREEN_HEIGHT * 0.029; // Height of just the tab
-<<<<<<< HEAD
 const INITIAL_MARGIN = FOLDER_HEIGHT - TAB_HEIGHT + 5; // Shows only the tab initially
 const ANIMATION_DURATION = 700;
 
 const BOTTOM_MARGIN = -800;
 const TOP_MARGIN = 1000;
-
-=======
-const INITIAL_MARGIN = FOLDER_HEIGHT - TAB_HEIGHT; // Shows only the tab initially
-const ANIMATION_DURATION = 1000;
-
->>>>>>> 20eaad21098c7d5b37a0af9885ac1409b9e5d07e
 export default function HomeScreen() {
   const router = useRouter();
   const topFolderMargin = useSharedValue(INITIAL_MARGIN);
-<<<<<<< HEAD
   const bottomCardMargin = useSharedValue(0);
   const [lineVisible, setLineVisible] = useState(false);
-=======
   const { selectedFilters } = useFilters(); // Access the selected filters
->>>>>>> 20eaad21098c7d5b37a0af9885ac1409b9e5d07e
 
   const [recipes, setRecipes] = useState([]); // State to hold recipes
 
@@ -127,7 +116,6 @@ export default function HomeScreen() {
         duration: ANIMATION_DURATION,
       },
       () => {
-<<<<<<< HEAD
         runOnJS(setLineVisible)(true);
         bottomCardMargin.value = withTiming(
           BOTTOM_MARGIN,
@@ -143,13 +131,6 @@ export default function HomeScreen() {
               })
             );
           }
-=======
-        topFolderMargin.value = withDelay(
-          ANIMATION_DURATION,
-          withTiming(INITIAL_MARGIN, {
-            duration: ANIMATION_DURATION,
-          })
->>>>>>> 20eaad21098c7d5b37a0af9885ac1409b9e5d07e
         );
       }
     );
@@ -227,30 +208,14 @@ export default function HomeScreen() {
         </View>
 
         {/* Recipe Card */}
-<<<<<<< HEAD
-        {/* <TouchableOpacity
-          onPress={() =>
-            router.push({
-              pathname: "/(tabs)/home/recipe_details1",
-              params: {
-                recipe_title: mine.Name,
-                the_image: mine.image_url,
-                servings: mine.servings,
-                time: mine.TotalTime,
-                difficulty: mine.difficulty,
-                chef_name: mine.AuthorName,
-              },
-            })
-          }
-        > */}
+
+        <View style={styles.stackLayer3} />
+        <View style={styles.stackLayer2} />
+        <View style={styles.stackLayer1} />
 
         <Animated.View
           style={[styles.cardStack, { bottom: bottomCardMargin, zIndex: 2 }]}
         >
-          <View style={styles.stackLayer3} />
-          <View style={styles.stackLayer2} />
-          <View style={styles.stackLayer1} />
-          {/* <View style={styles.stackLayer1} /> */}
           <FlingGestureHandler
             direction={Directions.DOWN}
             onActivated={onFlingDown}
@@ -262,20 +227,6 @@ export default function HomeScreen() {
               <View style={styles.imageContainer}>
                 <Image
                   source={require("assets/recipe_images/recipe_image_1.jpeg")}
-=======
-        <TouchableOpacity>
-          <View style={styles.cardStack}>
-            <View style={styles.stackLayer3} />
-            <View style={styles.stackLayer2} />
-            <View style={styles.stackLayer1} />
-            <FlingGestureHandler
-              direction={Directions.DOWN}
-              onActivated={onFling}
-            >
-              <View style={styles.imageContainer}>
-                <Image
-                  source={require("assets/recipe_images/recipe_image_7.jpeg")}
->>>>>>> 20eaad21098c7d5b37a0af9885ac1409b9e5d07e
                   style={styles.recipeImage}
                 />
                 <View style={styles.blurOverlay}>
@@ -288,7 +239,6 @@ export default function HomeScreen() {
                     </View>
                     <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text>
                   </View>
-<<<<<<< HEAD
                   {/* <Text style={styles.recipeTitle}>Zuppa Di Fagioli</Text> */}
                 </View>
 
@@ -320,50 +270,13 @@ export default function HomeScreen() {
                       style={styles.icon}
                     />
                     <Text style={styles.detailText}>147</Text>
-=======
-
-                  <View style={styles.recipeDetailsOverlay}>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/forkkk.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>4 people</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/whiteclock.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>1 hr</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/whitefire.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>easy</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("assets/whitebookmark.png")}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.detailText}>147</Text>
-                    </View>
->>>>>>> 20eaad21098c7d5b37a0af9885ac1409b9e5d07e
                   </View>
                 </View>
               </View>
             </FlingGestureHandler>
-<<<<<<< HEAD
           </FlingGestureHandler>
         </Animated.View>
         {/* </TouchableOpacity> */}
-=======
-          </View>
-        </TouchableOpacity>
->>>>>>> 20eaad21098c7d5b37a0af9885ac1409b9e5d07e
         <TouchableOpacity style={styles.redoButton}>
           <Icon name="redo" size={20} color="#B5300B" />
         </TouchableOpacity>
@@ -372,7 +285,6 @@ export default function HomeScreen() {
           <Animated.View
             style={[styles.folderContainer, { top: topFolderMargin }]}
           >
-<<<<<<< HEAD
             {/* <Image
               source={require("assets/swiping_images/saved_recipes_front.png")}
               style={[styles.savedRecipes, { bottom: -20, zIndex: 3 }]}
@@ -381,9 +293,6 @@ export default function HomeScreen() {
               onPress={() => router.push("/(tabs)/profile/saved_recipes")}
               style={[styles.buttonContainer, { zIndex: 1 }]}
             >
-=======
-            <TouchableOpacity onPress={onFling} style={styles.buttonContainer}>
->>>>>>> 20eaad21098c7d5b37a0af9885ac1409b9e5d07e
               <Image
                 source={require("assets/swiping_images/saved_recipes_folder_cropped.png")}
                 style={styles.savedRecipes}
@@ -465,7 +374,6 @@ const styles = StyleSheet.create({
   recipeImage: {
     width: "100%",
     height: 500,
-    borderRadius: 8,
   },
   blurOverlay: {
     position: "absolute",
@@ -549,6 +457,7 @@ const styles = StyleSheet.create({
     right: 15,
     height: 500,
     backgroundColor: "#8B0000",
+    //backgroundColor: "blue",
     opacity: 0.3,
   },
   stackLayer2: {
@@ -561,12 +470,12 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   stackLayer1: {
-    position: "absolute",
+    //position: "absolute",
     bottom: 0,
     left: 4,
     right: 4,
     height: 500,
-    backgroundColor: "#8B0000",
+    backgroundColor: "black",
     // bottom: 10,
   },
   imageContainer: {
@@ -577,18 +486,12 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   redoButton: {
-<<<<<<< HEAD
     width: 20,
     height: 20,
     alignItems: "center",
     marginLeft: 15,
     // position: "absolute",
     transform: [{ scaleX: -1 }],
-=======
-    width: 70,
-    height: 70,
-    alignSelf: "flex-start",
->>>>>>> 20eaad21098c7d5b37a0af9885ac1409b9e5d07e
   },
   redoIcon: {
     position: "absolute",
