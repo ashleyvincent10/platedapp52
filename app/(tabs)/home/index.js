@@ -642,7 +642,7 @@ export default function HomeScreen() {
               <View style={styles.filter}>
                 <Text style={styles.filterText}>
                   {item}
-                  {"✓"}
+                  {" ✓"}
                 </Text>
               </View>
             )}
