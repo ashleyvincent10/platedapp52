@@ -221,6 +221,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
+    // paddingTop: 24,
+    // paddingHorizontal: 24,
   },
   fullHeader: {
     flexDirection: "column",
