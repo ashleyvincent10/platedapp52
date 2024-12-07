@@ -83,7 +83,10 @@ export default function App() {
         >
           <Image source={require("assets/flip.png")} style={styles.iconImage} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton} onPress={toggleFlash}>
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => alert("flash is not hooked up sorry!")}
+        >
           <Image
             source={require("assets/flash.png")}
             style={styles.iconImage}

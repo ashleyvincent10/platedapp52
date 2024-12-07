@@ -527,6 +527,7 @@ export default function HomeScreen() {
                 time: recipes[index].TotalTime,
                 difficulty: recipes[index].difficulty,
                 chef_name: recipes[index].AuthorName,
+                recipe_id: recipes[index].recipeid,
               },
             })
           }

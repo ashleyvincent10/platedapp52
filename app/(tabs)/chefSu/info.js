@@ -111,7 +111,8 @@ export default function InfoScreen() {
       </Text>
       <View style={styles.headerContainer}>
         <Text style={styles.header} marginBottom={30}>
-          Happy Cooking & enjoy your Journey with Chef Su!
+          Happy Cooking & enjoy your Journey with Chef Su!{"\n"}
+          {"\n"}
         </Text>
       </View>
     </ScrollView>

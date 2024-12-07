@@ -156,7 +156,7 @@ export default function RecipeDetails() {
 
         {/* chef su and save recipe */}
         <View style={styles.vertCenterContainer}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("chefSu")}>
             <Image
               source={require("../../../assets/chefHat.png")}
               style={{

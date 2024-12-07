@@ -21,8 +21,15 @@ export default function RecipeDetails() {
   const [ingredients, setIngredients] = useState([]);
   const [steps, SetSteps] = useState([]);
 
-  const { recipe_title, the_image, servings, time, difficulty, chef_name } =
-    useLocalSearchParams();
+  const {
+    recipe_title,
+    the_image,
+    servings,
+    time,
+    difficulty,
+    chef_name,
+    recipe_id,
+  } = useLocalSearchParams();
 
   const navigation = useNavigation();
   navigation.setOptions({
@@ -151,7 +158,7 @@ export default function RecipeDetails() {
         </View>
         {/* chef su and save recipe */}
         <View style={styles.vertCenterContainer}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("chefSu")}>
             <Image
               source={require("../../../assets/chefHat.png")}
               style={{
@@ -161,7 +168,23 @@ export default function RecipeDetails() {
               }}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={async () => {
+              // Make a call to update your Supabase database
+              try {
+                const { error } = await supabase
+                  .from("Recipes") // Replace "Recipes" with your table name
+                  .update({ is_saved: true }) // Replace with your actual update logic
+                  .eq("recipeid", recipe_id); // Replace with your actual condition
+
+                if (error) {
+                  console.error("Error updating database:", error.message);
+                }
+              } catch (err) {
+                console.error("Error during database update:", err);
+              }
+            }}
+          >
             <Image source={require("../../../assets/save_tab_2.png")} />
             <Text
               style={{

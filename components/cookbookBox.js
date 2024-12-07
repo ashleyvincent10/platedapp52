@@ -13,62 +13,60 @@ import { BlurView } from "expo-blur";
 import { useState, useEffect } from "react";
 import { supabase } from "backend/supabaseClient";
 
-export default function CookBookBox({ type, name }) {
-  const [cookBookData, setCookBookData] = useState([]);
+export default function CookBookBox({ book_vec, name }) {
+  //const [cookBookData, setCookBookData] = useState([]);
   const router = useRouter();
   //console.log(type);
-  useEffect(() => {
-    const fetchCookBook = async () => {
-      try {
-        const user_response = await supabase
-          .from("Recipes")
-          .select("image_url")
-          .eq(type, true);
-        //console.log(user_response.data);
-        setCookBookData(user_response.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchCookBook();
-  }, []);
+  // useEffect(() => {
+  //   const fetchCookBook = async () => {
+  //     try {
+  //       const user_response = await supabase
+  //         .from("Recipes")
+  //         .select("image_url")
+  //         .eq(type, true);
+  //       //console.log(user_response.data);
+  //       setCookBookData(user_response.data);
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   };
+  //   fetchCookBook();
+  // }, []);
 
   // const url_0 = cookBookData[0].image_url;
   return (
-    <View style={styles.container}>
-      {/* <View style={styles.row}>
-        <Image
-          source={{ uri: cookBookData[0].image_url }}
-          style={styles.image}
-        />
-        <Image
-          source={{ uri: cookBookData[1].image_url }}
-          style={styles.image}
-        />
-      </View>
-      <View style={styles.row}>
-        <Image
-          source={{ uri: cookBookData[2].image_url }}
-          style={styles.image}
-        />
-        <Image
-          source={{ uri: cookBookData[3].image_url }}
-          style={styles.image}
-        />
-      </View>
-      <BlurView style={styles.footer} intensity={10}>
-        <Text style={styles.title}> {name} </Text>
-        <TouchableOpacity
-          style={styles.editButton}
-          onPress={() =>
-            alert(
-              "🚧whoops this feature is under construction!🚧, please return back"
-            )
-          }
-        >
-          <Text style={styles.editText}>✎</Text>
-        </TouchableOpacity>
-      </BlurView> */}
+    <View>
+      <TouchableOpacity
+        onPress={() =>
+          alert(
+            "🚧the cookbook page is under construction!🚧, please return back"
+          )
+        }
+      >
+        <View style={styles.container}>
+          <View style={styles.row}>
+            <Image source={{ uri: book_vec[0] }} style={styles.image} />
+            <Image source={{ uri: book_vec[1] }} style={styles.image} />
+          </View>
+          <View style={styles.row}>
+            <Image source={{ uri: book_vec[2] }} style={styles.image} />
+            <Image source={{ uri: book_vec[3] }} style={styles.image} />
+          </View>
+          <BlurView style={styles.footer} intensity={10}>
+            <Text style={styles.title}> {name} </Text>
+            <TouchableOpacity
+              style={styles.editButton}
+              onPress={() =>
+                alert(
+                  "🚧whoops this feature is under construction!🚧, please return back"
+                )
+              }
+            >
+              <Text style={styles.editText}>✎</Text>
+            </TouchableOpacity>
+          </BlurView>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }

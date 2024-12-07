@@ -109,9 +109,17 @@ export default function Page() {
               style={styles.filterIcon}
             />
           </TouchableOpacity>
-          <View style={[styles.filterChip, styles.selectedChip]}>
-            <Text style={styles.filterChipText}>Nut Allergy 🔒</Text>
-          </View>
+          <TouchableOpacity
+            onPress={() =>
+              alert(
+                "please navigate to your preferences in the top left of your profile to edit your locked dietary restrictions"
+              )
+            }
+          >
+            <View style={[styles.filterChip, styles.selectedChip]}>
+              <Text style={styles.filterChipText}>Nut Allergy 🔒</Text>
+            </View>
+          </TouchableOpacity>
         </View>
 
         {/* Ingredients Section */}
@@ -125,17 +133,14 @@ export default function Page() {
           </View>
           <View style={styles.chipContainer}>
             {[
-              "My Veggies",
-              "My Grains",
-              "This week",
+              "chicken",
+              "tomatoes",
               "lemon",
               "butter",
-              "chicken",
               "beef",
               "lamb",
               "basil",
               "rice",
-              "tomatoes",
               "onion",
               "corn",
               "eggs",
@@ -145,6 +150,9 @@ export default function Page() {
               "milk",
               "vanilla",
               "blueberries",
+              "My Veggies",
+              "My Grains",
+              "This week",
             ].map((item) => (
               <FilterChip key={item} text={item} category="ingredients" />
             ))}

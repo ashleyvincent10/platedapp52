@@ -24,6 +24,24 @@ export default function Page() {
   const [mine, setMine] = useState(null);
   const router = useRouter();
 
+  const cookbook1_data = [
+    "https://yribjypwwexuqoravaph.supabase.co/storage/v1/object/public/Recipes/chocochip.png?t=2024-12-06T05%3A21%3A30.329Z",
+    "https://yribjypwwexuqoravaph.supabase.co/storage/v1/object/public/Recipes/recipe_image_9.jpeg?t=2024-12-01T23%3A52%3A01.316Z",
+    "https://yribjypwwexuqoravaph.supabase.co/storage/v1/object/public/Recipes/recipe_image_17.jpeg?t=2024-12-01T23%3A50%3A58.975Z",
+    "https://yribjypwwexuqoravaph.supabase.co/storage/v1/object/public/Recipes/Blueberry-Rasberry-Jello-Salad.webp?t=2024-12-06T05%3A19%3A12.341Z",
+  ];
+  const cookbook2_data = [
+    "https://yribjypwwexuqoravaph.supabase.co/storage/v1/object/public/Recipes/recipe_image_7.jpeg?t=2024-12-01T23%3A51%3A50.420Z",
+    "https://yribjypwwexuqoravaph.supabase.co/storage/v1/object/public/Recipes/chicken%20l.jpeg?t=2024-12-06T04%3A53%3A39.643Z",
+    "https://yribjypwwexuqoravaph.supabase.co/storage/v1/object/public/Recipes/salad.jpg",
+    "https://yribjypwwexuqoravaph.supabase.co/storage/v1/object/public/Recipes/steamed-whole-tilapia-2.png?t=2024-12-06T05%3A24%3A53.783Z",
+  ];
+  const cookbook3_data = [
+    "https://yribjypwwexuqoravaph.supabase.co/storage/v1/object/public/Recipes/bbq_wings.png?t=2024-12-06T05%3A00%3A19.934Z",
+    "https://yribjypwwexuqoravaph.supabase.co/storage/v1/object/public/Recipes/Pineapple-Shrimp-with-Rice-scaled.jpg?t=2024-12-06T05%3A17%3A34.391Z",
+    "https://yribjypwwexuqoravaph.supabase.co/storage/v1/object/public/Recipes/pbjmuff.png?t=2024-12-06T05%3A32%3A03.151Z",
+    "https://yribjypwwexuqoravaph.supabase.co/storage/v1/object/public/Recipes/recipe_image_14.jpeg?t=2024-12-01T23%3A50%3A34.185Z",
+  ];
   const fetchMine = async () => {
     try {
       const user_response = await supabase
@@ -95,19 +113,19 @@ export default function Page() {
         </Text>
         <ScrollView backgroundColor="#FAF9F6" horizontal={true}>
           <CookBookBox
-            type="is_healthy_book"
-            name="Healthy Recipes"
+            book_vec={cookbook1_data}
+            name="Dessert Recipes"
           ></CookBookBox>
           <View>
             <CookBookBox
-              type="is_family_book"
+              book_vec={cookbook2_data}
               name="Family Recipes"
             ></CookBookBox>
           </View>
           <View>
             <CookBookBox
-              type="is_dessert_book"
-              name="Dessert Recipes"
+              book_vec={cookbook3_data}
+              name="healthy Recipes"
             ></CookBookBox>
           </View>
         </ScrollView>
