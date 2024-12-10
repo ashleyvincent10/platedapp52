@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.cs147l24aua4"
     },
     "android": {
       "adaptiveIcon": {
@@ -31,6 +32,18 @@
       "expo-router"
     ],
     "newArchEnabled": true,
-    "scheme": "expo-router-test"
+    "scheme": "expo-router-test",
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "2f0e289b-1136-40fb-b747-0d44298bc6cb"
+      }
+    },
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/2f0e289b-1136-40fb-b747-0d44298bc6cb"
+    }
   }
 }
