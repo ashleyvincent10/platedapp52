@@ -11,5 +11,5 @@ export default function Page() {
     chef_name,
     recipe_id,
   } = useLocalSearchParams();
-  return <Components route="(tabs)/profile" cameFrom="profile" />;
+  return <Components route="(tabs)/home" cameFrom="home" />;
 }

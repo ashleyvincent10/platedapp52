@@ -17,7 +17,7 @@ import { supabase } from "backend/supabaseClient";
 import RecreationBox from "components/recreationBox";
 const windowWidth = Dimensions.get("window").width;
 
-export default function RecipeDetails() {
+export default function RecipeDetails({ cameFrom }) {
   const [ingredients, setIngredients] = useState([]);
   const [steps, SetSteps] = useState([]);
 
@@ -114,7 +114,7 @@ export default function RecipeDetails() {
               }}
             >
               <Image
-                source={require("../../../assets/fork.png")}
+                source={require("assets/fork.png")}
                 style={{
                   width: windowWidth * 0.08,
                   height: windowWidth * 0.08,
@@ -130,7 +130,7 @@ export default function RecipeDetails() {
               }}
             >
               <Image
-                source={require("../../../assets/clock.png")}
+                source={require("assets/clock.png")}
                 style={{
                   width: windowWidth * 0.085,
                   height: windowWidth * 0.085,
@@ -146,7 +146,7 @@ export default function RecipeDetails() {
               }}
             >
               <Image
-                source={require("../../../assets/fire.png")}
+                source={require("assets/fire.png")}
                 style={{
                   width: windowWidth * 0.085,
                   height: windowWidth * 0.085,
@@ -160,7 +160,7 @@ export default function RecipeDetails() {
         <View style={styles.vertCenterContainer}>
           <TouchableOpacity onPress={() => navigation.navigate("chefSu")}>
             <Image
-              source={require("../../../assets/chefHat.png")}
+              source={require("assets/chefHat.png")}
               style={{
                 width: windowWidth * 0.33,
                 height: windowWidth * 0.33,
@@ -185,19 +185,23 @@ export default function RecipeDetails() {
               }
             }}
           >
-            <Image source={require("../../../assets/save_tab_2.png")} />
-            <Text
-              style={{
-                fontSize: 15,
-                fontFamily: "Poppins",
-                color: "white",
-                position: "absolute",
-                left: "13%",
-                bottom: "20%",
-              }}
-            >
-              Save Recipe +
-            </Text>
+            {cameFrom === "home" ? (
+              <Image source={require("assets/save_tab_2.png")} />
+            ) : null}
+            {cameFrom === "home" ? (
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontFamily: "Poppins",
+                  color: "white",
+                  position: "absolute",
+                  left: "13%",
+                  bottom: "20%",
+                }}
+              >
+                Save Recipe +
+              </Text>
+            ) : null}
           </TouchableOpacity>
         </View>
       </View>
@@ -238,7 +242,7 @@ export default function RecipeDetails() {
         <Text style={styles.title}> Recreations </Text>
         <TouchableOpacity>
           <Image
-            source={require("../../../assets/arrow.png")}
+            source={require("assets/arrow.png")}
             style={{
               width: windowWidth * 0.08,
               height: windowWidth * 0.08,
@@ -254,7 +258,7 @@ export default function RecipeDetails() {
         <View style={styles.chefContainer}>
           <View style={{ flexDirection: "row" }}>
             <Image
-              source={require("../../../assets/chef_prof.png")}
+              source={require("assets/chef_prof.png")}
               style={styles.profPic}
             ></Image>
             <Text

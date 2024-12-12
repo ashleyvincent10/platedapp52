@@ -519,7 +519,7 @@ export default function HomeScreen() {
         <Pressable
           onPress={() =>
             router.push({
-              pathname: "/(tabs)/home/recipe_details1",
+              pathname: "/(tabs)/home/recipe_details",
               params: {
                 recipe_title: recipes[index].Name,
                 the_image: recipes[index].image_url,
@@ -736,15 +736,15 @@ export default function HomeScreen() {
           <Animated.View
             style={[styles.folderContainer, { top: topFolderMargin }]}
           >
-            <TouchableOpacity
-              onPress={() => router.push("/(tabs)/profile/saved_recipes")}
+            {/* <TouchableOpacity
+              onPress={() => router.push("/pasdsdsntry")}
               style={[styles.buttonContainer, { zIndex: 1 }]}
-            >
-              <Image
-                source={require("assets/swiping_images/saved_recipes_folder_cropped.png")}
-                style={styles.savedRecipes}
-              />
-            </TouchableOpacity>
+            > */}
+            <Image
+              source={require("assets/swiping_images/saved_recipes_folder_cropped.png")}
+              style={styles.savedRecipes}
+            />
+            {/* </TouchableOpacity> */}
           </Animated.View>
         </View>
 
@@ -775,15 +775,12 @@ export default function HomeScreen() {
                 borderTopLeftRadius: 5,
                 borderTopRightRadius: 5,
                 width: 180,
-
                 alignSelf: "center",
-
-                // backgroundColor: "blue",
               },
             ]}
             onPress={() =>
               router.push({
-                pathname: "/(tabs)/profile/saved_recipes",
+                pathname: "/(tabs)/home/saved_recipes_home",
               })
             }
           />
